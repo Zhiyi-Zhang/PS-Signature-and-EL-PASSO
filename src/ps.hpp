@@ -13,14 +13,14 @@ public:
 
   PS();
 
-  std::shared_ptr<PK>
+  std::shared_ptr<PubKey>
   key_gen(const std::list<std::string>& attributes);
 
-  std::shared_ptr<SIG>
-  sign_hybrid(const PK& pk, const G1& gt, const G1& c_attributes, const std::list<std::string>& attributes);
+  std::shared_ptr<Credential>
+  sign_hybrid(const PubKey& pk, const G1& gt, const std::list<G1>& c_attributes, const std::list<std::string>& attributes);
 
-  std::shared_ptr<SIG>
-  sign_commitment(const PK& pk, const G1& commitment);
+  std::shared_ptr<Credential>
+  sign_commitment(const PubKey& pk, const G1& commitment);
 
   void
   verify();
