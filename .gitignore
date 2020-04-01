@@ -1,0 +1,4 @@
+.vscode
+build
+*.o
+test_ps
