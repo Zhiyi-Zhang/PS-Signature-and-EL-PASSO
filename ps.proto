@@ -14,5 +14,9 @@ message Credential {
 }
 
 message CredRequest {
-
+  bytes gt = 1;
+  bytes commitmented_s = 2;
+  bytes a = 3;
+  bytes r = 4;
+  repeated string attributes = 5;
 }

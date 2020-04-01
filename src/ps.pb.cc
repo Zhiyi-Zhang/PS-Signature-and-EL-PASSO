@@ -95,6 +95,11 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_ps_2eproto::offsets[] PROTOBUF
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
+  PROTOBUF_FIELD_OFFSET(::CredRequest, gt_),
+  PROTOBUF_FIELD_OFFSET(::CredRequest, commitmented_s_),
+  PROTOBUF_FIELD_OFFSET(::CredRequest, a_),
+  PROTOBUF_FIELD_OFFSET(::CredRequest, r_),
+  PROTOBUF_FIELD_OFFSET(::CredRequest, attributes_),
 };
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, sizeof(::PubKey)},
@@ -112,7 +117,9 @@ const char descriptor_table_protodef_ps_2eproto[] PROTOBUF_SECTION_VARIABLE(prot
   "\n\010ps.proto\"D\n\006PubKey\022\t\n\001g\030\001 \001(\014\022\n\n\002Yi\030\002 "
   "\003(\014\022\n\n\002gg\030\003 \001(\014\022\n\n\002XX\030\004 \001(\014\022\013\n\003YYi\030\005 \003(\014"
   "\"(\n\nCredential\022\014\n\004sig1\030\001 \001(\014\022\014\n\004sig2\030\002 \001"
-  "(\014\"\r\n\013CredRequestb\006proto3"
+  "(\014\"[\n\013CredRequest\022\n\n\002gt\030\001 \001(\014\022\026\n\016commitm"
+  "ented_s\030\002 \001(\014\022\t\n\001a\030\003 \001(\014\022\t\n\001r\030\004 \001(\014\022\022\n\na"
+  "ttributes\030\005 \003(\tb\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_ps_2eproto_deps[1] = {
 };
@@ -124,7 +131,7 @@ static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_ps_
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_ps_2eproto_once;
 static bool descriptor_table_ps_2eproto_initialized = false;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_ps_2eproto = {
-  &descriptor_table_ps_2eproto_initialized, descriptor_table_protodef_ps_2eproto, "ps.proto", 145,
+  &descriptor_table_ps_2eproto_initialized, descriptor_table_protodef_ps_2eproto, "ps.proto", 223,
   &descriptor_table_ps_2eproto_once, descriptor_table_ps_2eproto_sccs, descriptor_table_ps_2eproto_deps, 3, 0,
   schemas, file_default_instances, TableStruct_ps_2eproto::offsets,
   file_level_metadata_ps_2eproto, 3, file_level_enum_descriptors_ps_2eproto, file_level_service_descriptors_ps_2eproto,
@@ -700,12 +707,34 @@ CredRequest::CredRequest()
 }
 CredRequest::CredRequest(const CredRequest& from)
   : ::PROTOBUF_NAMESPACE_ID::Message(),
-      _internal_metadata_(nullptr) {
+      _internal_metadata_(nullptr),
+      attributes_(from.attributes_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
+  gt_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  if (!from._internal_gt().empty()) {
+    gt_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.gt_);
+  }
+  commitmented_s_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  if (!from._internal_commitmented_s().empty()) {
+    commitmented_s_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.commitmented_s_);
+  }
+  a_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  if (!from._internal_a().empty()) {
+    a_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.a_);
+  }
+  r_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  if (!from._internal_r().empty()) {
+    r_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.r_);
+  }
   // @@protoc_insertion_point(copy_constructor:CredRequest)
 }
 
 void CredRequest::SharedCtor() {
+  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_CredRequest_ps_2eproto.base);
+  gt_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  commitmented_s_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  a_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  r_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
 CredRequest::~CredRequest() {
@@ -714,6 +743,10 @@ CredRequest::~CredRequest() {
 }
 
 void CredRequest::SharedDtor() {
+  gt_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  commitmented_s_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  a_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  r_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
 void CredRequest::SetCachedSize(int size) const {
@@ -731,6 +764,11 @@ void CredRequest::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
+  attributes_.Clear();
+  gt_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  commitmented_s_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  a_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  r_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   _internal_metadata_.Clear();
 }
 
@@ -740,6 +778,55 @@ const char* CredRequest::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
     CHK_(ptr);
+    switch (tag >> 3) {
+      // bytes gt = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
+          auto str = _internal_mutable_gt();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // bytes commitmented_s = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 18)) {
+          auto str = _internal_mutable_commitmented_s();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // bytes a = 3;
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 26)) {
+          auto str = _internal_mutable_a();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // bytes r = 4;
+      case 4:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 34)) {
+          auto str = _internal_mutable_r();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // repeated string attributes = 5;
+      case 5:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 42)) {
+          ptr -= 1;
+          do {
+            ptr += 1;
+            auto str = _internal_add_attributes();
+            ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+            CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "CredRequest.attributes"));
+            CHK_(ptr);
+            if (!ctx->DataAvailable(ptr)) break;
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<42>(ptr));
+        } else goto handle_unusual;
+        continue;
+      default: {
+      handle_unusual:
         if ((tag & 7) == 4 || tag == 0) {
           ctx->SetLastTag(tag);
           goto success;
@@ -747,6 +834,8 @@ const char* CredRequest::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID
         ptr = UnknownFieldParse(tag, &_internal_metadata_, ptr, ctx);
         CHK_(ptr != nullptr);
         continue;
+      }
+    }  // switch
   }  // while
 success:
   return ptr;
@@ -761,6 +850,40 @@ failure:
   // @@protoc_insertion_point(serialize_to_array_start:CredRequest)
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
+
+  // bytes gt = 1;
+  if (this->gt().size() > 0) {
+    target = stream->WriteBytesMaybeAliased(
+        1, this->_internal_gt(), target);
+  }
+
+  // bytes commitmented_s = 2;
+  if (this->commitmented_s().size() > 0) {
+    target = stream->WriteBytesMaybeAliased(
+        2, this->_internal_commitmented_s(), target);
+  }
+
+  // bytes a = 3;
+  if (this->a().size() > 0) {
+    target = stream->WriteBytesMaybeAliased(
+        3, this->_internal_a(), target);
+  }
+
+  // bytes r = 4;
+  if (this->r().size() > 0) {
+    target = stream->WriteBytesMaybeAliased(
+        4, this->_internal_r(), target);
+  }
+
+  // repeated string attributes = 5;
+  for (int i = 0, n = this->_internal_attributes_size(); i < n; i++) {
+    const auto& s = this->_internal_attributes(i);
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      s.data(), static_cast<int>(s.length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "CredRequest.attributes");
+    target = stream->WriteString(5, s, target);
+  }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
@@ -777,6 +900,42 @@ size_t CredRequest::ByteSizeLong() const {
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
+
+  // repeated string attributes = 5;
+  total_size += 1 *
+      ::PROTOBUF_NAMESPACE_ID::internal::FromIntSize(attributes_.size());
+  for (int i = 0, n = attributes_.size(); i < n; i++) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+      attributes_.Get(i));
+  }
+
+  // bytes gt = 1;
+  if (this->gt().size() > 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
+        this->_internal_gt());
+  }
+
+  // bytes commitmented_s = 2;
+  if (this->commitmented_s().size() > 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
+        this->_internal_commitmented_s());
+  }
+
+  // bytes a = 3;
+  if (this->a().size() > 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
+        this->_internal_a());
+  }
+
+  // bytes r = 4;
+  if (this->r().size() > 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
+        this->_internal_r());
+  }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
@@ -809,6 +968,23 @@ void CredRequest::MergeFrom(const CredRequest& from) {
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
+  attributes_.MergeFrom(from.attributes_);
+  if (from.gt().size() > 0) {
+
+    gt_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.gt_);
+  }
+  if (from.commitmented_s().size() > 0) {
+
+    commitmented_s_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.commitmented_s_);
+  }
+  if (from.a().size() > 0) {
+
+    a_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.a_);
+  }
+  if (from.r().size() > 0) {
+
+    r_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.r_);
+  }
 }
 
 void CredRequest::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
@@ -832,6 +1008,15 @@ bool CredRequest::IsInitialized() const {
 void CredRequest::InternalSwap(CredRequest* other) {
   using std::swap;
   _internal_metadata_.Swap(&other->_internal_metadata_);
+  attributes_.InternalSwap(&other->attributes_);
+  gt_.Swap(&other->gt_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  commitmented_s_.Swap(&other->commitmented_s_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  a_.Swap(&other->a_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  r_.Swap(&other->r_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata CredRequest::GetMetadata() const {

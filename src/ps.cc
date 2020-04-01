@@ -1,4 +1,4 @@
-#include "ps.hpp"
+#include "ps.h"
 char buf[1024];
 using namespace mcl::bls12;
 
@@ -92,4 +92,5 @@ PS::sign_commitment(const PubKey& pk, const G1& commitment)
   G1::mul(sig2, sig2_base, u);
   size = sig1.serialize(buf, sizeof(buf));
   sig->set_sig2(buf, size);
+  return sig;
 }
