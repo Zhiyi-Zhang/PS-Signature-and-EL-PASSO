@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+message PK {
+  bytes g = 1;
+  repeated bytes Yi = 2;
+  bytes gg = 3;
+  bytes XX = 4;
+  repeated bytes YYi = 5;
+}
+
+message SIG {
+  bytes sig1 = 1;
+  bytes sig2 = 2;
+}
