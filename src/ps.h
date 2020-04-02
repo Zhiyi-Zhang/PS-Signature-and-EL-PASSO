@@ -1,26 +1,38 @@
+#ifndef PS_SRC_PS_H_
+#define PS_SRC_PS_H_
+
 #include "ps.pb.h"
 #include <string>
 #include <iostream>
 #include <list>
 #include <mcl/bls12_381.hpp>
+#include <cybozu/sha2.hpp>
 
 using namespace mcl::bls12;
 
-class PS
+// In this PS implementation, the commitmented attributes goes first and plaintext attribtues goes after
+// Prerequisite: initPairing();
+
+class PSSigner
 {
 public:
-  typedef std::unique_ptr<PS> Ptr;
+  typedef std::unique_ptr<PSSigner> Ptr;
 
-  PS();
+  PSSigner();
 
-  std::shared_ptr<PubKey>
-  key_gen(const std::list<std::string>& attributes);
+  // will update private member variables
+  std::shared_ptr<PSPubKey>
+  key_gen(int attribute_num);
 
-  std::shared_ptr<Credential>
-  sign_hybrid(const PubKey& pk, const G1& gt, const std::list<G1>& c_attributes, const std::list<std::string>& attributes);
+  // if schnorr protocol fails, a nullptr will be returned
+  std::shared_ptr<PSCredential>
+  sign_cred_request(const std::shared_ptr<PSCredRequest> request) const;
 
-  std::shared_ptr<Credential>
-  sign_commitment(const PubKey& pk, const G1& commitment);
+  std::shared_ptr<PSCredential>
+  sign_hybrid(const G1& gt, const std::list<G1>& c_attributes, const std::list<std::string>& attributes) const;
+
+  std::shared_ptr<PSCredential>
+  sign_commitment(const G1& commitment) const;
 
   void
   verify();
@@ -30,16 +42,26 @@ private:
 	G2 m_gg;
   Fp m_x; // sk1
   G1 m_X; // sk2
+  std::shared_ptr<PSPubKey> m_pk;
 };
 
-// class PSClient
-// {
-// public:
-//   typedef std::unique_ptr<PSClient> Ptr;
+class PSRequester
+{
+public:
+  typedef std::unique_ptr<PSRequester> Ptr;
 
-//   PSClient();
+  PSRequester(const std::shared_ptr<PSPubKey>& pk);
 
-//   static G2
-//   commit();
+  std::shared_ptr<PSCredRequest>
+  generate_request(const std::list<std::string> attributes_to_commit,
+                   const std::list<std::string> plaintext_attributes);
 
-// };
+  std::shared_ptr<PSCredential>
+  unblind_credential(const PSCredential& credential);
+
+private:
+  std::shared_ptr<PSPubKey> m_pk;
+  Fp m_t;
+};
+
+#endif // PS_SRC_PS_H_

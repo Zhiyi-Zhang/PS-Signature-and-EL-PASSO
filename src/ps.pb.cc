@@ -14,59 +14,59 @@
 #include <google/protobuf/wire_format.h>
 // @@protoc_insertion_point(includes)
 #include <google/protobuf/port_def.inc>
-class PubKeyDefaultTypeInternal {
+class PSPubKeyDefaultTypeInternal {
  public:
-  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<PubKey> _instance;
-} _PubKey_default_instance_;
-class CredentialDefaultTypeInternal {
+  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<PSPubKey> _instance;
+} _PSPubKey_default_instance_;
+class PSCredentialDefaultTypeInternal {
  public:
-  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<Credential> _instance;
-} _Credential_default_instance_;
-class CredRequestDefaultTypeInternal {
+  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<PSCredential> _instance;
+} _PSCredential_default_instance_;
+class PSCredRequestDefaultTypeInternal {
  public:
-  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<CredRequest> _instance;
-} _CredRequest_default_instance_;
-static void InitDefaultsscc_info_CredRequest_ps_2eproto() {
+  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<PSCredRequest> _instance;
+} _PSCredRequest_default_instance_;
+static void InitDefaultsscc_info_PSCredRequest_ps_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::_CredRequest_default_instance_;
-    new (ptr) ::CredRequest();
+    void* ptr = &::_PSCredRequest_default_instance_;
+    new (ptr) ::PSCredRequest();
     ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::CredRequest::InitAsDefaultInstance();
+  ::PSCredRequest::InitAsDefaultInstance();
 }
 
-::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_CredRequest_ps_2eproto =
-    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_CredRequest_ps_2eproto}, {}};
+::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_PSCredRequest_ps_2eproto =
+    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_PSCredRequest_ps_2eproto}, {}};
 
-static void InitDefaultsscc_info_Credential_ps_2eproto() {
+static void InitDefaultsscc_info_PSCredential_ps_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::_Credential_default_instance_;
-    new (ptr) ::Credential();
+    void* ptr = &::_PSCredential_default_instance_;
+    new (ptr) ::PSCredential();
     ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::Credential::InitAsDefaultInstance();
+  ::PSCredential::InitAsDefaultInstance();
 }
 
-::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_Credential_ps_2eproto =
-    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_Credential_ps_2eproto}, {}};
+::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_PSCredential_ps_2eproto =
+    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_PSCredential_ps_2eproto}, {}};
 
-static void InitDefaultsscc_info_PubKey_ps_2eproto() {
+static void InitDefaultsscc_info_PSPubKey_ps_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::_PubKey_default_instance_;
-    new (ptr) ::PubKey();
+    void* ptr = &::_PSPubKey_default_instance_;
+    new (ptr) ::PSPubKey();
     ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::PubKey::InitAsDefaultInstance();
+  ::PSPubKey::InitAsDefaultInstance();
 }
 
-::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_PubKey_ps_2eproto =
-    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_PubKey_ps_2eproto}, {}};
+::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_PSPubKey_ps_2eproto =
+    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_PSPubKey_ps_2eproto}, {}};
 
 static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_ps_2eproto[3];
 static constexpr ::PROTOBUF_NAMESPACE_ID::EnumDescriptor const** file_level_enum_descriptors_ps_2eproto = nullptr;
@@ -74,64 +74,64 @@ static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_s
 
 const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_ps_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   ~0u,  // no _has_bits_
-  PROTOBUF_FIELD_OFFSET(::PubKey, _internal_metadata_),
+  PROTOBUF_FIELD_OFFSET(::PSPubKey, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::PubKey, g_),
-  PROTOBUF_FIELD_OFFSET(::PubKey, yi_),
-  PROTOBUF_FIELD_OFFSET(::PubKey, gg_),
-  PROTOBUF_FIELD_OFFSET(::PubKey, xx_),
-  PROTOBUF_FIELD_OFFSET(::PubKey, yyi_),
+  PROTOBUF_FIELD_OFFSET(::PSPubKey, g_),
+  PROTOBUF_FIELD_OFFSET(::PSPubKey, yi_),
+  PROTOBUF_FIELD_OFFSET(::PSPubKey, gg_),
+  PROTOBUF_FIELD_OFFSET(::PSPubKey, xx_),
+  PROTOBUF_FIELD_OFFSET(::PSPubKey, yyi_),
   ~0u,  // no _has_bits_
-  PROTOBUF_FIELD_OFFSET(::Credential, _internal_metadata_),
+  PROTOBUF_FIELD_OFFSET(::PSCredential, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::Credential, sig1_),
-  PROTOBUF_FIELD_OFFSET(::Credential, sig2_),
+  PROTOBUF_FIELD_OFFSET(::PSCredential, sig1_),
+  PROTOBUF_FIELD_OFFSET(::PSCredential, sig2_),
   ~0u,  // no _has_bits_
-  PROTOBUF_FIELD_OFFSET(::CredRequest, _internal_metadata_),
+  PROTOBUF_FIELD_OFFSET(::PSCredRequest, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::CredRequest, gt_),
-  PROTOBUF_FIELD_OFFSET(::CredRequest, commitmented_s_),
-  PROTOBUF_FIELD_OFFSET(::CredRequest, a_),
-  PROTOBUF_FIELD_OFFSET(::CredRequest, r_),
-  PROTOBUF_FIELD_OFFSET(::CredRequest, attributes_),
+  PROTOBUF_FIELD_OFFSET(::PSCredRequest, gt_),
+  PROTOBUF_FIELD_OFFSET(::PSCredRequest, c_attributes_),
+  PROTOBUF_FIELD_OFFSET(::PSCredRequest, vs_),
+  PROTOBUF_FIELD_OFFSET(::PSCredRequest, rs_),
+  PROTOBUF_FIELD_OFFSET(::PSCredRequest, attributes_),
 };
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, -1, sizeof(::PubKey)},
-  { 10, -1, sizeof(::Credential)},
-  { 17, -1, sizeof(::CredRequest)},
+  { 0, -1, sizeof(::PSPubKey)},
+  { 10, -1, sizeof(::PSCredential)},
+  { 17, -1, sizeof(::PSCredRequest)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
-  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_PubKey_default_instance_),
-  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_Credential_default_instance_),
-  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_CredRequest_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_PSPubKey_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_PSCredential_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_PSCredRequest_default_instance_),
 };
 
 const char descriptor_table_protodef_ps_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
-  "\n\010ps.proto\"D\n\006PubKey\022\t\n\001g\030\001 \001(\014\022\n\n\002Yi\030\002 "
-  "\003(\014\022\n\n\002gg\030\003 \001(\014\022\n\n\002XX\030\004 \001(\014\022\013\n\003YYi\030\005 \003(\014"
-  "\"(\n\nCredential\022\014\n\004sig1\030\001 \001(\014\022\014\n\004sig2\030\002 \001"
-  "(\014\"[\n\013CredRequest\022\n\n\002gt\030\001 \001(\014\022\026\n\016commitm"
-  "ented_s\030\002 \001(\014\022\t\n\001a\030\003 \001(\014\022\t\n\001r\030\004 \001(\014\022\022\n\na"
-  "ttributes\030\005 \003(\tb\006proto3"
+  "\n\010ps.proto\"F\n\010PSPubKey\022\t\n\001g\030\001 \001(\014\022\n\n\002Yi\030"
+  "\002 \003(\014\022\n\n\002gg\030\003 \001(\014\022\n\n\002XX\030\004 \001(\014\022\013\n\003YYi\030\005 \003"
+  "(\014\"*\n\014PSCredential\022\014\n\004sig1\030\001 \001(\014\022\014\n\004sig2"
+  "\030\002 \001(\014\"]\n\rPSCredRequest\022\n\n\002gt\030\001 \001(\014\022\024\n\014c"
+  "_attributes\030\002 \003(\014\022\n\n\002vs\030\003 \003(\014\022\n\n\002rs\030\004 \003("
+  "\014\022\022\n\nattributes\030\005 \003(\tb\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_ps_2eproto_deps[1] = {
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_ps_2eproto_sccs[3] = {
-  &scc_info_CredRequest_ps_2eproto.base,
-  &scc_info_Credential_ps_2eproto.base,
-  &scc_info_PubKey_ps_2eproto.base,
+  &scc_info_PSCredRequest_ps_2eproto.base,
+  &scc_info_PSCredential_ps_2eproto.base,
+  &scc_info_PSPubKey_ps_2eproto.base,
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_ps_2eproto_once;
 static bool descriptor_table_ps_2eproto_initialized = false;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_ps_2eproto = {
-  &descriptor_table_ps_2eproto_initialized, descriptor_table_protodef_ps_2eproto, "ps.proto", 223,
+  &descriptor_table_ps_2eproto_initialized, descriptor_table_protodef_ps_2eproto, "ps.proto", 229,
   &descriptor_table_ps_2eproto_once, descriptor_table_ps_2eproto_sccs, descriptor_table_ps_2eproto_deps, 3, 0,
   schemas, file_default_instances, TableStruct_ps_2eproto::offsets,
   file_level_metadata_ps_2eproto, 3, file_level_enum_descriptors_ps_2eproto, file_level_service_descriptors_ps_2eproto,
@@ -142,18 +142,18 @@ static bool dynamic_init_dummy_ps_2eproto = (  ::PROTOBUF_NAMESPACE_ID::internal
 
 // ===================================================================
 
-void PubKey::InitAsDefaultInstance() {
+void PSPubKey::InitAsDefaultInstance() {
 }
-class PubKey::_Internal {
+class PSPubKey::_Internal {
  public:
 };
 
-PubKey::PubKey()
+PSPubKey::PSPubKey()
   : ::PROTOBUF_NAMESPACE_ID::Message(), _internal_metadata_(nullptr) {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:PubKey)
+  // @@protoc_insertion_point(constructor:PSPubKey)
 }
-PubKey::PubKey(const PubKey& from)
+PSPubKey::PSPubKey(const PSPubKey& from)
   : ::PROTOBUF_NAMESPACE_ID::Message(),
       _internal_metadata_(nullptr),
       yi_(from.yi_),
@@ -171,38 +171,38 @@ PubKey::PubKey(const PubKey& from)
   if (!from._internal_xx().empty()) {
     xx_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.xx_);
   }
-  // @@protoc_insertion_point(copy_constructor:PubKey)
+  // @@protoc_insertion_point(copy_constructor:PSPubKey)
 }
 
-void PubKey::SharedCtor() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_PubKey_ps_2eproto.base);
+void PSPubKey::SharedCtor() {
+  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_PSPubKey_ps_2eproto.base);
   g_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   gg_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   xx_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
-PubKey::~PubKey() {
-  // @@protoc_insertion_point(destructor:PubKey)
+PSPubKey::~PSPubKey() {
+  // @@protoc_insertion_point(destructor:PSPubKey)
   SharedDtor();
 }
 
-void PubKey::SharedDtor() {
+void PSPubKey::SharedDtor() {
   g_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   gg_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   xx_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
-void PubKey::SetCachedSize(int size) const {
+void PSPubKey::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
-const PubKey& PubKey::default_instance() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_PubKey_ps_2eproto.base);
+const PSPubKey& PSPubKey::default_instance() {
+  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_PSPubKey_ps_2eproto.base);
   return *internal_default_instance();
 }
 
 
-void PubKey::Clear() {
-// @@protoc_insertion_point(message_clear_start:PubKey)
+void PSPubKey::Clear() {
+// @@protoc_insertion_point(message_clear_start:PSPubKey)
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
@@ -215,7 +215,7 @@ void PubKey::Clear() {
   _internal_metadata_.Clear();
 }
 
-const char* PubKey::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+const char* PSPubKey::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
   while (!ctx->Done(&ptr)) {
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
@@ -292,9 +292,9 @@ failure:
 #undef CHK_
 }
 
-::PROTOBUF_NAMESPACE_ID::uint8* PubKey::_InternalSerialize(
+::PROTOBUF_NAMESPACE_ID::uint8* PSPubKey::_InternalSerialize(
     ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:PubKey)
+  // @@protoc_insertion_point(serialize_to_array_start:PSPubKey)
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -332,12 +332,12 @@ failure:
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target, stream);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:PubKey)
+  // @@protoc_insertion_point(serialize_to_array_end:PSPubKey)
   return target;
 }
 
-size_t PubKey::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:PubKey)
+size_t PSPubKey::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:PSPubKey)
   size_t total_size = 0;
 
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
@@ -390,23 +390,23 @@ size_t PubKey::ByteSizeLong() const {
   return total_size;
 }
 
-void PubKey::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:PubKey)
+void PSPubKey::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:PSPubKey)
   GOOGLE_DCHECK_NE(&from, this);
-  const PubKey* source =
-      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<PubKey>(
+  const PSPubKey* source =
+      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<PSPubKey>(
           &from);
   if (source == nullptr) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:PubKey)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:PSPubKey)
     ::PROTOBUF_NAMESPACE_ID::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:PubKey)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:PSPubKey)
     MergeFrom(*source);
   }
 }
 
-void PubKey::MergeFrom(const PubKey& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:PubKey)
+void PSPubKey::MergeFrom(const PSPubKey& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:PSPubKey)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
@@ -428,25 +428,25 @@ void PubKey::MergeFrom(const PubKey& from) {
   }
 }
 
-void PubKey::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:PubKey)
+void PSPubKey::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:PSPubKey)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void PubKey::CopyFrom(const PubKey& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:PubKey)
+void PSPubKey::CopyFrom(const PSPubKey& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:PSPubKey)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool PubKey::IsInitialized() const {
+bool PSPubKey::IsInitialized() const {
   return true;
 }
 
-void PubKey::InternalSwap(PubKey* other) {
+void PSPubKey::InternalSwap(PSPubKey* other) {
   using std::swap;
   _internal_metadata_.Swap(&other->_internal_metadata_);
   yi_.InternalSwap(&other->yi_);
@@ -459,25 +459,25 @@ void PubKey::InternalSwap(PubKey* other) {
     GetArenaNoVirtual());
 }
 
-::PROTOBUF_NAMESPACE_ID::Metadata PubKey::GetMetadata() const {
+::PROTOBUF_NAMESPACE_ID::Metadata PSPubKey::GetMetadata() const {
   return GetMetadataStatic();
 }
 
 
 // ===================================================================
 
-void Credential::InitAsDefaultInstance() {
+void PSCredential::InitAsDefaultInstance() {
 }
-class Credential::_Internal {
+class PSCredential::_Internal {
  public:
 };
 
-Credential::Credential()
+PSCredential::PSCredential()
   : ::PROTOBUF_NAMESPACE_ID::Message(), _internal_metadata_(nullptr) {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:Credential)
+  // @@protoc_insertion_point(constructor:PSCredential)
 }
-Credential::Credential(const Credential& from)
+PSCredential::PSCredential(const PSCredential& from)
   : ::PROTOBUF_NAMESPACE_ID::Message(),
       _internal_metadata_(nullptr) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
@@ -489,36 +489,36 @@ Credential::Credential(const Credential& from)
   if (!from._internal_sig2().empty()) {
     sig2_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.sig2_);
   }
-  // @@protoc_insertion_point(copy_constructor:Credential)
+  // @@protoc_insertion_point(copy_constructor:PSCredential)
 }
 
-void Credential::SharedCtor() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_Credential_ps_2eproto.base);
+void PSCredential::SharedCtor() {
+  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_PSCredential_ps_2eproto.base);
   sig1_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   sig2_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
-Credential::~Credential() {
-  // @@protoc_insertion_point(destructor:Credential)
+PSCredential::~PSCredential() {
+  // @@protoc_insertion_point(destructor:PSCredential)
   SharedDtor();
 }
 
-void Credential::SharedDtor() {
+void PSCredential::SharedDtor() {
   sig1_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   sig2_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
-void Credential::SetCachedSize(int size) const {
+void PSCredential::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
-const Credential& Credential::default_instance() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_Credential_ps_2eproto.base);
+const PSCredential& PSCredential::default_instance() {
+  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_PSCredential_ps_2eproto.base);
   return *internal_default_instance();
 }
 
 
-void Credential::Clear() {
-// @@protoc_insertion_point(message_clear_start:Credential)
+void PSCredential::Clear() {
+// @@protoc_insertion_point(message_clear_start:PSCredential)
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
@@ -528,7 +528,7 @@ void Credential::Clear() {
   _internal_metadata_.Clear();
 }
 
-const char* Credential::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+const char* PSCredential::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
   while (!ctx->Done(&ptr)) {
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
@@ -571,9 +571,9 @@ failure:
 #undef CHK_
 }
 
-::PROTOBUF_NAMESPACE_ID::uint8* Credential::_InternalSerialize(
+::PROTOBUF_NAMESPACE_ID::uint8* PSCredential::_InternalSerialize(
     ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:Credential)
+  // @@protoc_insertion_point(serialize_to_array_start:PSCredential)
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -593,12 +593,12 @@ failure:
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target, stream);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:Credential)
+  // @@protoc_insertion_point(serialize_to_array_end:PSCredential)
   return target;
 }
 
-size_t Credential::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:Credential)
+size_t PSCredential::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:PSCredential)
   size_t total_size = 0;
 
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
@@ -628,23 +628,23 @@ size_t Credential::ByteSizeLong() const {
   return total_size;
 }
 
-void Credential::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:Credential)
+void PSCredential::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:PSCredential)
   GOOGLE_DCHECK_NE(&from, this);
-  const Credential* source =
-      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<Credential>(
+  const PSCredential* source =
+      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<PSCredential>(
           &from);
   if (source == nullptr) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:Credential)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:PSCredential)
     ::PROTOBUF_NAMESPACE_ID::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:Credential)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:PSCredential)
     MergeFrom(*source);
   }
 }
 
-void Credential::MergeFrom(const Credential& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:Credential)
+void PSCredential::MergeFrom(const PSCredential& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:PSCredential)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
@@ -660,25 +660,25 @@ void Credential::MergeFrom(const Credential& from) {
   }
 }
 
-void Credential::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:Credential)
+void PSCredential::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:PSCredential)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void Credential::CopyFrom(const Credential& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:Credential)
+void PSCredential::CopyFrom(const PSCredential& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:PSCredential)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool Credential::IsInitialized() const {
+bool PSCredential::IsInitialized() const {
   return true;
 }
 
-void Credential::InternalSwap(Credential* other) {
+void PSCredential::InternalSwap(PSCredential* other) {
   using std::swap;
   _internal_metadata_.Swap(&other->_internal_metadata_);
   sig1_.Swap(&other->sig1_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
@@ -687,92 +687,77 @@ void Credential::InternalSwap(Credential* other) {
     GetArenaNoVirtual());
 }
 
-::PROTOBUF_NAMESPACE_ID::Metadata Credential::GetMetadata() const {
+::PROTOBUF_NAMESPACE_ID::Metadata PSCredential::GetMetadata() const {
   return GetMetadataStatic();
 }
 
 
 // ===================================================================
 
-void CredRequest::InitAsDefaultInstance() {
+void PSCredRequest::InitAsDefaultInstance() {
 }
-class CredRequest::_Internal {
+class PSCredRequest::_Internal {
  public:
 };
 
-CredRequest::CredRequest()
+PSCredRequest::PSCredRequest()
   : ::PROTOBUF_NAMESPACE_ID::Message(), _internal_metadata_(nullptr) {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:CredRequest)
+  // @@protoc_insertion_point(constructor:PSCredRequest)
 }
-CredRequest::CredRequest(const CredRequest& from)
+PSCredRequest::PSCredRequest(const PSCredRequest& from)
   : ::PROTOBUF_NAMESPACE_ID::Message(),
       _internal_metadata_(nullptr),
+      c_attributes_(from.c_attributes_),
+      vs_(from.vs_),
+      rs_(from.rs_),
       attributes_(from.attributes_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   gt_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   if (!from._internal_gt().empty()) {
     gt_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.gt_);
   }
-  commitmented_s_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  if (!from._internal_commitmented_s().empty()) {
-    commitmented_s_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.commitmented_s_);
-  }
-  a_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  if (!from._internal_a().empty()) {
-    a_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.a_);
-  }
-  r_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  if (!from._internal_r().empty()) {
-    r_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.r_);
-  }
-  // @@protoc_insertion_point(copy_constructor:CredRequest)
+  // @@protoc_insertion_point(copy_constructor:PSCredRequest)
 }
 
-void CredRequest::SharedCtor() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_CredRequest_ps_2eproto.base);
+void PSCredRequest::SharedCtor() {
+  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_PSCredRequest_ps_2eproto.base);
   gt_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  commitmented_s_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  a_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  r_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
-CredRequest::~CredRequest() {
-  // @@protoc_insertion_point(destructor:CredRequest)
+PSCredRequest::~PSCredRequest() {
+  // @@protoc_insertion_point(destructor:PSCredRequest)
   SharedDtor();
 }
 
-void CredRequest::SharedDtor() {
+void PSCredRequest::SharedDtor() {
   gt_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  commitmented_s_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  a_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  r_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
-void CredRequest::SetCachedSize(int size) const {
+void PSCredRequest::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
-const CredRequest& CredRequest::default_instance() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_CredRequest_ps_2eproto.base);
+const PSCredRequest& PSCredRequest::default_instance() {
+  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_PSCredRequest_ps_2eproto.base);
   return *internal_default_instance();
 }
 
 
-void CredRequest::Clear() {
-// @@protoc_insertion_point(message_clear_start:CredRequest)
+void PSCredRequest::Clear() {
+// @@protoc_insertion_point(message_clear_start:PSCredRequest)
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
+  c_attributes_.Clear();
+  vs_.Clear();
+  rs_.Clear();
   attributes_.Clear();
   gt_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  commitmented_s_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  a_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  r_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   _internal_metadata_.Clear();
 }
 
-const char* CredRequest::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+const char* PSCredRequest::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
   while (!ctx->Done(&ptr)) {
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
@@ -787,28 +772,43 @@ const char* CredRequest::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
-      // bytes commitmented_s = 2;
+      // repeated bytes c_attributes = 2;
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 18)) {
-          auto str = _internal_mutable_commitmented_s();
-          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(ptr);
+          ptr -= 1;
+          do {
+            ptr += 1;
+            auto str = _internal_add_c_attributes();
+            ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+            CHK_(ptr);
+            if (!ctx->DataAvailable(ptr)) break;
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<18>(ptr));
         } else goto handle_unusual;
         continue;
-      // bytes a = 3;
+      // repeated bytes vs = 3;
       case 3:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 26)) {
-          auto str = _internal_mutable_a();
-          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(ptr);
+          ptr -= 1;
+          do {
+            ptr += 1;
+            auto str = _internal_add_vs();
+            ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+            CHK_(ptr);
+            if (!ctx->DataAvailable(ptr)) break;
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<26>(ptr));
         } else goto handle_unusual;
         continue;
-      // bytes r = 4;
+      // repeated bytes rs = 4;
       case 4:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 34)) {
-          auto str = _internal_mutable_r();
-          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(ptr);
+          ptr -= 1;
+          do {
+            ptr += 1;
+            auto str = _internal_add_rs();
+            ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+            CHK_(ptr);
+            if (!ctx->DataAvailable(ptr)) break;
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<34>(ptr));
         } else goto handle_unusual;
         continue;
       // repeated string attributes = 5;
@@ -819,7 +819,7 @@ const char* CredRequest::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID
             ptr += 1;
             auto str = _internal_add_attributes();
             ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
-            CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "CredRequest.attributes"));
+            CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "PSCredRequest.attributes"));
             CHK_(ptr);
             if (!ctx->DataAvailable(ptr)) break;
           } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<42>(ptr));
@@ -845,9 +845,9 @@ failure:
 #undef CHK_
 }
 
-::PROTOBUF_NAMESPACE_ID::uint8* CredRequest::_InternalSerialize(
+::PROTOBUF_NAMESPACE_ID::uint8* PSCredRequest::_InternalSerialize(
     ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:CredRequest)
+  // @@protoc_insertion_point(serialize_to_array_start:PSCredRequest)
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -857,22 +857,22 @@ failure:
         1, this->_internal_gt(), target);
   }
 
-  // bytes commitmented_s = 2;
-  if (this->commitmented_s().size() > 0) {
-    target = stream->WriteBytesMaybeAliased(
-        2, this->_internal_commitmented_s(), target);
+  // repeated bytes c_attributes = 2;
+  for (int i = 0, n = this->_internal_c_attributes_size(); i < n; i++) {
+    const auto& s = this->_internal_c_attributes(i);
+    target = stream->WriteBytes(2, s, target);
   }
 
-  // bytes a = 3;
-  if (this->a().size() > 0) {
-    target = stream->WriteBytesMaybeAliased(
-        3, this->_internal_a(), target);
+  // repeated bytes vs = 3;
+  for (int i = 0, n = this->_internal_vs_size(); i < n; i++) {
+    const auto& s = this->_internal_vs(i);
+    target = stream->WriteBytes(3, s, target);
   }
 
-  // bytes r = 4;
-  if (this->r().size() > 0) {
-    target = stream->WriteBytesMaybeAliased(
-        4, this->_internal_r(), target);
+  // repeated bytes rs = 4;
+  for (int i = 0, n = this->_internal_rs_size(); i < n; i++) {
+    const auto& s = this->_internal_rs(i);
+    target = stream->WriteBytes(4, s, target);
   }
 
   // repeated string attributes = 5;
@@ -881,7 +881,7 @@ failure:
     ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
       s.data(), static_cast<int>(s.length()),
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "CredRequest.attributes");
+      "PSCredRequest.attributes");
     target = stream->WriteString(5, s, target);
   }
 
@@ -889,17 +889,41 @@ failure:
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target, stream);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:CredRequest)
+  // @@protoc_insertion_point(serialize_to_array_end:PSCredRequest)
   return target;
 }
 
-size_t CredRequest::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:CredRequest)
+size_t PSCredRequest::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:PSCredRequest)
   size_t total_size = 0;
 
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
+
+  // repeated bytes c_attributes = 2;
+  total_size += 1 *
+      ::PROTOBUF_NAMESPACE_ID::internal::FromIntSize(c_attributes_.size());
+  for (int i = 0, n = c_attributes_.size(); i < n; i++) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
+      c_attributes_.Get(i));
+  }
+
+  // repeated bytes vs = 3;
+  total_size += 1 *
+      ::PROTOBUF_NAMESPACE_ID::internal::FromIntSize(vs_.size());
+  for (int i = 0, n = vs_.size(); i < n; i++) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
+      vs_.Get(i));
+  }
+
+  // repeated bytes rs = 4;
+  total_size += 1 *
+      ::PROTOBUF_NAMESPACE_ID::internal::FromIntSize(rs_.size());
+  for (int i = 0, n = rs_.size(); i < n; i++) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
+      rs_.Get(i));
+  }
 
   // repeated string attributes = 5;
   total_size += 1 *
@@ -916,27 +940,6 @@ size_t CredRequest::ByteSizeLong() const {
         this->_internal_gt());
   }
 
-  // bytes commitmented_s = 2;
-  if (this->commitmented_s().size() > 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
-        this->_internal_commitmented_s());
-  }
-
-  // bytes a = 3;
-  if (this->a().size() > 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
-        this->_internal_a());
-  }
-
-  // bytes r = 4;
-  if (this->r().size() > 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
-        this->_internal_r());
-  }
-
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
         _internal_metadata_, total_size, &_cached_size_);
@@ -946,94 +949,82 @@ size_t CredRequest::ByteSizeLong() const {
   return total_size;
 }
 
-void CredRequest::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:CredRequest)
+void PSCredRequest::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:PSCredRequest)
   GOOGLE_DCHECK_NE(&from, this);
-  const CredRequest* source =
-      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<CredRequest>(
+  const PSCredRequest* source =
+      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<PSCredRequest>(
           &from);
   if (source == nullptr) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:CredRequest)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:PSCredRequest)
     ::PROTOBUF_NAMESPACE_ID::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:CredRequest)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:PSCredRequest)
     MergeFrom(*source);
   }
 }
 
-void CredRequest::MergeFrom(const CredRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:CredRequest)
+void PSCredRequest::MergeFrom(const PSCredRequest& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:PSCredRequest)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
+  c_attributes_.MergeFrom(from.c_attributes_);
+  vs_.MergeFrom(from.vs_);
+  rs_.MergeFrom(from.rs_);
   attributes_.MergeFrom(from.attributes_);
   if (from.gt().size() > 0) {
 
     gt_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.gt_);
   }
-  if (from.commitmented_s().size() > 0) {
-
-    commitmented_s_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.commitmented_s_);
-  }
-  if (from.a().size() > 0) {
-
-    a_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.a_);
-  }
-  if (from.r().size() > 0) {
-
-    r_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.r_);
-  }
 }
 
-void CredRequest::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:CredRequest)
+void PSCredRequest::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:PSCredRequest)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void CredRequest::CopyFrom(const CredRequest& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:CredRequest)
+void PSCredRequest::CopyFrom(const PSCredRequest& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:PSCredRequest)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool CredRequest::IsInitialized() const {
+bool PSCredRequest::IsInitialized() const {
   return true;
 }
 
-void CredRequest::InternalSwap(CredRequest* other) {
+void PSCredRequest::InternalSwap(PSCredRequest* other) {
   using std::swap;
   _internal_metadata_.Swap(&other->_internal_metadata_);
+  c_attributes_.InternalSwap(&other->c_attributes_);
+  vs_.InternalSwap(&other->vs_);
+  rs_.InternalSwap(&other->rs_);
   attributes_.InternalSwap(&other->attributes_);
   gt_.Swap(&other->gt_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
-  commitmented_s_.Swap(&other->commitmented_s_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
-    GetArenaNoVirtual());
-  a_.Swap(&other->a_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
-    GetArenaNoVirtual());
-  r_.Swap(&other->r_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
-    GetArenaNoVirtual());
 }
 
-::PROTOBUF_NAMESPACE_ID::Metadata CredRequest::GetMetadata() const {
+::PROTOBUF_NAMESPACE_ID::Metadata PSCredRequest::GetMetadata() const {
   return GetMetadataStatic();
 }
 
 
 // @@protoc_insertion_point(namespace_scope)
 PROTOBUF_NAMESPACE_OPEN
-template<> PROTOBUF_NOINLINE ::PubKey* Arena::CreateMaybeMessage< ::PubKey >(Arena* arena) {
-  return Arena::CreateInternal< ::PubKey >(arena);
+template<> PROTOBUF_NOINLINE ::PSPubKey* Arena::CreateMaybeMessage< ::PSPubKey >(Arena* arena) {
+  return Arena::CreateInternal< ::PSPubKey >(arena);
 }
-template<> PROTOBUF_NOINLINE ::Credential* Arena::CreateMaybeMessage< ::Credential >(Arena* arena) {
-  return Arena::CreateInternal< ::Credential >(arena);
+template<> PROTOBUF_NOINLINE ::PSCredential* Arena::CreateMaybeMessage< ::PSCredential >(Arena* arena) {
+  return Arena::CreateInternal< ::PSCredential >(arena);
 }
-template<> PROTOBUF_NOINLINE ::CredRequest* Arena::CreateMaybeMessage< ::CredRequest >(Arena* arena) {
-  return Arena::CreateInternal< ::CredRequest >(arena);
+template<> PROTOBUF_NOINLINE ::PSCredRequest* Arena::CreateMaybeMessage< ::PSCredRequest >(Arena* arena) {
+  return Arena::CreateInternal< ::PSCredRequest >(arena);
 }
 PROTOBUF_NAMESPACE_CLOSE
 

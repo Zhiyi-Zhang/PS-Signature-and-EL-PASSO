@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-message PubKey {
+message PSPubKey {
   bytes g = 1;
   repeated bytes Yi = 2;
   bytes gg = 3;
@@ -8,15 +8,15 @@ message PubKey {
   repeated bytes YYi = 5;
 }
 
-message Credential {
+message PSCredential {
   bytes sig1 = 1;
   bytes sig2 = 2;
 }
 
-message CredRequest {
+message PSCredRequest {
   bytes gt = 1;
-  bytes commitmented_s = 2;
-  bytes a = 3;
-  bytes r = 4;
+  repeated bytes c_attributes = 2;
+  repeated bytes vs = 3;
+  repeated bytes rs = 4;
   repeated string attributes = 5;
 }
