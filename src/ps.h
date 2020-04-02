@@ -40,7 +40,7 @@ public:
 private:
   G1 m_g;
 	G2 m_gg;
-  Fp m_x; // sk1
+  Fr m_x; // sk1
   G1 m_X; // sk2
   std::shared_ptr<PSPubKey> m_pk;
 };
@@ -61,7 +61,7 @@ public:
 
 private:
   std::shared_ptr<PSPubKey> m_pk;
-  Fp m_t;
+  Fr m_t;
 };
 
 #endif // PS_SRC_PS_H_

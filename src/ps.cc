@@ -35,8 +35,8 @@ PSSigner::key_gen(int attribute_num)
   size = XX.serialize(buf, sizeof(buf));
   pk->set_xx(buf, size);
   // y for each attribute
-  std::list<Fp> ys;
-  Fp y_item;
+  std::list<Fr> ys;
+  Fr y_item;
   for (int i = 0; i < attribute_num; i++) {
     y_item.setRand();
     ys.push_back(y_item);
@@ -71,7 +71,7 @@ PSSigner::sign_cred_request(const std::shared_ptr<PSCredRequest> request) const
   G1 c_attribute;
   G1 base;
   G1 V;
-  Fp r;
+  Fr r;
   for (int i = 0; i < request->c_attributes_size(); i++) {
     const auto& c_attribute_buf = request->c_attributes()[i];
     c_attribute.deserialize(c_attribute_buf.c_str(), c_attribute_buf.size());
@@ -106,7 +106,7 @@ PSSigner::sign_hybrid(const G1& gt,
     G1::add(commitment, commitment, attribute);
   }
   G1 after_commitment, base;
-  Fp hash;
+  Fr hash;
   int counter = 0;
   for (const auto& attribute : attributes) {
     const auto& encoded = m_pk->yi()[counter];
@@ -121,7 +121,7 @@ PSSigner::sign_hybrid(const G1& gt,
 std::shared_ptr<PSCredential>
 PSSigner::sign_commitment(const G1& commitment) const
 {
-  Fp u;
+  Fr u;
   u.setRand();
   // sig 1
   auto sig = std::make_shared<PSCredential>();
@@ -159,11 +159,11 @@ PSRequester::generate_request(const std::list<std::string> attributes_to_commit,
   G1 after_commitment;
   G1 base;
   G1 V;
-  Fp attribute_hash;
-  Fp c;
-  Fp v;
-  Fp r;
-  Fp ac;
+  Fr attribute_hash;
+  Fr c;
+  Fr v;
+  Fr r;
+  Fr ac;
   std::string schnorr_hash_str;
   cybozu::Sha256 digest_engine;
   int counter = 0;
@@ -187,8 +187,8 @@ PSRequester::generate_request(const std::list<std::string> attributes_to_commit,
     digest_engine.update(after_commitment.serializeToHexStr());
     schnorr_hash_str = digest_engine.digest("replace_with_your_id");
     c.setHashOf(schnorr_hash_str);
-    Fp::mul(ac, attribute_hash, c);
-    Fp::sub(r, v, ac);
+    Fr::mul(ac, attribute_hash, c);
+    Fr::sub(r, v, ac);
     size = r.serialize(buf, sizeof(buf));
     request->add_rs(buf, size);
   }

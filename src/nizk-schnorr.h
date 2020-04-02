@@ -8,12 +8,12 @@
 using namespace mcl::bls12;
 
 void
-nizk_schnorr_prove(const G1& g, const Fp& a,
+nizk_schnorr_prove(const G1& g, const Fr& a,
                    const std::string& associated_data,
-                   G1& A, G1& V, Fp& r);
+                   G1& A, G1& V, Fr& r);
 
 bool
 nizk_schnorr_verify(const G1& g, const G1& A, const G1& V,
-                    const Fp& r, const std::string& associated_data);
+                    const Fr& r, const std::string& associated_data);
 
 #endif // PS_SRC_NIZK_SCHNORR_H_

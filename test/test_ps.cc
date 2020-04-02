@@ -39,19 +39,19 @@ test_nizk_schnorr()
   initPairing();
   // prepare
   G1 g;
-  Fp secret;
+  Fr secret;
   hashAndMapToG1(g, "abc", 3);
   secret.setRand();
   // test
   G1 A, V;
-  Fp r;
-  nizk_schnorr_prove(g, secret, "hello world", A, V, r);
-  bool result = nizk_schnorr_verify(g, A, V, r, "hello world");
-  std::cout << result  << std::endl;
+  Fr r;
+  nizk_schnorr_prove(g, secret, "hello", A, V, r);
+  bool result = nizk_schnorr_verify(g, A, V, r, "hello");
+  std::cout << result << std::endl;
 }
 
 int main(int argc, char const *argv[])
 {
   test_nizk_schnorr();
-  // test_cred_application();
+  test_cred_application();
 }
