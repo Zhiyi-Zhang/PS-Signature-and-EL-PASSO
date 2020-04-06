@@ -20,7 +20,7 @@ PSSigner::key_gen(int attribute_num)
   size_t size = m_g.serialize(buf, sizeof(buf));
   pk->set_g(buf, size);
   // x
-  m_x.setRand();
+  m_x.setByCSPRNG();
   // X
   G1::mul(m_X, m_g, m_x);
 
@@ -38,7 +38,7 @@ PSSigner::key_gen(int attribute_num)
   std::list<Fr> ys;
   Fr y_item;
   for (int i = 0; i < attribute_num; i++) {
-    y_item.setRand();
+    y_item.setByCSPRNG();
     ys.push_back(y_item);
   }
   // Y for each attribute
@@ -118,6 +118,7 @@ PSSigner::sign_hybrid(const G1& gt,
     hash.setHashOf(attribute);
     G1::mul(after_commitment, base, hash);
     G1::add(commitment, commitment, after_commitment);
+    counter++;
   }
   return this->sign_commitment(commitment);
 }
@@ -126,7 +127,7 @@ std::shared_ptr<PSCredential>
 PSSigner::sign_commitment(const G1& commitment) const
 {
   Fr u;
-  u.setRand();
+  u.setByCSPRNG();
   // sig 1
   auto sig = std::make_shared<PSCredential>();
   G1 sig1;
@@ -137,7 +138,7 @@ PSSigner::sign_commitment(const G1& commitment) const
   G1 sig2_base, sig2;
   G1::add(sig2_base, m_X, commitment);
   G1::mul(sig2, sig2_base, u);
-  size = sig1.serialize(buf, sizeof(buf));
+  size = sig2.serialize(buf, sizeof(buf));
   sig->set_sig2(buf, size);
   return sig;
 }
@@ -155,8 +156,12 @@ PSRequester::generate_request(const std::list<std::string> attributes_to_commit,
 {
   auto request = std::make_shared<PSCredRequest>();
   // gt
-  m_t1.setRand();
+  m_t1.setByCSPRNG();
+  G1 g;
+  auto g_str = m_pk->g();
+  g.deserialize(g_str.c_str(), g_str.size());
   G1 gt;
+  G1::mul(gt, g, m_t1);
   size_t size = gt.serialize(buf, sizeof(buf));
   request->set_gt(buf, size);
   // attributes to commitment and schnorr protocol parameters
@@ -264,7 +269,7 @@ PSRequester::randomize_credential(const PSCredential& credential)
   sig1.deserialize(sig1_str.c_str(), sig1_str.size());
   sig2.deserialize(sig2_str.c_str(), sig2_str.size());
 
-  m_t2.setRand();
+  m_t2.setByCSPRNG();
   G1::mul(sig1, sig1, m_t2);
   G1::mul(sig2, sig2, m_t2);
 

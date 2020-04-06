@@ -42,14 +42,12 @@ test_cred_application()
   all_attributes.push_back("secret1");
   all_attributes.push_back("secret2");
   all_attributes.push_back("plain1");
-  if (!user.verify(*cred1, all_attributes)) {
-    std::cout << "verification raw credentail failure" << std::endl;
-  }
   auto cred2 = user.unblind_credential(*cred1);
   if (!user.verify(*cred2, all_attributes)) {
     std::cout << "verification unblinded credential failure" << std::endl;
+    return;
   }
-  std::cout << "****test_cred_application End****" << std::endl;
+  std::cout << "****test_cred_application ends without errors****" << std::endl;
 }
 
 void
@@ -69,8 +67,9 @@ test_nizk_schnorr()
   bool result = nizk_schnorr_verify(g, A, V, r, "hello");
   if (!result) {
     std::cout << "NIZK schnorr failure" << std::endl;
+    return;
   }
-  std::cout << "****test_nizk_schnorr End****" << std::endl;
+  std::cout << "****test_nizk_schnorr ends without errors****" << std::endl;
 }
 
 int main(int argc, char const *argv[])
