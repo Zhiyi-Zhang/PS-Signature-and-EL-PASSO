@@ -30,8 +30,8 @@ test_cred_application()
   std::list<std::string> attributes;
   attributes.push_back("plain1");
   auto request = user.generate_request(c_attributes, attributes);
-  std::cout << request->SerializeAsString().size() << std::endl;
-  std::cout << request->DebugString() << std::endl;
+  // std::cout << request->SerializeAsString().size() << std::endl;
+  // std::cout << request->DebugString() << std::endl;
 
   auto cred1 = idp.sign_cred_request(*request);
   if (cred1 == nullptr) {
@@ -45,6 +45,12 @@ test_cred_application()
   auto cred2 = user.unblind_credential(*cred1);
   if (!user.verify(*cred2, all_attributes)) {
     std::cout << "verification unblinded credential failure" << std::endl;
+    return;
+  }
+
+  auto cred3 = user.randomize_credential(*cred2);
+  if (!user.verify(*cred3, all_attributes)) {
+    std::cout << "verification randomized credential failure" << std::endl;
     return;
   }
   std::cout << "****test_cred_application ends without errors****" << std::endl;

@@ -22,7 +22,6 @@ nizk_schnorr_prove(const G1& g, const Fr& a,
   digest_engine.update(A.serializeToHexStr());
   auto schnorr_hash_str = digest_engine.digest(associated_data);
   m_c.setHashOf(schnorr_hash_str);
-  std::cout << m_c.serializeToHexStr() << std::endl;
   Fr::mul(m_ac, a, m_c);
   Fr::sub(r, m_v, m_ac);
 }
@@ -40,7 +39,6 @@ nizk_schnorr_verify(const G1& g, const G1& A, const G1& V,
   digest_engine.update(A.serializeToHexStr());
   auto schnorr_hash_str = digest_engine.digest(associated_data);
   m_c.setHashOf(schnorr_hash_str);
-  std::cout << m_c.serializeToHexStr() << std::endl;
   // check
   G1::mul(m_gr, g, r);
   G1::mul(m_ac, A, m_c);
