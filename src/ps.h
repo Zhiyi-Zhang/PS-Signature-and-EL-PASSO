@@ -26,16 +26,13 @@ public:
 
   // if schnorr protocol fails, a nullptr will be returned
   std::shared_ptr<PSCredential>
-  sign_cred_request(const std::shared_ptr<PSCredRequest> request) const;
+  sign_cred_request(const PSCredRequest& request) const;
 
   std::shared_ptr<PSCredential>
   sign_hybrid(const G1& gt, const std::list<G1>& c_attributes, const std::list<std::string>& attributes) const;
 
   std::shared_ptr<PSCredential>
   sign_commitment(const G1& commitment) const;
-
-  void
-  verify();
 
 private:
   G1 m_g;
@@ -57,11 +54,18 @@ public:
                    const std::list<std::string> plaintext_attributes);
 
   std::shared_ptr<PSCredential>
-  unblind_credential(const PSCredential& credential);
+  unblind_credential(const PSCredential& credential) const;
+
+  bool
+  verify(const PSCredential& credential, const std::list<std::string>& attributes) const;
+
+  std::shared_ptr<PSCredential>
+  randomize_credential(const PSCredential& credential);
 
 private:
   std::shared_ptr<PSPubKey> m_pk;
-  Fr m_t;
+  Fr m_t1; // used in commitment attributes
+  Fr m_t2; // used in randomize signature
 };
 
 #endif // PS_SRC_PS_H_
