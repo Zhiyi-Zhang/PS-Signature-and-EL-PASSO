@@ -2,17 +2,29 @@
 
 Author: Zhiyi Zhang (zhiyi@cs.ucla.edu)
 
+This library supports the use of certificates based on PS Signature.
+The certificate is privacy-preserving:
+
+* The signer cannot learn the data being signed. The signer can only verify the correctness of the data through zero-knowledge proofs.
+* Each certificate can be randomized so as to preserve certificate owner's privacy while a randomized certificate is still valid.
+
+For example, Alice wants to get a certificate for attribute `secret1`, `secret2`, and `plaintext1`.
+When applying the certificate from a CA, Alice can hide the value of hidden attributes and prove the ownership of `secret1`, `secret2` to the CA through zero-knowledge proofs.
+After CA issues Alice the certificate.
+Alice can further randomize the certificate.
+When Alice use a randomized certificate to prove her identity, even the CA cannot link this certificate with Alice.
+
 ## Quick Compile and Test
 
 ### Prerequisites
 
-#### [Google Protocol Buffer] (https://developers.google.com/protocol-buffers)
+#### 1. [Google Protocol Buffer](https://developers.google.com/protocol-buffers)
 
 The network part relies on Google's protocol buffer.
 You should install it for C++.
 Check the instructions [here](https://github.com/protocolbuffers/protobuf/tree/master/src#c-installation---unix).
 
-#### [MCL library](https://github.com/herumi/mcl).
+#### 2. [MCL library](https://github.com/herumi/mcl).
 
 First you need to install all the prerequisites of MCL library.
 Check it [here](https://github.com/herumi/mcl#installation-requirements).
