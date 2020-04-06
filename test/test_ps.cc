@@ -7,13 +7,22 @@ using namespace mcl::bls12;
 void
 test_key_gen()
 {
-  PSSigner ps;
-  auto pk = ps.key_gen(2);
-  std::cout << pk->SerializeAsString().size() << std::endl;
-  std::cout << pk->DebugString() << std::endl;
-  pk = ps.key_gen(4);
-  std::cout << pk->SerializeAsString().size() << std::endl;
-  std::cout << pk->DebugString() << std::endl;
+  std::cout << "****test_key_gen Start****" << std::endl;
+  PSSigner signer;
+  auto pk = signer.key_gen(2);
+  // std::cout << pk->SerializeAsString().size() << std::endl;
+  // std::cout << pk->DebugString() << std::endl;
+  pk = signer.key_gen(4);
+  // std::cout << pk->SerializeAsString().size() << std::endl;
+  // std::cout << pk->DebugString() << std::endl;
+
+  std::string encoded_pk = pk->SerializeAsString();
+  PSPubKey pk2;
+  if (!pk2.ParseFromString(encoded_pk)) {
+    std::cout << "Cannot decode pk correctly" << std::endl;
+    return;
+  }
+  std::cout << "****test_key_gen ends without errors****" << std::endl;
 }
 
 void
@@ -38,11 +47,11 @@ test_cred_application()
     std::cout << "sign request failure" << std::endl;
   }
 
+  auto cred2 = user.unblind_credential(*cred1);
   std::list<std::string> all_attributes;
   all_attributes.push_back("secret1");
   all_attributes.push_back("secret2");
   all_attributes.push_back("plain1");
-  auto cred2 = user.unblind_credential(*cred1);
   if (!user.verify(*cred2, all_attributes)) {
     std::cout << "verification unblinded credential failure" << std::endl;
     return;
@@ -60,12 +69,11 @@ void
 test_nizk_schnorr()
 {
   std::cout << "****test_nizk_schnorr Start****" << std::endl;
-  initPairing();
   // prepare
   G1 g;
   Fr secret;
   hashAndMapToG1(g, "abc", 3);
-  secret.setRand();
+  secret.setByCSPRNG();
   // test
   G1 A, V;
   Fr r;
@@ -80,6 +88,8 @@ test_nizk_schnorr()
 
 int main(int argc, char const *argv[])
 {
+  initPairing();
+  test_key_gen();
   test_nizk_schnorr();
   test_cred_application();
 }
