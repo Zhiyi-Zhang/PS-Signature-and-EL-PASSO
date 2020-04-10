@@ -50,7 +50,7 @@ public:
   PSRequester(const std::shared_ptr<PSPubKey>& pk);
 
   std::shared_ptr<PSCredRequest>
-  generate_request(const std::list<std::string> attributes_to_commit,
+  generate_request(const std::list<std::string> attributes_to_commitment,
                    const std::list<std::string> plaintext_attributes);
 
   std::shared_ptr<PSCredential>
@@ -61,6 +61,15 @@ public:
 
   std::shared_ptr<PSCredential>
   randomize_credential(const PSCredential& credential);
+
+  // To simplify the implementation, @p attributes_to_commitment concatenated with @p plaintext_attributes
+  // must be equal to attributes parameter used in PSRequester::verify (the order of attributes matters).
+  // Therefore, a PSRequester should divide all attributes into two sub lists (order won't change), where
+  // the first @p attributes_to_commitment.size() attributes will be hidden from the credential verifier.
+  std::shared_ptr<PSCredProof>
+  prove_credentail(const PSCredential& credential,
+                   const std::list<std::string> attributes_to_commitment,
+                   const std::list<std::string> plaintext_attributes);
 
 private:
   std::shared_ptr<PSPubKey> m_pk;

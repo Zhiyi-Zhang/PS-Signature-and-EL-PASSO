@@ -20,3 +20,13 @@ message PSCredRequest {
   repeated bytes rs = 4;
   repeated string attributes = 5;
 }
+
+message PSCredProof {
+  bytes sig1 = 1;
+  bytes sig2 = 2;
+  bytes c_t = 3;
+  repeated bytes as = 4;
+  repeated bytes vs = 5;
+  repeated bytes rs = 6;
+  repeated bytes attributes = 7;
+}

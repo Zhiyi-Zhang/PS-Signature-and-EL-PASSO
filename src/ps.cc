@@ -280,3 +280,11 @@ PSRequester::randomize_credential(const PSCredential& credential)
   randomized->set_sig2(buf, size);
   return randomized;
 }
+
+std::shared_ptr<PSCredProof>
+PSRequester::prove_credentail(const PSCredential& credential,
+                              const std::list<std::string> attributes_to_commitment,
+                              const std::list<std::string> plaintext_attributes)
+{
+  return nullptr;
+}

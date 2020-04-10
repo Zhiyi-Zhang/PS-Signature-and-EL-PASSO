@@ -47,13 +47,16 @@ struct TableStruct_ps_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxillaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[3]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[4]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
   static const ::PROTOBUF_NAMESPACE_ID::uint32 offsets[];
 };
 extern const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_ps_2eproto;
+class PSCredProof;
+class PSCredProofDefaultTypeInternal;
+extern PSCredProofDefaultTypeInternal _PSCredProof_default_instance_;
 class PSCredRequest;
 class PSCredRequestDefaultTypeInternal;
 extern PSCredRequestDefaultTypeInternal _PSCredRequest_default_instance_;
@@ -64,6 +67,7 @@ class PSPubKey;
 class PSPubKeyDefaultTypeInternal;
 extern PSPubKeyDefaultTypeInternal _PSPubKey_default_instance_;
 PROTOBUF_NAMESPACE_OPEN
+template<> ::PSCredProof* Arena::CreateMaybeMessage<::PSCredProof>(Arena*);
 template<> ::PSCredRequest* Arena::CreateMaybeMessage<::PSCredRequest>(Arena*);
 template<> ::PSCredential* Arena::CreateMaybeMessage<::PSCredential>(Arena*);
 template<> ::PSPubKey* Arena::CreateMaybeMessage<::PSPubKey>(Arena*);
@@ -681,6 +685,281 @@ class PSCredRequest :
   ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string> rs_;
   ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string> attributes_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr gt_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_ps_2eproto;
+};
+// -------------------------------------------------------------------
+
+class PSCredProof :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:PSCredProof) */ {
+ public:
+  PSCredProof();
+  virtual ~PSCredProof();
+
+  PSCredProof(const PSCredProof& from);
+  PSCredProof(PSCredProof&& from) noexcept
+    : PSCredProof() {
+    *this = ::std::move(from);
+  }
+
+  inline PSCredProof& operator=(const PSCredProof& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline PSCredProof& operator=(PSCredProof&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const PSCredProof& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const PSCredProof* internal_default_instance() {
+    return reinterpret_cast<const PSCredProof*>(
+               &_PSCredProof_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    3;
+
+  friend void swap(PSCredProof& a, PSCredProof& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(PSCredProof* other) {
+    if (other == this) return;
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline PSCredProof* New() const final {
+    return CreateMaybeMessage<PSCredProof>(nullptr);
+  }
+
+  PSCredProof* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<PSCredProof>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const PSCredProof& from);
+  void MergeFrom(const PSCredProof& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(PSCredProof* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "PSCredProof";
+  }
+  private:
+  inline ::PROTOBUF_NAMESPACE_ID::Arena* GetArenaNoVirtual() const {
+    return nullptr;
+  }
+  inline void* MaybeArenaPtr() const {
+    return nullptr;
+  }
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_ps_2eproto);
+    return ::descriptor_table_ps_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kAsFieldNumber = 4,
+    kVsFieldNumber = 5,
+    kRsFieldNumber = 6,
+    kAttributesFieldNumber = 7,
+    kSig1FieldNumber = 1,
+    kSig2FieldNumber = 2,
+    kCTFieldNumber = 3,
+  };
+  // repeated bytes as = 4;
+  int as_size() const;
+  private:
+  int _internal_as_size() const;
+  public:
+  void clear_as();
+  const std::string& as(int index) const;
+  std::string* mutable_as(int index);
+  void set_as(int index, const std::string& value);
+  void set_as(int index, std::string&& value);
+  void set_as(int index, const char* value);
+  void set_as(int index, const void* value, size_t size);
+  std::string* add_as();
+  void add_as(const std::string& value);
+  void add_as(std::string&& value);
+  void add_as(const char* value);
+  void add_as(const void* value, size_t size);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>& as() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>* mutable_as();
+  private:
+  const std::string& _internal_as(int index) const;
+  std::string* _internal_add_as();
+  public:
+
+  // repeated bytes vs = 5;
+  int vs_size() const;
+  private:
+  int _internal_vs_size() const;
+  public:
+  void clear_vs();
+  const std::string& vs(int index) const;
+  std::string* mutable_vs(int index);
+  void set_vs(int index, const std::string& value);
+  void set_vs(int index, std::string&& value);
+  void set_vs(int index, const char* value);
+  void set_vs(int index, const void* value, size_t size);
+  std::string* add_vs();
+  void add_vs(const std::string& value);
+  void add_vs(std::string&& value);
+  void add_vs(const char* value);
+  void add_vs(const void* value, size_t size);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>& vs() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>* mutable_vs();
+  private:
+  const std::string& _internal_vs(int index) const;
+  std::string* _internal_add_vs();
+  public:
+
+  // repeated bytes rs = 6;
+  int rs_size() const;
+  private:
+  int _internal_rs_size() const;
+  public:
+  void clear_rs();
+  const std::string& rs(int index) const;
+  std::string* mutable_rs(int index);
+  void set_rs(int index, const std::string& value);
+  void set_rs(int index, std::string&& value);
+  void set_rs(int index, const char* value);
+  void set_rs(int index, const void* value, size_t size);
+  std::string* add_rs();
+  void add_rs(const std::string& value);
+  void add_rs(std::string&& value);
+  void add_rs(const char* value);
+  void add_rs(const void* value, size_t size);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>& rs() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>* mutable_rs();
+  private:
+  const std::string& _internal_rs(int index) const;
+  std::string* _internal_add_rs();
+  public:
+
+  // repeated bytes attributes = 7;
+  int attributes_size() const;
+  private:
+  int _internal_attributes_size() const;
+  public:
+  void clear_attributes();
+  const std::string& attributes(int index) const;
+  std::string* mutable_attributes(int index);
+  void set_attributes(int index, const std::string& value);
+  void set_attributes(int index, std::string&& value);
+  void set_attributes(int index, const char* value);
+  void set_attributes(int index, const void* value, size_t size);
+  std::string* add_attributes();
+  void add_attributes(const std::string& value);
+  void add_attributes(std::string&& value);
+  void add_attributes(const char* value);
+  void add_attributes(const void* value, size_t size);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>& attributes() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>* mutable_attributes();
+  private:
+  const std::string& _internal_attributes(int index) const;
+  std::string* _internal_add_attributes();
+  public:
+
+  // bytes sig1 = 1;
+  void clear_sig1();
+  const std::string& sig1() const;
+  void set_sig1(const std::string& value);
+  void set_sig1(std::string&& value);
+  void set_sig1(const char* value);
+  void set_sig1(const void* value, size_t size);
+  std::string* mutable_sig1();
+  std::string* release_sig1();
+  void set_allocated_sig1(std::string* sig1);
+  private:
+  const std::string& _internal_sig1() const;
+  void _internal_set_sig1(const std::string& value);
+  std::string* _internal_mutable_sig1();
+  public:
+
+  // bytes sig2 = 2;
+  void clear_sig2();
+  const std::string& sig2() const;
+  void set_sig2(const std::string& value);
+  void set_sig2(std::string&& value);
+  void set_sig2(const char* value);
+  void set_sig2(const void* value, size_t size);
+  std::string* mutable_sig2();
+  std::string* release_sig2();
+  void set_allocated_sig2(std::string* sig2);
+  private:
+  const std::string& _internal_sig2() const;
+  void _internal_set_sig2(const std::string& value);
+  std::string* _internal_mutable_sig2();
+  public:
+
+  // bytes c_t = 3;
+  void clear_c_t();
+  const std::string& c_t() const;
+  void set_c_t(const std::string& value);
+  void set_c_t(std::string&& value);
+  void set_c_t(const char* value);
+  void set_c_t(const void* value, size_t size);
+  std::string* mutable_c_t();
+  std::string* release_c_t();
+  void set_allocated_c_t(std::string* c_t);
+  private:
+  const std::string& _internal_c_t() const;
+  void _internal_set_c_t(const std::string& value);
+  std::string* _internal_mutable_c_t();
+  public:
+
+  // @@protoc_insertion_point(class_scope:PSCredProof)
+ private:
+  class _Internal;
+
+  ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string> as_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string> vs_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string> rs_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string> attributes_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr sig1_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr sig2_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr c_t_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_ps_2eproto;
 };
@@ -1507,9 +1786,491 @@ PSCredRequest::mutable_attributes() {
   return &attributes_;
 }
 
+// -------------------------------------------------------------------
+
+// PSCredProof
+
+// bytes sig1 = 1;
+inline void PSCredProof::clear_sig1() {
+  sig1_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline const std::string& PSCredProof::sig1() const {
+  // @@protoc_insertion_point(field_get:PSCredProof.sig1)
+  return _internal_sig1();
+}
+inline void PSCredProof::set_sig1(const std::string& value) {
+  _internal_set_sig1(value);
+  // @@protoc_insertion_point(field_set:PSCredProof.sig1)
+}
+inline std::string* PSCredProof::mutable_sig1() {
+  // @@protoc_insertion_point(field_mutable:PSCredProof.sig1)
+  return _internal_mutable_sig1();
+}
+inline const std::string& PSCredProof::_internal_sig1() const {
+  return sig1_.GetNoArena();
+}
+inline void PSCredProof::_internal_set_sig1(const std::string& value) {
+  
+  sig1_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
+}
+inline void PSCredProof::set_sig1(std::string&& value) {
+  
+  sig1_.SetNoArena(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:PSCredProof.sig1)
+}
+inline void PSCredProof::set_sig1(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  sig1_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:PSCredProof.sig1)
+}
+inline void PSCredProof::set_sig1(const void* value, size_t size) {
+  
+  sig1_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:PSCredProof.sig1)
+}
+inline std::string* PSCredProof::_internal_mutable_sig1() {
+  
+  return sig1_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline std::string* PSCredProof::release_sig1() {
+  // @@protoc_insertion_point(field_release:PSCredProof.sig1)
+  
+  return sig1_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline void PSCredProof::set_allocated_sig1(std::string* sig1) {
+  if (sig1 != nullptr) {
+    
+  } else {
+    
+  }
+  sig1_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), sig1);
+  // @@protoc_insertion_point(field_set_allocated:PSCredProof.sig1)
+}
+
+// bytes sig2 = 2;
+inline void PSCredProof::clear_sig2() {
+  sig2_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline const std::string& PSCredProof::sig2() const {
+  // @@protoc_insertion_point(field_get:PSCredProof.sig2)
+  return _internal_sig2();
+}
+inline void PSCredProof::set_sig2(const std::string& value) {
+  _internal_set_sig2(value);
+  // @@protoc_insertion_point(field_set:PSCredProof.sig2)
+}
+inline std::string* PSCredProof::mutable_sig2() {
+  // @@protoc_insertion_point(field_mutable:PSCredProof.sig2)
+  return _internal_mutable_sig2();
+}
+inline const std::string& PSCredProof::_internal_sig2() const {
+  return sig2_.GetNoArena();
+}
+inline void PSCredProof::_internal_set_sig2(const std::string& value) {
+  
+  sig2_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
+}
+inline void PSCredProof::set_sig2(std::string&& value) {
+  
+  sig2_.SetNoArena(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:PSCredProof.sig2)
+}
+inline void PSCredProof::set_sig2(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  sig2_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:PSCredProof.sig2)
+}
+inline void PSCredProof::set_sig2(const void* value, size_t size) {
+  
+  sig2_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:PSCredProof.sig2)
+}
+inline std::string* PSCredProof::_internal_mutable_sig2() {
+  
+  return sig2_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline std::string* PSCredProof::release_sig2() {
+  // @@protoc_insertion_point(field_release:PSCredProof.sig2)
+  
+  return sig2_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline void PSCredProof::set_allocated_sig2(std::string* sig2) {
+  if (sig2 != nullptr) {
+    
+  } else {
+    
+  }
+  sig2_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), sig2);
+  // @@protoc_insertion_point(field_set_allocated:PSCredProof.sig2)
+}
+
+// bytes c_t = 3;
+inline void PSCredProof::clear_c_t() {
+  c_t_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline const std::string& PSCredProof::c_t() const {
+  // @@protoc_insertion_point(field_get:PSCredProof.c_t)
+  return _internal_c_t();
+}
+inline void PSCredProof::set_c_t(const std::string& value) {
+  _internal_set_c_t(value);
+  // @@protoc_insertion_point(field_set:PSCredProof.c_t)
+}
+inline std::string* PSCredProof::mutable_c_t() {
+  // @@protoc_insertion_point(field_mutable:PSCredProof.c_t)
+  return _internal_mutable_c_t();
+}
+inline const std::string& PSCredProof::_internal_c_t() const {
+  return c_t_.GetNoArena();
+}
+inline void PSCredProof::_internal_set_c_t(const std::string& value) {
+  
+  c_t_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
+}
+inline void PSCredProof::set_c_t(std::string&& value) {
+  
+  c_t_.SetNoArena(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:PSCredProof.c_t)
+}
+inline void PSCredProof::set_c_t(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  c_t_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:PSCredProof.c_t)
+}
+inline void PSCredProof::set_c_t(const void* value, size_t size) {
+  
+  c_t_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:PSCredProof.c_t)
+}
+inline std::string* PSCredProof::_internal_mutable_c_t() {
+  
+  return c_t_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline std::string* PSCredProof::release_c_t() {
+  // @@protoc_insertion_point(field_release:PSCredProof.c_t)
+  
+  return c_t_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline void PSCredProof::set_allocated_c_t(std::string* c_t) {
+  if (c_t != nullptr) {
+    
+  } else {
+    
+  }
+  c_t_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), c_t);
+  // @@protoc_insertion_point(field_set_allocated:PSCredProof.c_t)
+}
+
+// repeated bytes as = 4;
+inline int PSCredProof::_internal_as_size() const {
+  return as_.size();
+}
+inline int PSCredProof::as_size() const {
+  return _internal_as_size();
+}
+inline void PSCredProof::clear_as() {
+  as_.Clear();
+}
+inline std::string* PSCredProof::add_as() {
+  // @@protoc_insertion_point(field_add_mutable:PSCredProof.as)
+  return _internal_add_as();
+}
+inline const std::string& PSCredProof::_internal_as(int index) const {
+  return as_.Get(index);
+}
+inline const std::string& PSCredProof::as(int index) const {
+  // @@protoc_insertion_point(field_get:PSCredProof.as)
+  return _internal_as(index);
+}
+inline std::string* PSCredProof::mutable_as(int index) {
+  // @@protoc_insertion_point(field_mutable:PSCredProof.as)
+  return as_.Mutable(index);
+}
+inline void PSCredProof::set_as(int index, const std::string& value) {
+  // @@protoc_insertion_point(field_set:PSCredProof.as)
+  as_.Mutable(index)->assign(value);
+}
+inline void PSCredProof::set_as(int index, std::string&& value) {
+  // @@protoc_insertion_point(field_set:PSCredProof.as)
+  as_.Mutable(index)->assign(std::move(value));
+}
+inline void PSCredProof::set_as(int index, const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  as_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:PSCredProof.as)
+}
+inline void PSCredProof::set_as(int index, const void* value, size_t size) {
+  as_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:PSCredProof.as)
+}
+inline std::string* PSCredProof::_internal_add_as() {
+  return as_.Add();
+}
+inline void PSCredProof::add_as(const std::string& value) {
+  as_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:PSCredProof.as)
+}
+inline void PSCredProof::add_as(std::string&& value) {
+  as_.Add(std::move(value));
+  // @@protoc_insertion_point(field_add:PSCredProof.as)
+}
+inline void PSCredProof::add_as(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  as_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:PSCredProof.as)
+}
+inline void PSCredProof::add_as(const void* value, size_t size) {
+  as_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:PSCredProof.as)
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>&
+PSCredProof::as() const {
+  // @@protoc_insertion_point(field_list:PSCredProof.as)
+  return as_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>*
+PSCredProof::mutable_as() {
+  // @@protoc_insertion_point(field_mutable_list:PSCredProof.as)
+  return &as_;
+}
+
+// repeated bytes vs = 5;
+inline int PSCredProof::_internal_vs_size() const {
+  return vs_.size();
+}
+inline int PSCredProof::vs_size() const {
+  return _internal_vs_size();
+}
+inline void PSCredProof::clear_vs() {
+  vs_.Clear();
+}
+inline std::string* PSCredProof::add_vs() {
+  // @@protoc_insertion_point(field_add_mutable:PSCredProof.vs)
+  return _internal_add_vs();
+}
+inline const std::string& PSCredProof::_internal_vs(int index) const {
+  return vs_.Get(index);
+}
+inline const std::string& PSCredProof::vs(int index) const {
+  // @@protoc_insertion_point(field_get:PSCredProof.vs)
+  return _internal_vs(index);
+}
+inline std::string* PSCredProof::mutable_vs(int index) {
+  // @@protoc_insertion_point(field_mutable:PSCredProof.vs)
+  return vs_.Mutable(index);
+}
+inline void PSCredProof::set_vs(int index, const std::string& value) {
+  // @@protoc_insertion_point(field_set:PSCredProof.vs)
+  vs_.Mutable(index)->assign(value);
+}
+inline void PSCredProof::set_vs(int index, std::string&& value) {
+  // @@protoc_insertion_point(field_set:PSCredProof.vs)
+  vs_.Mutable(index)->assign(std::move(value));
+}
+inline void PSCredProof::set_vs(int index, const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  vs_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:PSCredProof.vs)
+}
+inline void PSCredProof::set_vs(int index, const void* value, size_t size) {
+  vs_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:PSCredProof.vs)
+}
+inline std::string* PSCredProof::_internal_add_vs() {
+  return vs_.Add();
+}
+inline void PSCredProof::add_vs(const std::string& value) {
+  vs_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:PSCredProof.vs)
+}
+inline void PSCredProof::add_vs(std::string&& value) {
+  vs_.Add(std::move(value));
+  // @@protoc_insertion_point(field_add:PSCredProof.vs)
+}
+inline void PSCredProof::add_vs(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  vs_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:PSCredProof.vs)
+}
+inline void PSCredProof::add_vs(const void* value, size_t size) {
+  vs_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:PSCredProof.vs)
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>&
+PSCredProof::vs() const {
+  // @@protoc_insertion_point(field_list:PSCredProof.vs)
+  return vs_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>*
+PSCredProof::mutable_vs() {
+  // @@protoc_insertion_point(field_mutable_list:PSCredProof.vs)
+  return &vs_;
+}
+
+// repeated bytes rs = 6;
+inline int PSCredProof::_internal_rs_size() const {
+  return rs_.size();
+}
+inline int PSCredProof::rs_size() const {
+  return _internal_rs_size();
+}
+inline void PSCredProof::clear_rs() {
+  rs_.Clear();
+}
+inline std::string* PSCredProof::add_rs() {
+  // @@protoc_insertion_point(field_add_mutable:PSCredProof.rs)
+  return _internal_add_rs();
+}
+inline const std::string& PSCredProof::_internal_rs(int index) const {
+  return rs_.Get(index);
+}
+inline const std::string& PSCredProof::rs(int index) const {
+  // @@protoc_insertion_point(field_get:PSCredProof.rs)
+  return _internal_rs(index);
+}
+inline std::string* PSCredProof::mutable_rs(int index) {
+  // @@protoc_insertion_point(field_mutable:PSCredProof.rs)
+  return rs_.Mutable(index);
+}
+inline void PSCredProof::set_rs(int index, const std::string& value) {
+  // @@protoc_insertion_point(field_set:PSCredProof.rs)
+  rs_.Mutable(index)->assign(value);
+}
+inline void PSCredProof::set_rs(int index, std::string&& value) {
+  // @@protoc_insertion_point(field_set:PSCredProof.rs)
+  rs_.Mutable(index)->assign(std::move(value));
+}
+inline void PSCredProof::set_rs(int index, const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  rs_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:PSCredProof.rs)
+}
+inline void PSCredProof::set_rs(int index, const void* value, size_t size) {
+  rs_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:PSCredProof.rs)
+}
+inline std::string* PSCredProof::_internal_add_rs() {
+  return rs_.Add();
+}
+inline void PSCredProof::add_rs(const std::string& value) {
+  rs_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:PSCredProof.rs)
+}
+inline void PSCredProof::add_rs(std::string&& value) {
+  rs_.Add(std::move(value));
+  // @@protoc_insertion_point(field_add:PSCredProof.rs)
+}
+inline void PSCredProof::add_rs(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  rs_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:PSCredProof.rs)
+}
+inline void PSCredProof::add_rs(const void* value, size_t size) {
+  rs_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:PSCredProof.rs)
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>&
+PSCredProof::rs() const {
+  // @@protoc_insertion_point(field_list:PSCredProof.rs)
+  return rs_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>*
+PSCredProof::mutable_rs() {
+  // @@protoc_insertion_point(field_mutable_list:PSCredProof.rs)
+  return &rs_;
+}
+
+// repeated bytes attributes = 7;
+inline int PSCredProof::_internal_attributes_size() const {
+  return attributes_.size();
+}
+inline int PSCredProof::attributes_size() const {
+  return _internal_attributes_size();
+}
+inline void PSCredProof::clear_attributes() {
+  attributes_.Clear();
+}
+inline std::string* PSCredProof::add_attributes() {
+  // @@protoc_insertion_point(field_add_mutable:PSCredProof.attributes)
+  return _internal_add_attributes();
+}
+inline const std::string& PSCredProof::_internal_attributes(int index) const {
+  return attributes_.Get(index);
+}
+inline const std::string& PSCredProof::attributes(int index) const {
+  // @@protoc_insertion_point(field_get:PSCredProof.attributes)
+  return _internal_attributes(index);
+}
+inline std::string* PSCredProof::mutable_attributes(int index) {
+  // @@protoc_insertion_point(field_mutable:PSCredProof.attributes)
+  return attributes_.Mutable(index);
+}
+inline void PSCredProof::set_attributes(int index, const std::string& value) {
+  // @@protoc_insertion_point(field_set:PSCredProof.attributes)
+  attributes_.Mutable(index)->assign(value);
+}
+inline void PSCredProof::set_attributes(int index, std::string&& value) {
+  // @@protoc_insertion_point(field_set:PSCredProof.attributes)
+  attributes_.Mutable(index)->assign(std::move(value));
+}
+inline void PSCredProof::set_attributes(int index, const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  attributes_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:PSCredProof.attributes)
+}
+inline void PSCredProof::set_attributes(int index, const void* value, size_t size) {
+  attributes_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:PSCredProof.attributes)
+}
+inline std::string* PSCredProof::_internal_add_attributes() {
+  return attributes_.Add();
+}
+inline void PSCredProof::add_attributes(const std::string& value) {
+  attributes_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:PSCredProof.attributes)
+}
+inline void PSCredProof::add_attributes(std::string&& value) {
+  attributes_.Add(std::move(value));
+  // @@protoc_insertion_point(field_add:PSCredProof.attributes)
+}
+inline void PSCredProof::add_attributes(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  attributes_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:PSCredProof.attributes)
+}
+inline void PSCredProof::add_attributes(const void* value, size_t size) {
+  attributes_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:PSCredProof.attributes)
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>&
+PSCredProof::attributes() const {
+  // @@protoc_insertion_point(field_list:PSCredProof.attributes)
+  return attributes_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>*
+PSCredProof::mutable_attributes() {
+  // @@protoc_insertion_point(field_mutable_list:PSCredProof.attributes)
+  return &attributes_;
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
