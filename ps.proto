@@ -22,11 +22,8 @@ message PSCredRequest {
 }
 
 message PSCredProof {
-  bytes sig1 = 1;
-  bytes sig2 = 2;
-  bytes c_t = 3;
-  repeated bytes as = 4;
-  repeated bytes vs = 5;
-  repeated bytes rs = 6;
-  repeated bytes attributes = 7;
+  repeated bytes as = 1;
+  repeated bytes vs = 2;
+  repeated bytes rs = 3;
+  repeated bytes attributes = 4;
 }

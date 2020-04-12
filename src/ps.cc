@@ -4,6 +4,26 @@
 char buf[1024];
 using namespace mcl::bls12;
 
+/*==============Helpers==============*/
+
+void
+_parse_credential(const PSCredential& credential, G1& sig1, G1& sig2)
+{
+  auto sig1_str = credential.sig1();
+  auto sig2_str = credential.sig2();
+  sig1.deserialize(sig1_str.c_str(), sig1_str.size());
+  sig2.deserialize(sig2_str.c_str(), sig2_str.size());
+}
+
+void
+_generate_credential(const G1& sig1, const G1& sig2, const std::shared_ptr<PSCredential>& credential)
+{
+  size_t size = sig1.serialize(buf, sizeof(buf));
+  credential->set_sig1(buf, size);
+  size = sig2.serialize(buf, sizeof(buf));
+  credential->set_sig2(buf, size);
+}
+
 /*==============PSSigner==============*/
 
 PSSigner::PSSigner()
@@ -128,18 +148,17 @@ PSSigner::sign_commitment(const G1& commitment) const
 {
   Fr u;
   u.setByCSPRNG();
+
   // sig 1
-  auto sig = std::make_shared<PSCredential>();
   G1 sig1;
   G1::mul(sig1, m_g, u);
-  size_t size = sig1.serialize(buf, sizeof(buf));
-  sig->set_sig1(buf, size);
   // sig 2
   G1 sig2_base, sig2;
   G1::add(sig2_base, m_X, commitment);
   G1::mul(sig2, sig2_base, u);
-  size = sig2.serialize(buf, sizeof(buf));
-  sig->set_sig2(buf, size);
+
+  auto sig = std::make_shared<PSCredential>();
+  _generate_credential(sig1, sig2, sig);
   return sig;
 }
 
@@ -199,19 +218,15 @@ PSRequester::unblind_credential(const PSCredential& credential) const
 {
   // unblinded_sig <- (sig_1, sig_2 - t*sig_1)
   G1 sig1, sig2;
-  auto sig1_str = credential.sig1();
-  auto sig2_str = credential.sig2();
-  sig1.deserialize(sig1_str.c_str(), sig1_str.size());
-  sig2.deserialize(sig2_str.c_str(), sig2_str.size());
+  _parse_credential(credential, sig1, sig2);
+
   G1 t_sig1;
   G1 unblinded_sig2;
   G1::mul(t_sig1, sig1, m_t1);
   G1::sub(unblinded_sig2, sig2, t_sig1);
 
-  size_t size = unblinded_sig2.serialize(buf, sizeof(buf));
   auto unblinded = std::make_shared<PSCredential>();
-  unblinded->set_sig1(sig1_str);
-  unblinded->set_sig2(buf, size);
+  _generate_credential(sig1, unblinded_sig2, unblinded);
   return unblinded;
 }
 
@@ -226,10 +241,7 @@ PSRequester::verify(const PSCredential& credential, const std::list<std::string>
   }
 
   G1 sig1, sig2;
-  auto sig1_str = credential.sig1();
-  auto sig2_str = credential.sig2();
-  sig1.deserialize(sig1_str.c_str(), sig1_str.size());
-  sig2.deserialize(sig2_str.c_str(), sig2_str.size());
+  _parse_credential(credential, sig1, sig2);
 
   if (sig1.isZero()) {
     return false;
@@ -264,27 +276,121 @@ std::shared_ptr<PSCredential>
 PSRequester::randomize_credential(const PSCredential& credential)
 {
   G1 sig1, sig2;
-  auto sig1_str = credential.sig1();
-  auto sig2_str = credential.sig2();
-  sig1.deserialize(sig1_str.c_str(), sig1_str.size());
-  sig2.deserialize(sig2_str.c_str(), sig2_str.size());
+  _parse_credential(credential, sig1, sig2);
 
-  m_t2.setByCSPRNG();
-  G1::mul(sig1, sig1, m_t2);
-  G1::mul(sig2, sig2, m_t2);
+  Fr t;
+  t.setByCSPRNG();
+  G1::mul(sig1, sig1, t);
+  G1::mul(sig2, sig2, t);
 
   auto randomized = std::make_shared<PSCredential>();
-  size_t size = sig1.serialize(buf, sizeof(buf));
-  randomized->set_sig1(buf, size);
-  size = sig2.serialize(buf, sizeof(buf));
-  randomized->set_sig2(buf, size);
+  _generate_credential(sig1, sig2, randomized);
   return randomized;
 }
 
-std::shared_ptr<PSCredProof>
-PSRequester::prove_credentail(const PSCredential& credential,
-                              const std::list<std::string> attributes_to_commitment,
-                              const std::list<std::string> plaintext_attributes)
+std::tuple<std::shared_ptr<PSCredential>, std::shared_ptr<PSCredProof>>
+PSRequester::zk_prove_credentail(const PSCredential& credential,
+                                 const std::list<std::string> attributes_to_commitment,
+                                 const std::list<std::string> plaintext_attributes,
+                                 const std::string& associated_data)
 {
-  return nullptr;
+  G1 sig1, sig2;
+  _parse_credential(credential, sig1, sig2);
+
+  // new_sig = (r*sig1, r*(sig2 + t*sig1))
+  auto randomized = std::make_shared<PSCredential>();
+  G1 new_sig1, new_sig2;
+  Fr t, r;
+  t.setByCSPRNG();
+  r.setByCSPRNG();
+  G1::mul(new_sig1, sig1, r);
+  G1::mul(sig1, sig1, t);
+  G1::add(sig2, sig2, sig1);
+  G1::mul(new_sig2, sig2, r);
+  _generate_credential(new_sig1, new_sig2, randomized);
+
+  auto proof = std::make_shared<PSCredProof>();
+  const auto& base = new_sig1;
+
+  // proofs: the first A,V,r is for t*g, the rest are for attributes
+  std::list<G1> As;
+  std::list<G1> Vs;
+  std::list<Fr> rs;
+  G1 A;
+  G1 V;
+  Fr attribute_hash;
+  nizk_schnorr_prove(base, t, associated_data, A, V, r);
+  size_t size = A.serialize(buf, sizeof(buf));
+  proof->add_as(buf, size);
+  size = V.serialize(buf, sizeof(buf));
+  proof->add_vs(buf, size);
+  size = r.serialize(buf, sizeof(buf));
+  proof->add_vs(buf, size);
+  for (const auto& attribute : attributes_to_commitment) {
+    attribute_hash.setHashOf(attribute);
+    nizk_schnorr_prove(base, attribute_hash, associated_data, A, V, r);
+    size = A.serialize(buf, sizeof(buf));
+    proof->add_as(buf, size);
+    size = V.serialize(buf, sizeof(buf));
+    proof->add_vs(buf, size);
+    size = r.serialize(buf, sizeof(buf));
+    proof->add_vs(buf, size);
+  }
+  return std::make_tuple(randomized, proof);
+}
+
+bool
+PSRequester::zk_verify_credential(const PSCredential& credential, const PSCredProof& proof,
+                                  const std::string& associated_data)
+{
+  // needed elements
+  G1 ele_3_l;
+  G2 ele_1_r, ele_3_r;
+  GT ele_1, ele_2, ele_3;
+  // parse signature
+  G1 sig1, sig2;
+  _parse_credential(credential, sig1, sig2);
+  // nizk verify
+  G1 A, V;
+  Fr r;
+  G2 yyi;
+  GT ele_2_i;
+  for (int i = 0; i < proof.as_size(); i++) {
+    const auto& A_string = proof.as()[i];
+    A.deserialize(A_string.c_str(), A_string.size());
+    const auto& V_string = proof.vs()[i];
+    V.deserialize(V_string.c_str(), V_string.size());
+    const auto& r_string = proof.rs()[i];
+    r.deserialize(r_string.c_str(), r_string.size());
+    if (!nizk_schnorr_verify(sig1, A, V, r, associated_data)) {
+      return false;
+    }
+    if (i == 0) {
+      ele_3_l = A;
+    }
+    else {
+      const auto& yyi_string = m_pk->yyi()[i - 1];
+      yyi.deserialize(yyi_string.c_str(), yyi_string.size());
+      pairing(ele_2_i, A, yyi);
+      if (i == 1) {
+        ele_2 = ele_2_i;
+      }
+      else {
+        GT::mul(ele_2, ele_2, ele_2_i);
+      }
+    }
+  }
+  // prepare for verification
+  const auto& xx_string = m_pk->xx();
+  ele_1_r.deserialize(xx_string.c_str(), xx_string.size());
+  const auto& gg_string = m_pk->gg();
+  ele_3_r.deserialize(gg_string.c_str(), gg_string.size());
+  // verification
+  GT lh, rh;
+  pairing(ele_1, sig1, ele_1_r);
+  pairing(ele_3, ele_3_l, ele_3_r);
+  GT::mul(lh, ele_1, ele_2);
+  GT::mul(lh, lh, ele_3);
+  pairing(rh, sig2, ele_3_r);
+  return lh == rh;
 }

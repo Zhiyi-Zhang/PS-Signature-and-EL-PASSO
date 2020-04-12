@@ -66,15 +66,19 @@ public:
   // must be equal to attributes parameter used in PSRequester::verify (the order of attributes matters).
   // Therefore, a PSRequester should divide all attributes into two sub lists (order won't change), where
   // the first @p attributes_to_commitment.size() attributes will be hidden from the credential verifier.
-  std::shared_ptr<PSCredProof>
-  prove_credentail(const PSCredential& credential,
-                   const std::list<std::string> attributes_to_commitment,
-                   const std::list<std::string> plaintext_attributes);
+  std::tuple<std::shared_ptr<PSCredential>, std::shared_ptr<PSCredProof>>
+  zk_prove_credentail(const PSCredential& credential,
+                      const std::list<std::string> attributes_to_commitment,
+                      const std::list<std::string> plaintext_attributes,
+                      const std::string& associated_data);
+
+  bool
+  zk_verify_credential(const PSCredential& credential, const PSCredProof& proof,
+                       const std::string& associated_data);
 
 private:
   std::shared_ptr<PSPubKey> m_pk;
   Fr m_t1; // used in commitment attributes
-  Fr m_t2; // used in randomize signature
 };
 
 #endif // PS_SRC_PS_H_

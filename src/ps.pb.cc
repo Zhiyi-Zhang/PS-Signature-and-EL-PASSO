@@ -123,9 +123,6 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_ps_2eproto::offsets[] PROTOBUF
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::PSCredProof, sig1_),
-  PROTOBUF_FIELD_OFFSET(::PSCredProof, sig2_),
-  PROTOBUF_FIELD_OFFSET(::PSCredProof, c_t_),
   PROTOBUF_FIELD_OFFSET(::PSCredProof, as_),
   PROTOBUF_FIELD_OFFSET(::PSCredProof, vs_),
   PROTOBUF_FIELD_OFFSET(::PSCredProof, rs_),
@@ -151,10 +148,9 @@ const char descriptor_table_protodef_ps_2eproto[] PROTOBUF_SECTION_VARIABLE(prot
   "(\014\"*\n\014PSCredential\022\014\n\004sig1\030\001 \001(\014\022\014\n\004sig2"
   "\030\002 \001(\014\"]\n\rPSCredRequest\022\n\n\002gt\030\001 \001(\014\022\024\n\014c"
   "_attributes\030\002 \003(\014\022\n\n\002vs\030\003 \003(\014\022\n\n\002rs\030\004 \003("
-  "\014\022\022\n\nattributes\030\005 \003(\t\"n\n\013PSCredProof\022\014\n\004"
-  "sig1\030\001 \001(\014\022\014\n\004sig2\030\002 \001(\014\022\013\n\003c_t\030\003 \001(\014\022\n\n"
-  "\002as\030\004 \003(\014\022\n\n\002vs\030\005 \003(\014\022\n\n\002rs\030\006 \003(\014\022\022\n\natt"
-  "ributes\030\007 \003(\014b\006proto3"
+  "\014\022\022\n\nattributes\030\005 \003(\t\"E\n\013PSCredProof\022\n\n\002"
+  "as\030\001 \003(\014\022\n\n\002vs\030\002 \003(\014\022\n\n\002rs\030\003 \003(\014\022\022\n\nattr"
+  "ibutes\030\004 \003(\014b\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_ps_2eproto_deps[1] = {
 };
@@ -167,7 +163,7 @@ static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_ps_
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_ps_2eproto_once;
 static bool descriptor_table_ps_2eproto_initialized = false;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_ps_2eproto = {
-  &descriptor_table_ps_2eproto_initialized, descriptor_table_protodef_ps_2eproto, "ps.proto", 341,
+  &descriptor_table_ps_2eproto_initialized, descriptor_table_protodef_ps_2eproto, "ps.proto", 300,
   &descriptor_table_ps_2eproto_once, descriptor_table_ps_2eproto_sccs, descriptor_table_ps_2eproto_deps, 4, 0,
   schemas, file_default_instances, TableStruct_ps_2eproto::offsets,
   file_level_metadata_ps_2eproto, 4, file_level_enum_descriptors_ps_2eproto, file_level_service_descriptors_ps_2eproto,
@@ -1072,26 +1068,11 @@ PSCredProof::PSCredProof(const PSCredProof& from)
       rs_(from.rs_),
       attributes_(from.attributes_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
-  sig1_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  if (!from._internal_sig1().empty()) {
-    sig1_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.sig1_);
-  }
-  sig2_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  if (!from._internal_sig2().empty()) {
-    sig2_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.sig2_);
-  }
-  c_t_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  if (!from._internal_c_t().empty()) {
-    c_t_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.c_t_);
-  }
   // @@protoc_insertion_point(copy_constructor:PSCredProof)
 }
 
 void PSCredProof::SharedCtor() {
   ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_PSCredProof_ps_2eproto.base);
-  sig1_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  sig2_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  c_t_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
 PSCredProof::~PSCredProof() {
@@ -1100,9 +1081,6 @@ PSCredProof::~PSCredProof() {
 }
 
 void PSCredProof::SharedDtor() {
-  sig1_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  sig2_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  c_t_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
 void PSCredProof::SetCachedSize(int size) const {
@@ -1124,9 +1102,6 @@ void PSCredProof::Clear() {
   vs_.Clear();
   rs_.Clear();
   attributes_.Clear();
-  sig1_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  sig2_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  c_t_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   _internal_metadata_.Clear();
 }
 
@@ -1137,33 +1112,9 @@ const char* PSCredProof::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
     CHK_(ptr);
     switch (tag >> 3) {
-      // bytes sig1 = 1;
+      // repeated bytes as = 1;
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
-          auto str = _internal_mutable_sig1();
-          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
-      // bytes sig2 = 2;
-      case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 18)) {
-          auto str = _internal_mutable_sig2();
-          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
-      // bytes c_t = 3;
-      case 3:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 26)) {
-          auto str = _internal_mutable_c_t();
-          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
-      // repeated bytes as = 4;
-      case 4:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 34)) {
           ptr -= 1;
           do {
             ptr += 1;
@@ -1171,12 +1122,12 @@ const char* PSCredProof::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID
             ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
             CHK_(ptr);
             if (!ctx->DataAvailable(ptr)) break;
-          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<34>(ptr));
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<10>(ptr));
         } else goto handle_unusual;
         continue;
-      // repeated bytes vs = 5;
-      case 5:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 42)) {
+      // repeated bytes vs = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 18)) {
           ptr -= 1;
           do {
             ptr += 1;
@@ -1184,12 +1135,12 @@ const char* PSCredProof::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID
             ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
             CHK_(ptr);
             if (!ctx->DataAvailable(ptr)) break;
-          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<42>(ptr));
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<18>(ptr));
         } else goto handle_unusual;
         continue;
-      // repeated bytes rs = 6;
-      case 6:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 50)) {
+      // repeated bytes rs = 3;
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 26)) {
           ptr -= 1;
           do {
             ptr += 1;
@@ -1197,12 +1148,12 @@ const char* PSCredProof::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID
             ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
             CHK_(ptr);
             if (!ctx->DataAvailable(ptr)) break;
-          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<50>(ptr));
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<26>(ptr));
         } else goto handle_unusual;
         continue;
-      // repeated bytes attributes = 7;
-      case 7:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 58)) {
+      // repeated bytes attributes = 4;
+      case 4:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 34)) {
           ptr -= 1;
           do {
             ptr += 1;
@@ -1210,7 +1161,7 @@ const char* PSCredProof::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID
             ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
             CHK_(ptr);
             if (!ctx->DataAvailable(ptr)) break;
-          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<58>(ptr));
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<34>(ptr));
         } else goto handle_unusual;
         continue;
       default: {
@@ -1239,46 +1190,28 @@ failure:
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // bytes sig1 = 1;
-  if (this->sig1().size() > 0) {
-    target = stream->WriteBytesMaybeAliased(
-        1, this->_internal_sig1(), target);
-  }
-
-  // bytes sig2 = 2;
-  if (this->sig2().size() > 0) {
-    target = stream->WriteBytesMaybeAliased(
-        2, this->_internal_sig2(), target);
-  }
-
-  // bytes c_t = 3;
-  if (this->c_t().size() > 0) {
-    target = stream->WriteBytesMaybeAliased(
-        3, this->_internal_c_t(), target);
-  }
-
-  // repeated bytes as = 4;
+  // repeated bytes as = 1;
   for (int i = 0, n = this->_internal_as_size(); i < n; i++) {
     const auto& s = this->_internal_as(i);
-    target = stream->WriteBytes(4, s, target);
+    target = stream->WriteBytes(1, s, target);
   }
 
-  // repeated bytes vs = 5;
+  // repeated bytes vs = 2;
   for (int i = 0, n = this->_internal_vs_size(); i < n; i++) {
     const auto& s = this->_internal_vs(i);
-    target = stream->WriteBytes(5, s, target);
+    target = stream->WriteBytes(2, s, target);
   }
 
-  // repeated bytes rs = 6;
+  // repeated bytes rs = 3;
   for (int i = 0, n = this->_internal_rs_size(); i < n; i++) {
     const auto& s = this->_internal_rs(i);
-    target = stream->WriteBytes(6, s, target);
+    target = stream->WriteBytes(3, s, target);
   }
 
-  // repeated bytes attributes = 7;
+  // repeated bytes attributes = 4;
   for (int i = 0, n = this->_internal_attributes_size(); i < n; i++) {
     const auto& s = this->_internal_attributes(i);
-    target = stream->WriteBytes(7, s, target);
+    target = stream->WriteBytes(4, s, target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -1297,7 +1230,7 @@ size_t PSCredProof::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // repeated bytes as = 4;
+  // repeated bytes as = 1;
   total_size += 1 *
       ::PROTOBUF_NAMESPACE_ID::internal::FromIntSize(as_.size());
   for (int i = 0, n = as_.size(); i < n; i++) {
@@ -1305,7 +1238,7 @@ size_t PSCredProof::ByteSizeLong() const {
       as_.Get(i));
   }
 
-  // repeated bytes vs = 5;
+  // repeated bytes vs = 2;
   total_size += 1 *
       ::PROTOBUF_NAMESPACE_ID::internal::FromIntSize(vs_.size());
   for (int i = 0, n = vs_.size(); i < n; i++) {
@@ -1313,7 +1246,7 @@ size_t PSCredProof::ByteSizeLong() const {
       vs_.Get(i));
   }
 
-  // repeated bytes rs = 6;
+  // repeated bytes rs = 3;
   total_size += 1 *
       ::PROTOBUF_NAMESPACE_ID::internal::FromIntSize(rs_.size());
   for (int i = 0, n = rs_.size(); i < n; i++) {
@@ -1321,33 +1254,12 @@ size_t PSCredProof::ByteSizeLong() const {
       rs_.Get(i));
   }
 
-  // repeated bytes attributes = 7;
+  // repeated bytes attributes = 4;
   total_size += 1 *
       ::PROTOBUF_NAMESPACE_ID::internal::FromIntSize(attributes_.size());
   for (int i = 0, n = attributes_.size(); i < n; i++) {
     total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
       attributes_.Get(i));
-  }
-
-  // bytes sig1 = 1;
-  if (this->sig1().size() > 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
-        this->_internal_sig1());
-  }
-
-  // bytes sig2 = 2;
-  if (this->sig2().size() > 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
-        this->_internal_sig2());
-  }
-
-  // bytes c_t = 3;
-  if (this->c_t().size() > 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
-        this->_internal_c_t());
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -1385,18 +1297,6 @@ void PSCredProof::MergeFrom(const PSCredProof& from) {
   vs_.MergeFrom(from.vs_);
   rs_.MergeFrom(from.rs_);
   attributes_.MergeFrom(from.attributes_);
-  if (from.sig1().size() > 0) {
-
-    sig1_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.sig1_);
-  }
-  if (from.sig2().size() > 0) {
-
-    sig2_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.sig2_);
-  }
-  if (from.c_t().size() > 0) {
-
-    c_t_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.c_t_);
-  }
 }
 
 void PSCredProof::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
@@ -1424,12 +1324,6 @@ void PSCredProof::InternalSwap(PSCredProof* other) {
   vs_.InternalSwap(&other->vs_);
   rs_.InternalSwap(&other->rs_);
   attributes_.InternalSwap(&other->attributes_);
-  sig1_.Swap(&other->sig1_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
-    GetArenaNoVirtual());
-  sig2_.Swap(&other->sig2_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
-    GetArenaNoVirtual());
-  c_t_.Swap(&other->c_t_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
-    GetArenaNoVirtual());
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata PSCredProof::GetMetadata() const {
