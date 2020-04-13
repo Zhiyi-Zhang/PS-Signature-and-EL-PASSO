@@ -1,6 +1,6 @@
 CXX = g++
 LIBS = -L/usr/local/opt/openssl/lib -lssl -lcrypto -L../mcl/lib -lmcl -lgmp `pkg-config --libs protobuf`
-CXXFLAGS = -g -std=c++11 -Wall -I./src -I../mcl/include `pkg-config --cflags protobuf`
+CXXFLAGS = -g -std=c++17 -Wall -I./src -I../mcl/include `pkg-config --cflags protobuf`
 
 VPATH = ./src ./test
 BUILDDIR = ./build

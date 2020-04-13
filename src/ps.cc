@@ -325,7 +325,7 @@ PSRequester::zk_prove_credentail(const PSCredential& credential,
   size = V.serialize(buf, sizeof(buf));
   proof->add_vs(buf, size);
   size = r.serialize(buf, sizeof(buf));
-  proof->add_vs(buf, size);
+  proof->add_rs(buf, size);
   for (const auto& attribute : attributes_to_commitment) {
     attribute_hash.setHashOf(attribute);
     nizk_schnorr_prove(base, attribute_hash, associated_data, A, V, r);
@@ -334,7 +334,11 @@ PSRequester::zk_prove_credentail(const PSCredential& credential,
     size = V.serialize(buf, sizeof(buf));
     proof->add_vs(buf, size);
     size = r.serialize(buf, sizeof(buf));
-    proof->add_vs(buf, size);
+    proof->add_rs(buf, size);
+  }
+  // plaintext attributes
+  for (const auto& attribute : plaintext_attributes) {
+    proof->add_attributes(attribute);
   }
   return std::make_tuple(randomized, proof);
 }
@@ -379,6 +383,16 @@ PSRequester::zk_verify_credential(const PSCredential& credential, const PSCredPr
         GT::mul(ele_2, ele_2, ele_2_i);
       }
     }
+  }
+  Fr attribute_hash;
+  G1 sig_attribute;
+  for (int i = 0; i < proof.attributes_size(); i++) {
+    const auto& yyi_string = m_pk->yyi()[proof.as_size() - 1 + i];
+    yyi.deserialize(yyi_string.c_str(), yyi_string.size());
+    attribute_hash.setHashOf(proof.attributes()[i]);
+    G1::mul(sig_attribute, sig1, attribute_hash);
+    pairing(ele_2_i, sig_attribute, yyi);
+    GT::mul(ele_2, ele_2, ele_2_i);
   }
   // prepare for verification
   const auto& xx_string = m_pk->xx();
