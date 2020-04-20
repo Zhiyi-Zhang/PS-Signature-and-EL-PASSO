@@ -131,6 +131,22 @@ if (!user.verify(*cred3, all_attributes)) { // verify randomized signature
 }
 ```
 
+#### 1.5 Requester: Zero-knowledge proof of the Credential
+
+Use PSRequester to zero-knowledge prove the ownership of the credential.
+In this process, the owner of the credential can decide which attributes to reveal to the verifier.
+In our current implementation, we require c_attributes + attributes must equal to all attributes and the order matters.
+
+```C++
+auto [cred3, proof] = user.zk_prove_credentail(*cred2, c_attributes, attributes, "abc");
+
+PSRequester user2(pk);
+if (!user2.zk_verify_credential(*cred3, *proof, "abc")) {
+  std::cout << "zk proof failure" << std::endl;
+  return;
+}
+```
+
 ### 2. Encoding/Decoding of Public Key, Credential Request, and Credential
 
 We use Google Protocol Buffer for encoding and decoding.
