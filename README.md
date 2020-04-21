@@ -24,35 +24,24 @@ The network part relies on Google's protocol buffer.
 You should install it for C++.
 Check the instructions [here](https://github.com/protocolbuffers/protobuf/tree/master/src#c-installation---unix).
 
-#### 2. [MCL library](https://github.com/herumi/mcl).
-
-First you need to install all the prerequisites of MCL library.
-Check it [here](https://github.com/herumi/mcl#installation-requirements).
-
-After that, create a new directory, download MCL library, and install MCL library
+### Download
 
 ```bash
-mkdir ps-sig
-cd ps-sig
-git clone git://github.com/herumi/mcl
-cd mcl
-make -j4
-make install
-```
-
-Then, go back to the `ps-sig` directory and download this repository.
-
-```bash
-cd ..
-git clone https://github.com/Zhiyi-Zhang/PSSignature.git
+git clone --recurse-submodules https://github.com/Zhiyi-Zhang/PSSignature.git
 ```
 
 ### Compile and Test
 
-Compile it.
+First, install the MCL library, which is a submodule of PSSignature.
+`make mcl` should only be called for one time.
 
 ```bash
-cd PSSignature
+make mcl
+```
+
+Then compile PSSignature.
+
+```bash
 make
 ```
 
@@ -63,7 +52,8 @@ You can re-generate them.
 make protobuf
 ```
 
-Test it.
+Otherwise you are all set.
+You can test PSSignature with `unit_tests`.
 
 ```bash
 ./unit_tests
