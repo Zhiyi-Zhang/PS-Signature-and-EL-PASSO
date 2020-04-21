@@ -1,0 +1,3 @@
+[submodule "third-parties/mcl"]
+	path = third-parties/mcl
+	url = https://github.com/herumi/mcl.git
