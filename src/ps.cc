@@ -408,3 +408,86 @@ PSRequester::zk_verify_credential(const PSCredential& credential, const PSCredPr
   pairing(rh, sig2, ele_3_r);
   return lh == rh;
 }
+
+std::tuple<std::shared_ptr<PSCredential>, std::shared_ptr<PSCredProof>, std::shared_ptr<IdRecoveryToken>>
+PSRequester::zk_prove_credentail_with_accountability(const PSCredential& credential,
+                                                     const std::list<std::string> attributes_to_commitment,
+                                                     const std::list<std::string> plaintext_attributes,
+                                                     const std::string& associated_data,
+                                                     const G1Point& authority_pk,
+                                                     const std::string& attribute_for_audit,
+                                                     const G1& g, const G1& h)
+{
+  // prepare El Gamal ciphertext and its NIZK proof
+  G1 m_pk;
+  const auto pk_str = authority_pk.g();
+  m_pk.deserialize(pk_str.c_str(), pk_str.size());
+  Fr m_r, m_attribute;
+  m_r.setByCSPRNG();
+  m_attribute.setHashOf(attribute_for_audit);
+  auto id_recovery_token = std::make_shared<IdRecoveryToken>();
+  size_t size = g.serialize(buf, sizeof(buf));
+  id_recovery_token->set_g(buf, size);
+  size = h.serialize(buf, sizeof(buf));
+  id_recovery_token->set_h(buf, size);
+  // NIZK proof of El Gamal ciphertext
+  G1 V, A;
+  Fr m_r1, m_r2;
+  // c1
+  nizk_schnorr_prove(g, m_r, associated_data, A, V, m_r1);
+  size = A.serialize(buf, sizeof(buf));
+  id_recovery_token->add_as(buf, size);
+  size = V.serialize(buf, sizeof(buf));
+  id_recovery_token->add_vs(buf, size);
+  size = m_r1.serialize(buf, sizeof(buf));
+  id_recovery_token->add_rs(buf, size);
+  // c2
+  nizk_schnorr_prove_with_two_bases(m_pk, h, m_r, m_attribute, associated_data, A, V, m_r1, m_r2);
+  size = A.serialize(buf, sizeof(buf));
+  id_recovery_token->add_as(buf, size);
+  size = V.serialize(buf, sizeof(buf));
+  id_recovery_token->add_vs(buf, size);
+  size = m_r1.serialize(buf, sizeof(buf));
+  id_recovery_token->add_rs(buf, size);
+  size = m_r2.serialize(buf, sizeof(buf));
+  id_recovery_token->add_rs(buf, size);
+  auto [cred, proof] = this->zk_prove_credentail(credential, attributes_to_commitment, plaintext_attributes, associated_data);
+  return std::make_tuple(cred, proof, id_recovery_token);
+}
+
+bool
+PSRequester::zk_verify_credential_with_accountability(const PSCredential& credential, const PSCredProof& proof,
+                                                      const IdRecoveryToken& id_recovery_token,
+                                                      const G1Point& authority_pk, const std::string& associated_data)
+{
+  G1 m_pk;
+  const auto pk_str = authority_pk.g();
+  m_pk.deserialize(pk_str.c_str(), pk_str.size());
+  // parse audit info
+  bool result = false;
+  G1 g, h;
+  const auto& g_str = id_recovery_token.g();
+  const auto& h_str = id_recovery_token.h();
+  g.deserialize(g_str.c_str(), g_str.size());
+  h.deserialize(h_str.c_str(), h_str.size());
+  // NIZK verify
+  G1 m_A, m_V;
+  Fr m_r1, m_r2;
+  for (int i = 0; i < id_recovery_token.as_size(); i++) {
+    const auto& a_str = id_recovery_token.as()[i];
+    m_A.deserialize(a_str.c_str(), a_str.size());
+    const auto& v_str = id_recovery_token.vs()[i];
+    m_V.deserialize(v_str.c_str(), v_str.size());
+    const auto& r_str = id_recovery_token.rs()[i];
+    m_r1.deserialize(r_str.c_str(), r_str.size());
+    if (i == 0) {
+      result = nizk_schnorr_verify(g, m_A, m_V, m_r1, associated_data);
+    }
+    else {
+      const auto& r2_str = id_recovery_token.rs()[i + 1];
+      m_r2.deserialize(r2_str.c_str(), r2_str.size());
+      result = result && nizk_schnorr_verify_with_two_bases(m_pk, h, m_A, m_V, m_r1, m_r2, associated_data);
+    }
+  }
+  return zk_verify_credential(credential, proof, associated_data) && result;
+}

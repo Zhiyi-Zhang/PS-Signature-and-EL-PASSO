@@ -47,13 +47,19 @@ struct TableStruct_ps_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxillaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[4]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[6]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
   static const ::PROTOBUF_NAMESPACE_ID::uint32 offsets[];
 };
 extern const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_ps_2eproto;
+class G1Point;
+class G1PointDefaultTypeInternal;
+extern G1PointDefaultTypeInternal _G1Point_default_instance_;
+class IdRecoveryToken;
+class IdRecoveryTokenDefaultTypeInternal;
+extern IdRecoveryTokenDefaultTypeInternal _IdRecoveryToken_default_instance_;
 class PSCredProof;
 class PSCredProofDefaultTypeInternal;
 extern PSCredProofDefaultTypeInternal _PSCredProof_default_instance_;
@@ -67,6 +73,8 @@ class PSPubKey;
 class PSPubKeyDefaultTypeInternal;
 extern PSPubKeyDefaultTypeInternal _PSPubKey_default_instance_;
 PROTOBUF_NAMESPACE_OPEN
+template<> ::G1Point* Arena::CreateMaybeMessage<::G1Point>(Arena*);
+template<> ::IdRecoveryToken* Arena::CreateMaybeMessage<::IdRecoveryToken>(Arena*);
 template<> ::PSCredProof* Arena::CreateMaybeMessage<::PSCredProof>(Arena*);
 template<> ::PSCredRequest* Arena::CreateMaybeMessage<::PSCredRequest>(Arena*);
 template<> ::PSCredential* Arena::CreateMaybeMessage<::PSCredential>(Arena*);
@@ -74,6 +82,141 @@ template<> ::PSPubKey* Arena::CreateMaybeMessage<::PSPubKey>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 
 // ===================================================================
+
+class G1Point :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:G1Point) */ {
+ public:
+  G1Point();
+  virtual ~G1Point();
+
+  G1Point(const G1Point& from);
+  G1Point(G1Point&& from) noexcept
+    : G1Point() {
+    *this = ::std::move(from);
+  }
+
+  inline G1Point& operator=(const G1Point& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline G1Point& operator=(G1Point&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const G1Point& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const G1Point* internal_default_instance() {
+    return reinterpret_cast<const G1Point*>(
+               &_G1Point_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    0;
+
+  friend void swap(G1Point& a, G1Point& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(G1Point* other) {
+    if (other == this) return;
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline G1Point* New() const final {
+    return CreateMaybeMessage<G1Point>(nullptr);
+  }
+
+  G1Point* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<G1Point>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const G1Point& from);
+  void MergeFrom(const G1Point& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(G1Point* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "G1Point";
+  }
+  private:
+  inline ::PROTOBUF_NAMESPACE_ID::Arena* GetArenaNoVirtual() const {
+    return nullptr;
+  }
+  inline void* MaybeArenaPtr() const {
+    return nullptr;
+  }
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_ps_2eproto);
+    return ::descriptor_table_ps_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kGFieldNumber = 1,
+  };
+  // bytes g = 1;
+  void clear_g();
+  const std::string& g() const;
+  void set_g(const std::string& value);
+  void set_g(std::string&& value);
+  void set_g(const char* value);
+  void set_g(const void* value, size_t size);
+  std::string* mutable_g();
+  std::string* release_g();
+  void set_allocated_g(std::string* g);
+  private:
+  const std::string& _internal_g() const;
+  void _internal_set_g(const std::string& value);
+  std::string* _internal_mutable_g();
+  public:
+
+  // @@protoc_insertion_point(class_scope:G1Point)
+ private:
+  class _Internal;
+
+  ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr g_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_ps_2eproto;
+};
+// -------------------------------------------------------------------
 
 class PSPubKey :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:PSPubKey) */ {
@@ -117,7 +260,7 @@ class PSPubKey :
                &_PSPubKey_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    0;
+    1;
 
   friend void swap(PSPubKey& a, PSPubKey& b) {
     a.Swap(&b);
@@ -340,7 +483,7 @@ class PSCredential :
                &_PSCredential_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    1;
+    2;
 
   friend void swap(PSCredential& a, PSCredential& b) {
     a.Swap(&b);
@@ -493,7 +636,7 @@ class PSCredRequest :
                &_PSCredRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    2;
+    3;
 
   friend void swap(PSCredRequest& a, PSCredRequest& b) {
     a.Swap(&b);
@@ -732,7 +875,7 @@ class PSCredProof :
                &_PSCredProof_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    3;
+    4;
 
   friend void swap(PSCredProof& a, PSCredProof& b) {
     a.Swap(&b);
@@ -909,6 +1052,237 @@ class PSCredProof :
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_ps_2eproto;
 };
+// -------------------------------------------------------------------
+
+class IdRecoveryToken :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:IdRecoveryToken) */ {
+ public:
+  IdRecoveryToken();
+  virtual ~IdRecoveryToken();
+
+  IdRecoveryToken(const IdRecoveryToken& from);
+  IdRecoveryToken(IdRecoveryToken&& from) noexcept
+    : IdRecoveryToken() {
+    *this = ::std::move(from);
+  }
+
+  inline IdRecoveryToken& operator=(const IdRecoveryToken& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline IdRecoveryToken& operator=(IdRecoveryToken&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const IdRecoveryToken& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const IdRecoveryToken* internal_default_instance() {
+    return reinterpret_cast<const IdRecoveryToken*>(
+               &_IdRecoveryToken_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    5;
+
+  friend void swap(IdRecoveryToken& a, IdRecoveryToken& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(IdRecoveryToken* other) {
+    if (other == this) return;
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline IdRecoveryToken* New() const final {
+    return CreateMaybeMessage<IdRecoveryToken>(nullptr);
+  }
+
+  IdRecoveryToken* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<IdRecoveryToken>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const IdRecoveryToken& from);
+  void MergeFrom(const IdRecoveryToken& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(IdRecoveryToken* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "IdRecoveryToken";
+  }
+  private:
+  inline ::PROTOBUF_NAMESPACE_ID::Arena* GetArenaNoVirtual() const {
+    return nullptr;
+  }
+  inline void* MaybeArenaPtr() const {
+    return nullptr;
+  }
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_ps_2eproto);
+    return ::descriptor_table_ps_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kAsFieldNumber = 3,
+    kVsFieldNumber = 4,
+    kRsFieldNumber = 5,
+    kGFieldNumber = 1,
+    kHFieldNumber = 2,
+  };
+  // repeated bytes as = 3;
+  int as_size() const;
+  private:
+  int _internal_as_size() const;
+  public:
+  void clear_as();
+  const std::string& as(int index) const;
+  std::string* mutable_as(int index);
+  void set_as(int index, const std::string& value);
+  void set_as(int index, std::string&& value);
+  void set_as(int index, const char* value);
+  void set_as(int index, const void* value, size_t size);
+  std::string* add_as();
+  void add_as(const std::string& value);
+  void add_as(std::string&& value);
+  void add_as(const char* value);
+  void add_as(const void* value, size_t size);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>& as() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>* mutable_as();
+  private:
+  const std::string& _internal_as(int index) const;
+  std::string* _internal_add_as();
+  public:
+
+  // repeated bytes vs = 4;
+  int vs_size() const;
+  private:
+  int _internal_vs_size() const;
+  public:
+  void clear_vs();
+  const std::string& vs(int index) const;
+  std::string* mutable_vs(int index);
+  void set_vs(int index, const std::string& value);
+  void set_vs(int index, std::string&& value);
+  void set_vs(int index, const char* value);
+  void set_vs(int index, const void* value, size_t size);
+  std::string* add_vs();
+  void add_vs(const std::string& value);
+  void add_vs(std::string&& value);
+  void add_vs(const char* value);
+  void add_vs(const void* value, size_t size);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>& vs() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>* mutable_vs();
+  private:
+  const std::string& _internal_vs(int index) const;
+  std::string* _internal_add_vs();
+  public:
+
+  // repeated bytes rs = 5;
+  int rs_size() const;
+  private:
+  int _internal_rs_size() const;
+  public:
+  void clear_rs();
+  const std::string& rs(int index) const;
+  std::string* mutable_rs(int index);
+  void set_rs(int index, const std::string& value);
+  void set_rs(int index, std::string&& value);
+  void set_rs(int index, const char* value);
+  void set_rs(int index, const void* value, size_t size);
+  std::string* add_rs();
+  void add_rs(const std::string& value);
+  void add_rs(std::string&& value);
+  void add_rs(const char* value);
+  void add_rs(const void* value, size_t size);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>& rs() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>* mutable_rs();
+  private:
+  const std::string& _internal_rs(int index) const;
+  std::string* _internal_add_rs();
+  public:
+
+  // bytes g = 1;
+  void clear_g();
+  const std::string& g() const;
+  void set_g(const std::string& value);
+  void set_g(std::string&& value);
+  void set_g(const char* value);
+  void set_g(const void* value, size_t size);
+  std::string* mutable_g();
+  std::string* release_g();
+  void set_allocated_g(std::string* g);
+  private:
+  const std::string& _internal_g() const;
+  void _internal_set_g(const std::string& value);
+  std::string* _internal_mutable_g();
+  public:
+
+  // bytes h = 2;
+  void clear_h();
+  const std::string& h() const;
+  void set_h(const std::string& value);
+  void set_h(std::string&& value);
+  void set_h(const char* value);
+  void set_h(const void* value, size_t size);
+  std::string* mutable_h();
+  std::string* release_h();
+  void set_allocated_h(std::string* h);
+  private:
+  const std::string& _internal_h() const;
+  void _internal_set_h(const std::string& value);
+  std::string* _internal_mutable_h();
+  public:
+
+  // @@protoc_insertion_point(class_scope:IdRecoveryToken)
+ private:
+  class _Internal;
+
+  ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string> as_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string> vs_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string> rs_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr g_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr h_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_ps_2eproto;
+};
 // ===================================================================
 
 
@@ -918,6 +1292,70 @@ class PSCredProof :
   #pragma GCC diagnostic push
   #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif  // __GNUC__
+// G1Point
+
+// bytes g = 1;
+inline void G1Point::clear_g() {
+  g_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline const std::string& G1Point::g() const {
+  // @@protoc_insertion_point(field_get:G1Point.g)
+  return _internal_g();
+}
+inline void G1Point::set_g(const std::string& value) {
+  _internal_set_g(value);
+  // @@protoc_insertion_point(field_set:G1Point.g)
+}
+inline std::string* G1Point::mutable_g() {
+  // @@protoc_insertion_point(field_mutable:G1Point.g)
+  return _internal_mutable_g();
+}
+inline const std::string& G1Point::_internal_g() const {
+  return g_.GetNoArena();
+}
+inline void G1Point::_internal_set_g(const std::string& value) {
+  
+  g_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
+}
+inline void G1Point::set_g(std::string&& value) {
+  
+  g_.SetNoArena(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:G1Point.g)
+}
+inline void G1Point::set_g(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  g_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:G1Point.g)
+}
+inline void G1Point::set_g(const void* value, size_t size) {
+  
+  g_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:G1Point.g)
+}
+inline std::string* G1Point::_internal_mutable_g() {
+  
+  return g_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline std::string* G1Point::release_g() {
+  // @@protoc_insertion_point(field_release:G1Point.g)
+  
+  return g_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline void G1Point::set_allocated_g(std::string* g) {
+  if (g != nullptr) {
+    
+  } else {
+    
+  }
+  g_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), g);
+  // @@protoc_insertion_point(field_set_allocated:G1Point.g)
+}
+
+// -------------------------------------------------------------------
+
 // PSPubKey
 
 // bytes g = 1;
@@ -2032,9 +2470,359 @@ PSCredProof::mutable_attributes() {
   return &attributes_;
 }
 
+// -------------------------------------------------------------------
+
+// IdRecoveryToken
+
+// bytes g = 1;
+inline void IdRecoveryToken::clear_g() {
+  g_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline const std::string& IdRecoveryToken::g() const {
+  // @@protoc_insertion_point(field_get:IdRecoveryToken.g)
+  return _internal_g();
+}
+inline void IdRecoveryToken::set_g(const std::string& value) {
+  _internal_set_g(value);
+  // @@protoc_insertion_point(field_set:IdRecoveryToken.g)
+}
+inline std::string* IdRecoveryToken::mutable_g() {
+  // @@protoc_insertion_point(field_mutable:IdRecoveryToken.g)
+  return _internal_mutable_g();
+}
+inline const std::string& IdRecoveryToken::_internal_g() const {
+  return g_.GetNoArena();
+}
+inline void IdRecoveryToken::_internal_set_g(const std::string& value) {
+  
+  g_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
+}
+inline void IdRecoveryToken::set_g(std::string&& value) {
+  
+  g_.SetNoArena(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:IdRecoveryToken.g)
+}
+inline void IdRecoveryToken::set_g(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  g_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:IdRecoveryToken.g)
+}
+inline void IdRecoveryToken::set_g(const void* value, size_t size) {
+  
+  g_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:IdRecoveryToken.g)
+}
+inline std::string* IdRecoveryToken::_internal_mutable_g() {
+  
+  return g_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline std::string* IdRecoveryToken::release_g() {
+  // @@protoc_insertion_point(field_release:IdRecoveryToken.g)
+  
+  return g_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline void IdRecoveryToken::set_allocated_g(std::string* g) {
+  if (g != nullptr) {
+    
+  } else {
+    
+  }
+  g_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), g);
+  // @@protoc_insertion_point(field_set_allocated:IdRecoveryToken.g)
+}
+
+// bytes h = 2;
+inline void IdRecoveryToken::clear_h() {
+  h_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline const std::string& IdRecoveryToken::h() const {
+  // @@protoc_insertion_point(field_get:IdRecoveryToken.h)
+  return _internal_h();
+}
+inline void IdRecoveryToken::set_h(const std::string& value) {
+  _internal_set_h(value);
+  // @@protoc_insertion_point(field_set:IdRecoveryToken.h)
+}
+inline std::string* IdRecoveryToken::mutable_h() {
+  // @@protoc_insertion_point(field_mutable:IdRecoveryToken.h)
+  return _internal_mutable_h();
+}
+inline const std::string& IdRecoveryToken::_internal_h() const {
+  return h_.GetNoArena();
+}
+inline void IdRecoveryToken::_internal_set_h(const std::string& value) {
+  
+  h_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
+}
+inline void IdRecoveryToken::set_h(std::string&& value) {
+  
+  h_.SetNoArena(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:IdRecoveryToken.h)
+}
+inline void IdRecoveryToken::set_h(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  h_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:IdRecoveryToken.h)
+}
+inline void IdRecoveryToken::set_h(const void* value, size_t size) {
+  
+  h_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:IdRecoveryToken.h)
+}
+inline std::string* IdRecoveryToken::_internal_mutable_h() {
+  
+  return h_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline std::string* IdRecoveryToken::release_h() {
+  // @@protoc_insertion_point(field_release:IdRecoveryToken.h)
+  
+  return h_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline void IdRecoveryToken::set_allocated_h(std::string* h) {
+  if (h != nullptr) {
+    
+  } else {
+    
+  }
+  h_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), h);
+  // @@protoc_insertion_point(field_set_allocated:IdRecoveryToken.h)
+}
+
+// repeated bytes as = 3;
+inline int IdRecoveryToken::_internal_as_size() const {
+  return as_.size();
+}
+inline int IdRecoveryToken::as_size() const {
+  return _internal_as_size();
+}
+inline void IdRecoveryToken::clear_as() {
+  as_.Clear();
+}
+inline std::string* IdRecoveryToken::add_as() {
+  // @@protoc_insertion_point(field_add_mutable:IdRecoveryToken.as)
+  return _internal_add_as();
+}
+inline const std::string& IdRecoveryToken::_internal_as(int index) const {
+  return as_.Get(index);
+}
+inline const std::string& IdRecoveryToken::as(int index) const {
+  // @@protoc_insertion_point(field_get:IdRecoveryToken.as)
+  return _internal_as(index);
+}
+inline std::string* IdRecoveryToken::mutable_as(int index) {
+  // @@protoc_insertion_point(field_mutable:IdRecoveryToken.as)
+  return as_.Mutable(index);
+}
+inline void IdRecoveryToken::set_as(int index, const std::string& value) {
+  // @@protoc_insertion_point(field_set:IdRecoveryToken.as)
+  as_.Mutable(index)->assign(value);
+}
+inline void IdRecoveryToken::set_as(int index, std::string&& value) {
+  // @@protoc_insertion_point(field_set:IdRecoveryToken.as)
+  as_.Mutable(index)->assign(std::move(value));
+}
+inline void IdRecoveryToken::set_as(int index, const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  as_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:IdRecoveryToken.as)
+}
+inline void IdRecoveryToken::set_as(int index, const void* value, size_t size) {
+  as_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:IdRecoveryToken.as)
+}
+inline std::string* IdRecoveryToken::_internal_add_as() {
+  return as_.Add();
+}
+inline void IdRecoveryToken::add_as(const std::string& value) {
+  as_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:IdRecoveryToken.as)
+}
+inline void IdRecoveryToken::add_as(std::string&& value) {
+  as_.Add(std::move(value));
+  // @@protoc_insertion_point(field_add:IdRecoveryToken.as)
+}
+inline void IdRecoveryToken::add_as(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  as_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:IdRecoveryToken.as)
+}
+inline void IdRecoveryToken::add_as(const void* value, size_t size) {
+  as_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:IdRecoveryToken.as)
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>&
+IdRecoveryToken::as() const {
+  // @@protoc_insertion_point(field_list:IdRecoveryToken.as)
+  return as_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>*
+IdRecoveryToken::mutable_as() {
+  // @@protoc_insertion_point(field_mutable_list:IdRecoveryToken.as)
+  return &as_;
+}
+
+// repeated bytes vs = 4;
+inline int IdRecoveryToken::_internal_vs_size() const {
+  return vs_.size();
+}
+inline int IdRecoveryToken::vs_size() const {
+  return _internal_vs_size();
+}
+inline void IdRecoveryToken::clear_vs() {
+  vs_.Clear();
+}
+inline std::string* IdRecoveryToken::add_vs() {
+  // @@protoc_insertion_point(field_add_mutable:IdRecoveryToken.vs)
+  return _internal_add_vs();
+}
+inline const std::string& IdRecoveryToken::_internal_vs(int index) const {
+  return vs_.Get(index);
+}
+inline const std::string& IdRecoveryToken::vs(int index) const {
+  // @@protoc_insertion_point(field_get:IdRecoveryToken.vs)
+  return _internal_vs(index);
+}
+inline std::string* IdRecoveryToken::mutable_vs(int index) {
+  // @@protoc_insertion_point(field_mutable:IdRecoveryToken.vs)
+  return vs_.Mutable(index);
+}
+inline void IdRecoveryToken::set_vs(int index, const std::string& value) {
+  // @@protoc_insertion_point(field_set:IdRecoveryToken.vs)
+  vs_.Mutable(index)->assign(value);
+}
+inline void IdRecoveryToken::set_vs(int index, std::string&& value) {
+  // @@protoc_insertion_point(field_set:IdRecoveryToken.vs)
+  vs_.Mutable(index)->assign(std::move(value));
+}
+inline void IdRecoveryToken::set_vs(int index, const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  vs_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:IdRecoveryToken.vs)
+}
+inline void IdRecoveryToken::set_vs(int index, const void* value, size_t size) {
+  vs_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:IdRecoveryToken.vs)
+}
+inline std::string* IdRecoveryToken::_internal_add_vs() {
+  return vs_.Add();
+}
+inline void IdRecoveryToken::add_vs(const std::string& value) {
+  vs_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:IdRecoveryToken.vs)
+}
+inline void IdRecoveryToken::add_vs(std::string&& value) {
+  vs_.Add(std::move(value));
+  // @@protoc_insertion_point(field_add:IdRecoveryToken.vs)
+}
+inline void IdRecoveryToken::add_vs(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  vs_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:IdRecoveryToken.vs)
+}
+inline void IdRecoveryToken::add_vs(const void* value, size_t size) {
+  vs_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:IdRecoveryToken.vs)
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>&
+IdRecoveryToken::vs() const {
+  // @@protoc_insertion_point(field_list:IdRecoveryToken.vs)
+  return vs_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>*
+IdRecoveryToken::mutable_vs() {
+  // @@protoc_insertion_point(field_mutable_list:IdRecoveryToken.vs)
+  return &vs_;
+}
+
+// repeated bytes rs = 5;
+inline int IdRecoveryToken::_internal_rs_size() const {
+  return rs_.size();
+}
+inline int IdRecoveryToken::rs_size() const {
+  return _internal_rs_size();
+}
+inline void IdRecoveryToken::clear_rs() {
+  rs_.Clear();
+}
+inline std::string* IdRecoveryToken::add_rs() {
+  // @@protoc_insertion_point(field_add_mutable:IdRecoveryToken.rs)
+  return _internal_add_rs();
+}
+inline const std::string& IdRecoveryToken::_internal_rs(int index) const {
+  return rs_.Get(index);
+}
+inline const std::string& IdRecoveryToken::rs(int index) const {
+  // @@protoc_insertion_point(field_get:IdRecoveryToken.rs)
+  return _internal_rs(index);
+}
+inline std::string* IdRecoveryToken::mutable_rs(int index) {
+  // @@protoc_insertion_point(field_mutable:IdRecoveryToken.rs)
+  return rs_.Mutable(index);
+}
+inline void IdRecoveryToken::set_rs(int index, const std::string& value) {
+  // @@protoc_insertion_point(field_set:IdRecoveryToken.rs)
+  rs_.Mutable(index)->assign(value);
+}
+inline void IdRecoveryToken::set_rs(int index, std::string&& value) {
+  // @@protoc_insertion_point(field_set:IdRecoveryToken.rs)
+  rs_.Mutable(index)->assign(std::move(value));
+}
+inline void IdRecoveryToken::set_rs(int index, const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  rs_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:IdRecoveryToken.rs)
+}
+inline void IdRecoveryToken::set_rs(int index, const void* value, size_t size) {
+  rs_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:IdRecoveryToken.rs)
+}
+inline std::string* IdRecoveryToken::_internal_add_rs() {
+  return rs_.Add();
+}
+inline void IdRecoveryToken::add_rs(const std::string& value) {
+  rs_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:IdRecoveryToken.rs)
+}
+inline void IdRecoveryToken::add_rs(std::string&& value) {
+  rs_.Add(std::move(value));
+  // @@protoc_insertion_point(field_add:IdRecoveryToken.rs)
+}
+inline void IdRecoveryToken::add_rs(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  rs_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:IdRecoveryToken.rs)
+}
+inline void IdRecoveryToken::add_rs(const void* value, size_t size) {
+  rs_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:IdRecoveryToken.rs)
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>&
+IdRecoveryToken::rs() const {
+  // @@protoc_insertion_point(field_list:IdRecoveryToken.rs)
+  return rs_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>*
+IdRecoveryToken::mutable_rs() {
+  // @@protoc_insertion_point(field_mutable_list:IdRecoveryToken.rs)
+  return &rs_;
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

@@ -1,5 +1,9 @@
 syntax = "proto3";
 
+message G1Point {
+  bytes g = 1;
+}
+
 message PSPubKey {
   bytes g = 1;
   repeated bytes Yi = 2;
@@ -26,4 +30,12 @@ message PSCredProof {
   repeated bytes vs = 2;
   repeated bytes rs = 3;
   repeated bytes attributes = 4;
+}
+
+message IdRecoveryToken {
+  bytes g = 1;
+  bytes h = 2;
+  repeated bytes as = 3;
+  repeated bytes vs = 4;
+  repeated bytes rs = 5;
 }
