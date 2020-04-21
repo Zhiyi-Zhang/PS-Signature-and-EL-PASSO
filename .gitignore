@@ -1,4 +1,4 @@
 .vscode
 build
 *.o
-test_ps
+unit_tests

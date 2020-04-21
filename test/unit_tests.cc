@@ -53,13 +53,13 @@ test_cred_application()
   all_attributes.push_back("secret2");
   all_attributes.push_back("plain1");
   if (!user.verify(*cred2, all_attributes)) {
-    std::cout << "verification unblinded credential failure" << std::endl;
+    std::cout << "unblinded credential verification failure" << std::endl;
     return;
   }
 
   auto cred3 = user.randomize_credential(*cred2);
   if (!user.verify(*cred3, all_attributes)) {
-    std::cout << "verification randomized credential failure" << std::endl;
+    std::cout << "randomized credential verification failure" << std::endl;
     return;
   }
   std::cout << "****test_cred_application ends without errors****\n" << std::endl;
@@ -103,7 +103,7 @@ test_nizk_schnorr_with_two_bases()
   nizk_schnorr_prove_with_two_bases(g, h, secret1, secret2, "hello", A, V, r1, r2);
   bool result = nizk_schnorr_verify_with_two_bases(g, h, A, V, r1, r2, "hello");
   if (!result) {
-    std::cout << "NIZK schnorr failure" << std::endl;
+    std::cout << "NIZK schnorr verification failure" << std::endl;
     return;
   }
   std::cout << "****test_nizk_schnorr_with_two_bases ends without errors****\n" << std::endl;
@@ -135,14 +135,14 @@ test_zk_sig_prove()
   all_attributes.push_back("secret2");
   all_attributes.push_back("plain1");
   if (!user.verify(*cred2, all_attributes)) {
-    std::cout << "verification unblinded credential failure" << std::endl;
+    std::cout << "unblinded credential verification failure" << std::endl;
     return;
   }
 
   auto [cred3, proof]  = user.zk_prove_credentail(*cred2, c_attributes, attributes, "abc");
   PSRequester user2(pk);
   if (!user2.zk_verify_credential(*cred3, *proof, "abc")) {
-    std::cout << "zk proof failure" << std::endl;
+    std::cout << "zk verification failure" << std::endl;
     return;
   }
 

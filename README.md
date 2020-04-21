@@ -50,6 +50,7 @@ git clone https://github.com/Zhiyi-Zhang/PSSignature.git
 ### Compile and Test
 
 Compile it.
+
 ```bash
 cd PSSignature
 make
@@ -57,13 +58,15 @@ make
 
 If you encountered any issues with Protocol Buffers used in `ps.pb.cc` and `ps.pb.h`.
 You can re-generate them.
-```
+
+```bash
 make protobuf
 ```
 
 Test it.
+
 ```bash
-./test-ps
+./unit_tests
 ```
 
 ## Documentation

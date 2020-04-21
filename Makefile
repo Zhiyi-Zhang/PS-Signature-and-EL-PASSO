@@ -5,8 +5,8 @@ CXXFLAGS = -g -std=c++17 -Wall -I./src -I../mcl/include `pkg-config --cflags pro
 VPATH = ./src ./test
 BUILDDIR = ./build
 
-PROGRAMS = test_ps
-OBJECTS = test_ps.o ps.o ps.pb.o nizk-schnorr.o
+PROGRAMS = unit_tests
+OBJECTS = unit_tests.o ps.o ps.pb.o nizk-schnorr.o
 
 all: $(PROGRAMS)
 
@@ -16,7 +16,7 @@ protobuf: ps.proto
 %.o: %.cc
 	$(CXX) $(CXXFLAGS) -c -o $@ $< $(LIBS)
 
-test_ps: $(OBJECTS)
+unit_tests: $(OBJECTS)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LIBS)
 
 clean:
