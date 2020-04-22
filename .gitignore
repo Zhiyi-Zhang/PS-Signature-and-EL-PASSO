@@ -2,3 +2,8 @@
 build
 *.o
 unit_tests
+*.bc
+*.wasm
+*.js
+*.a
+*.so
