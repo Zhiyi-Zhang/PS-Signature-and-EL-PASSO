@@ -4,6 +4,5 @@
 #include <ps.h>
 #include <nizk-schnorr.h>
 
-// @todo check how WASM works
 
 #endif

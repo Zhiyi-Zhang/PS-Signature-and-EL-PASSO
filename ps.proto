@@ -6,9 +6,9 @@ message G1Point {
 
 message PSPubKey {
   bytes g = 1;
-  repeated bytes Yi = 2;
-  bytes gg = 3;
-  bytes XX = 4;
+  bytes gg = 2;
+  bytes XX = 3;
+  repeated bytes Yi = 4;
   repeated bytes YYi = 5;
 }
 
@@ -18,11 +18,10 @@ message PSCredential {
 }
 
 message PSCredRequest {
-  bytes gt = 1;
-  repeated bytes c_attributes = 2;
-  repeated bytes vs = 3;
-  repeated bytes rs = 4;
-  repeated string attributes = 5;
+  bytes A = 1;
+  bytes c = 2;
+  repeated bytes rs = 3;
+  repeated string attributes = 4;
 }
 
 message PSCredProof {

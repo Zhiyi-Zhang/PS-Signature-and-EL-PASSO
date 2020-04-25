@@ -5,13 +5,13 @@ CXXFLAGS = -g -std=c++17 -Wall -I./src -I./third-parties/mcl/include -DMCL_DONT_
 VPATH = ./src ./test
 BUILDDIR = ./build
 
-PROGRAMS = unit_tests
-OBJECTS = unit_tests.o ps.o ps.pb.o nizk-schnorr.o
-BC_OBJECTS = wasm_test_nizk.bc nizk-schnorr.bc
+PROGRAMS = ps-tests encoding-tests
+OBJECTS = ps-tests.o ps.o
+OBJECTS_PROTOBUF = encoding-test.o ps.pb.o ps.o protobuf-encoding.o
 
 all: $(PROGRAMS)
 
-.PHONY: clean mcl emar_mcl
+.PHONY: unit-tests clean mcl emar_mcl
 
 mcl:
 	./install-mcl.sh
@@ -22,7 +22,12 @@ protobuf: ps.proto
 %.o: %.cc
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-unit_tests: $(OBJECTS)
+unit-tests: $(PROGRAMS)
+
+ps-tests: $(OBJECTS)
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LIBS)
+
+encoding-tests: $(OBJECTS_PROTOBUF)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LIBS)
 
 # **********************************WASM************************************

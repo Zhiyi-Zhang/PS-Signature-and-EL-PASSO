@@ -1,4 +1,5 @@
 #include "nizk-schnorr.h"
+#include <cybozu/sha2.hpp>
 #include <iostream>
 
 using namespace mcl::bls12;
@@ -6,9 +7,9 @@ using namespace mcl::bls12;
 // Prerequisite: initPairing()
 
 void
-nizk_schnorr_prove(const G1& g, const Fr& a,
-                   const std::string& associated_data,
-                   G1& A, G1& V, Fr& r)
+nizk_schnorr_prove_fr(const G1& g, const Fr& a,
+                      const std::string& associated_data,
+                      G1& A, G1& V, Fr& r)
 {
   Fr m_v, m_c, m_ac;
   G1::mul(A, g, a);
@@ -27,8 +28,8 @@ nizk_schnorr_prove(const G1& g, const Fr& a,
 }
 
 bool
-nizk_schnorr_verify(const G1& g, const G1& A, const G1& V,
-                    const Fr& r, const std::string& associated_data)
+nizk_schnorr_verify_fr(const G1& g, const G1& A, const G1& V,
+                       const Fr& r, const std::string& associated_data)
 {
   G1 m_result, m_gr, m_ac;
   Fr m_c;
