@@ -13,8 +13,6 @@ using namespace mcl::bls12;
 class PSSigner
 {
 public:
-  typedef std::unique_ptr<PSSigner> Ptr;
-
   PSSigner(size_t attribute_num, const G1& g, const G2& gg);
 
   std::tuple<G1, G2, G2, std::vector<G1>, std::vector<G2>>
@@ -50,72 +48,108 @@ private:
 class PSRequester
 {
 public:
-  typedef std::unique_ptr<PSRequester> Ptr;
-
   PSRequester();
 
+  /**
+   * Add PS public key.
+   * This function should be called before any other PS related functions.
+   *
+   * @p g, input, generator of G1.
+   * @p gg, input, generator of G2.
+   * @p XX, input, gg^x, a point in G2.
+   * @p Yi, input, g^yi, points in G1. Yi.size() is the fixed based on PS public key's allowed attribute size.
+   * @p YYi, input, gg^yi, points in G2. Yi.size() is the fixed based on PS public key's allowed attribute size.
+   */
   void
   init_with_pk(const G1& g, const G2& gg, const G2& XX,
                const std::vector<G1>& Yi, const std::vector<G2>& YYi);
 
+  /**
+   * Generate a request along with a NIZK proof for a PSSigner to sign over requester's
+   * blinded attributes and plaintext attributes.
+   *
+   * @p attributes, input, user's attributes in the format of tuple<std::string, bool>.
+   *   - std::string, the value of the attribute.
+   *   - bool, true if the attribute should be commitmented.
+   * @p associated_data, input, used for NIZK Schnorr verification.
+   * @return
+   *   - G1, A, commitmented attributes
+   *   - Fr, c, used for NIZK Schnorr verification.
+   *   - std::vector<Fr>, rs, used for NIZK Schnorr verification.
+   *   - std::vector<std::string>, attributes, attributes that only contain plaintext attributes
+   *     and "" for commitmented attributes. The order of attributes is the same as @p attributes.
+   */
   std::tuple<G1, Fr, std::vector<Fr>, std::vector<std::string>>
   generate_request(const std::vector<std::tuple<std::string, bool>> attributes, // string is the attribute, bool whether to hide
                    const std::string& associated_data);
 
+  /**
+   * Unblind the signature after the PSSigner signs requester's attribtues.
+   *
+   * @p sig1, the PS signature returned by the PSSigner, part one.
+   * @p sig2, the PS signature returned by the PSSigner, part two.
+   * @return
+   *   - G1, unblinded PS signature, part one.
+   *   - G1, unblinded PS signature, part two.
+   */
   std::tuple<G1, G1>
   unblind_credential(const G1& sig1, const G1& sig2) const;
 
+  /**
+   * Verify the signature over the given attributes (all in plaintext).
+   *
+   * @p sig1, the PS signature, part one.
+   * @p sig2, the PS signature, part two.
+   * @p all_attributes, the attributes in the same order as when the PS signature is requested.
+   *                    All in plaintext.
+   * @return true if the signature is valid.
+   */
   bool
   verify(const G1& sig1, const G1& sig2, const std::vector<std::string>& all_attributes) const;
 
+  /**
+   * Randomize a signature.
+   *
+   * @p sig1, the PS signature, part one.
+   * @p sig2, the PS signature, part two.
+   * @return
+   *   - G1, randomized PS signature, part one.
+   *   - G1, randomized PS signature, part two.
+   */
   std::tuple<G1, G1>
   randomize_credential(const G1& sig1, const G1& sig2) const;
 
-  // /**
-  //  * Generate NIZK proof of the credential.
-  //  * To simplify the implementation, @p attributes_to_commitment concatenated with @p plaintext_attributes
-  //  * must be equal to attributes parameter used in PSRequester::verify (the order of attributes matters).
-  //  * Therefore, a PSRequester should divide all attributes into two sub lists (order won't change), where
-  //  * the first @p attributes_to_commitment.size() attributes will be hidden from the credential verifier.
-  //  *
-  //  * @p credential, input, the PS signature to prove
-  //  * @p attributes_to_commitment, input, the attributes to hide from the verifier
-  //  * @p plaintext_attributes, input, the attribtues to disclose to the verifier
-  //  * @p associated_data, input, an associated data bound with the NIZK proof used for authentication
-  //  * @return a tuple of the randomized credential and the proof of the credential
-  //  */
-  // std::tuple<std::shared_ptr<PSCredential>, std::shared_ptr<PSCredProof>>
-  // zk_prove_credentail(const PSCredential& credential,
-  //                     const std::list<std::string> attributes_to_commitment,
-  //                     const std::list<std::string> plaintext_attributes,
-  //                     const std::string& associated_data);
-
-  // /**
-  //  * Verify the NIZK proof of the credential.
-  //  *
-  //  * @p credential, input, a randomized PS signature
-  //  * @p proof, input, the NIZK proof of the PS signature
-  //  * @p associated_data, input, an associated data bound with the NIZK proof used for authentication
-  //  * @return true if verification succeeds; otherwise, return false
-  //  */
-  // bool
-  // zk_verify_credential(const PSCredential& credential, const PSCredProof& proof,
-  //                      const std::string& associated_data);
-
-  // /**
-  //  * Generate NIZK proof of the credential and a identity recovery token.
-  //  * Only the accountabilty authority can recover prover's identity from the identity recovery token.
-  //  *
-  //  * @p credential, input, the PS signature to prove
-  //  * @p attributes_to_commitment, input, the attributes to hide from the verifier
-  //  * @p plaintext_attributes, input, the attribtues to disclose to the verifier
-  //  * @p associated_data, input, an associated data bound with the NIZK proof used for authentication
-  //  * @p authority_pk, input, the EL Gamal public key (a G1 point) of an accountability authority
-  //  * @p identity_attribute, input, the identity attribute to hide in the identity recovery token, must be a attribute in @p attributes_to_commitment
-  //  * @p g, input, a G1 point that both prover and verifier agree on for NIZK of the identity recovery token
-  //  * @p h, input, a G1 point that both prover and verifier agree on for NIZK of the identity recovery token
-  //  * @return a tuple of the randomized credential, the proof of the credential, and an identity recovery secret with its proof
-  //  */
+  /**
+   * EL PASSO ProveID
+   * This function will generate:
+   *   -# a randomized PS signature (random_sig1, random_sig2).
+   *   -# a unique ID (phi) of the user derived from RP's service name and user's primary secret.
+   *   -# an identity recovery token (E1, E2) that can only be decrypted by the authority.
+   *   -# an NIZK proof of the PS signature, recovery token, and phi.
+   *   -# a list of attributes where the commitmented attribute slot is "" and plaintext attribute is the full attribute.
+   *
+   * @p sig1, input, the original PS signature, first part.
+   * @p sig2, input, the original PS signature, second part.
+   * @p attributes, input, user's attributes in the format of tuple<std::string, bool>.
+   *   - std::string, the value of the attribute.
+   *   - bool, true if the attribute should be commitmented.
+   * @p associated_data, input, an associated data (e.g., session ID) bound with the NIZK proof used for authentication.
+   * @p service_name, input, the RP's service name, e.g., RP's domain name.
+   * @p authority_pk, input, the EL Gamal public key (a G1 point) of an accountability authority.
+   * @p g, input, a G1 point that both prover and verifier agree on for NIZK of the identity recovery token
+   * @p h, input, a G1 point that both prover and verifier agree on for NIZK of the identity recovery token
+   * @return
+   *   - G1, random_sig1, randomized signature, first part.
+   *   - G1, random_sig2, randomized signature, second part.
+   *   - G2, k, a part of the public value used for signature verification and NIZK Schnorr verification.
+   *   - G1, phi, user's unique ID at RP.
+   *   - G1, E1, El Gamal ciphertext as the identity recovery token, first part.
+   *   - G1, E2, El Gamal ciphertext as the identity recovery token, second part.
+   *   - Fr, c, used for NIZK Schnorr verification.
+   *   - std::vector<Fr>, rs, used for NIZK Schnorr verification.
+   *   - std::vector<std::string>, attributes, attributes that only contain plaintext attributes
+   *     and "" for commitmented attributes. The order of attributes is the same as @p attributes.
+   */
   std::tuple<G1, G1, G2, G1, G1, G1, Fr, std::vector<Fr>, std::vector<std::string>> // sig1, sig2, k, phi, E1, E2, c, rs
   el_passo_prove_id(const G1& sig1, const G1& sig2,
                     const std::vector<std::tuple<std::string, bool>> attributes,
@@ -123,22 +157,41 @@ public:
                     const std::string& service_name,
                     const G1& authority_pk, const G1& g, const G1& h);
 
-  // /**
-  //  * Verify the NIZK proof of the credential and the identity recovery token is correctly generated.
-  //  * This function only verify the @p id_recovery_token is correctly generated. It cannot recover prover's identity.
-  //  * Only the accountabilty authority can recover prover's identity.
-  //  *
-  //  * @p credential, input, a randomized PS signature
-  //  * @p proof, input, the NIZK proof of the PS signature
-  //  * @p id_recovery_token, input, the identity recovery token that can only be parsed by the accountability authority
-  //  * @p authority_pk, input, the EL Gamal public key (a G1 point) of an accountability authority
-  //  * @p associated_data, input, an associated data bound with the NIZK proof used for authentication
-  //  * @return true if verification succeeds; otherwise, return false
-  //  */
-  // bool
-  // zk_verify_credential_with_accountability(const PSCredential& credential, const PSCredProof& proof,
-  //                                          const IdRecoveryToken& id_recovery_token,
-  //                                          const G1Point& authority_pk, const std::string& associated_data);
+  /**
+   * EL PASSO VerifyID
+   * This function will:
+   *  -# verify the NIZK proof of the PS signature, ID recovery token, and Phi.
+   *  -# verify the PS signature over the commitmented attributes and the plaintext attributes.
+   *
+   * @p sig1, input, the randomized PS signature, first part.
+   * @p sig2, input, the randomized PS signature, second part.
+   * @p k, input, used for signature verification and NIZK Schnorr verification.
+   * @p phi, input, user's unique ID at RP.
+   * @p E1, input, El Gamal ciphertext as the identity recovery token, first part.
+   * @p E2, input, El Gamal ciphertext as the identity recovery token, second part.
+   * @p c, input, used for NIZK Schnorr verification.
+   * @p rs, input, used for NIZK Schnorr verification.
+   * @p attributes, input, user's attributes including
+   *   - "" represents those commitmented attributes.
+   *   - normal plaintext attributes.
+   * @p associated_data, input, an associated data (e.g., session ID) bound with the NIZK proof used for authentication.
+   * @p service_name, input, the RP's service name, e.g., RP's domain name.
+   * @p authority_pk, input, the EL Gamal public key (a G1 point) of an accountability authority.
+   * @p g, input, a G1 point that both prover and verifier agree on for NIZK of the identity recovery token
+   * @p h, input, a G1 point that both prover and verifier agree on for NIZK of the identity recovery token
+   * @return true if both the NIZK proof and signature are valid.
+   */
+  bool
+  el_passo_verify_id(const G1& sig1, const G1& sig2, const G2& k, const G1& phi,
+                     const G1& E1, const G1& E2, const Fr& c,
+                     const std::vector<Fr>& rsize_t, const std::vector<std::string>& attributes,
+                     const std::string& associated_data,
+                     const std::string& service_name,
+                     const G1& authority_pk, const G1& g, const G1& h);
+
+private:
+  G2
+  prepare_hybrid_verification(const G2& k, const std::vector<std::string>& attributes) const;
 
 private:
   G1 m_g; // G1 generator

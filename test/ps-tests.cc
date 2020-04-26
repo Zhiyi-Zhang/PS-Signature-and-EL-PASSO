@@ -82,6 +82,18 @@ test_el_passo()
         prove_id_E2, prove_id_c, prove_id_rs, prove_id_plaintext_attributes] =
       user.el_passo_prove_id(ubld_sig1, ubld_sig2, attributes, "hello", "service", authority_pk, g, h);
 
+  PSRequester rp;
+  rp.init_with_pk(pk_g, pk_gg, pk_XX, pk_Yi, pk_YYi);
+
+  bool result = rp.el_passo_verify_id(
+      prove_id_sig1, prove_id_sig2, prove_id_k, prove_id_phi, prove_id_E1,
+      prove_id_E2, prove_id_c, prove_id_rs, prove_id_plaintext_attributes,
+      "hello", "service", authority_pk, g, h);
+
+  if (!result) {
+    std::cout << "EL PASSO Verify ID failed" << std::endl;
+  }
+
   std::cout << "****test_el_passo ends without errors****\n" << std::endl;
 }
 
