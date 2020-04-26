@@ -19,12 +19,11 @@ test_ps_sign_verify()
   PSRequester user;
   protobuf_decode_ps_pk(*pk_msg, pk_g, pk_gg, pk_XX, pk_Yi, pk_YYi);
   user.init_with_pk(pk_g, pk_gg, pk_XX, pk_Yi, pk_YYi);
-  std::vector<std::string> c_attributes;
-  c_attributes.push_back("secret1");
-  c_attributes.push_back("secret2");
-  std::vector<std::string> attributes;
-  attributes.push_back("plain1");
-  auto [request_A, request_c, request_rs, request_attributes] = user.generate_request(c_attributes, attributes, "hello");
+  std::vector<std::tuple<std::string, bool>> attributes;
+  attributes.push_back(std::make_tuple("secret1", true));
+  attributes.push_back(std::make_tuple("secret2", true));
+  attributes.push_back(std::make_tuple("plain1", false));
+  auto [request_A, request_c, request_rs, request_attributes] = user.generate_request(attributes, "hello");
   auto request_msg = protobuf_encode_sign_request(request_A, request_c, request_rs, request_attributes);
 
   protobuf_decode_sign_request(*request_msg, request_A, request_c, request_rs, request_attributes);

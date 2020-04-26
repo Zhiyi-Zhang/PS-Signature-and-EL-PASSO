@@ -22,12 +22,12 @@ public:
 
   bool
   sign_cred_request(const G1& A, const Fr& c, const std::vector<Fr>& rs,
-                    const std::vector<std::string>& plaintext_attributes,
+                    const std::vector<std::string>& attributes,
                     const std::string& associated_data, G1& sig1, G1& sig2) const;
 
   bool
   nizk_verify_request(const G1& A, const Fr& c, const std::vector<Fr>& rs,
-                      const std::vector<std::string>& plaintext_attributes,
+                      const std::vector<std::string>& attributes,
                       const std::string& associated_data) const;
 
   std::tuple<G1, G1>
@@ -59,8 +59,7 @@ public:
                const std::vector<G1>& Yi, const std::vector<G2>& YYi);
 
   std::tuple<G1, Fr, std::vector<Fr>, std::vector<std::string>>
-  generate_request(const std::vector<std::string> attributes_to_commitment,
-                   const std::vector<std::string> plaintext_attributes,
+  generate_request(const std::vector<std::tuple<std::string, bool>> attributes, // string is the attribute, bool whether to hide
                    const std::string& associated_data);
 
   std::tuple<G1, G1>
@@ -117,12 +116,12 @@ public:
   //  * @p h, input, a G1 point that both prover and verifier agree on for NIZK of the identity recovery token
   //  * @return a tuple of the randomized credential, the proof of the credential, and an identity recovery secret with its proof
   //  */
-  // std::tuple<Fr, G2, std::vector<Fr>> // c, k, v,
-  // zk_prove_credentail_with_accountability(const PSCredential& credential,
-  //                                         const std::list<std::string> attributes_to_commitment,
-  //                                         const std::list<std::string> plaintext_attributes,
-  //                                         const std::string& associated_data, const G1Point& authority_pk,
-  //                                         const std::string& identity_attribute, const G1& g, const G1& h);
+  std::tuple<G1, G1, G2, G1, G1, G1, Fr, std::vector<Fr>, std::vector<std::string>> // sig1, sig2, k, phi, E1, E2, c, rs
+  el_passo_prove_id(const G1& sig1, const G1& sig2,
+                    const std::vector<std::tuple<std::string, bool>> attributes,
+                    const std::string& associated_data,
+                    const std::string& service_name,
+                    const G1& authority_pk, const G1& g, const G1& h);
 
   // /**
   //  * Verify the NIZK proof of the credential and the identity recovery token is correctly generated.
