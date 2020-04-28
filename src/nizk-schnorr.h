@@ -16,12 +16,4 @@ bool
 nizk_schnorr_verify_fr(const G1& g, const G1& A, const G1& V,
                        const Fr& r, const std::string& associated_data);
 
-void
-nizk_schnorr_prove_with_two_bases(const G1& g, const G1& h, const Fr& a, const Fr& b, const std::string& associated_data,
-                                  G1& A, G1& V, Fr& r1, Fr& r2);
-
-bool
-nizk_schnorr_verify_with_two_bases(const G1& g, const G1& h, const G1& A, const G1& V, Fr& r1, Fr& r2,
-                                   const std::string& associated_data);
-
 #endif // PS_SRC_NIZK_SCHNORR_H_

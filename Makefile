@@ -41,17 +41,17 @@ EMCC_OPT += -DCYBOZU_MINIMUM_EXCEPTION
 EMCC_OPT += -s ABORTING_MALLOC=0
 MCL_C_DEP = $(MCL_DIR)/src/fp.cpp $(MCL_DIR)/include/mcl/impl/bn_c_impl.hpp $(MCL_DIR)/include/mcl/bn.hpp $(MCL_DIR)/include/mcl/fp.hpp $(MCL_DIR)/include/mcl/op.hpp
 
-bls12_381.bc: wasm/bls12-381.cpp $(MCL_C_DEP)
-	emcc -c -o $@ wasm/bls12-381.cpp $(EMCC_OPT) -DMCL_MAX_BIT_SIZE=256 -DMCL_USE_WEB_CRYPTO_API -s DISABLE_EXCEPTION_CATCHING=1 -DCYBOZU_DONT_USE_EXCEPTION -DCYBOZU_DONT_USE_STRING -fno-exceptions
+# bls12_381.bc:  $(MCL_C_DEP)
+# 	emcc -c -o $@ wasm/bls12-381.cpp $(EMCC_OPT) -DMCL_MAX_BIT_SIZE=256 -DMCL_USE_WEB_CRYPTO_API -s DISABLE_EXCEPTION_CATCHING=1 -DCYBOZU_DONT_USE_EXCEPTION -DCYBOZU_DONT_USE_STRING -fno-exceptions
 
-fp.bc: wasm/bls12-381.cpp $(MCL_C_DEP)
-	emcc -c -o $@ $(MCL_DIR)/src/fp.cpp $(EMCC_OPT) -DMCL_MAX_BIT_SIZE=256 -DMCL_USE_WEB_CRYPTO_API -s DISABLE_EXCEPTION_CATCHING=1 -DCYBOZU_DONT_USE_EXCEPTION -DCYBOZU_DONT_USE_STRING -fno-exceptions
+# fp.bc: wasm/bls12-381.cpp $(MCL_C_DEP)
+# 	emcc -c -o $@ $(MCL_DIR)/src/fp.cpp $(EMCC_OPT) -DMCL_MAX_BIT_SIZE=256 -DMCL_USE_WEB_CRYPTO_API -s DISABLE_EXCEPTION_CATCHING=1 -DCYBOZU_DONT_USE_EXCEPTION -DCYBOZU_DONT_USE_STRING -fno-exceptions
 
-%.bc: %.cc
-	$(EMCC) $(EMCC_OPT) -c -o $@ $<
+# %.bc: %.cc
+# 	$(EMCC) $(EMCC_OPT) -c -o $@ $<
 
-wasm_test_nizk.js : bls12_381.bc fp.bc $(BC_OBJECTS)
-	$(EMCC) $(EMCC_OPT) fp.bc bls12_381.bc -o $@ $^
+ps.js : src/ps.cc $(MCL_C_DEP)
+	$(EMCC) -o $@ wasm/bls12-381.cpp $(MCL_DIR)/src/fp.cpp src/ps.cc $(EMCC_OPT) -DMCL_MAX_BIT_SIZE=256 -DMCL_USE_WEB_CRYPTO_API -s DISABLE_EXCEPTION_CATCHING=1 -DCYBOZU_DONT_USE_EXCEPTION -DCYBOZU_DONT_USE_STRING -fno-exceptions
 
 clean:
 	rm -f $(OBJECTS)
