@@ -1,9 +1,10 @@
 .vscode
 build
 *.o
-unit_tests
 *.bc
 *.wasm
 *.js
 *.a
 *.so
+ps-tests
+encoding-tests
