@@ -59,6 +59,41 @@ You can test PSSignature with `unit_tests`.
 ./unit_tests
 ```
 
+## Web Assembly
+
+Our library supports the use of Web Assembly (WASM) so that web applications can use the PS Signature and EL PASSO system.
+
+To compile the PS signature test file into a HTML and test it with your browser.
+
+```bash
+make ps-tests.html
+```
+
+After this step, you should have a `ps-tests.js`, `ps-tests.wasm`, and `ps-tests.html` in your directory.
+To check the output in the browser, you can serve the html with python or python3
+
+```bash
+python -m SimpleHTTPServer 8080
+```
+
+or
+
+```bash
+python3 -m http.server 8080
+```
+
+After that, you can open your browser and visit `http://0.0.0.0:8080/ps-tests.html`.
+
+### Compile ps.js
+
+To compile the PS code into a piece of JS code:
+
+```bash
+make ps.js
+```
+
+After that, you will get a `ps.js` and a `ps.wasm`. You can develop your own JS code and use `ps.js` for your application.
+
 ## Documentation (Doc is out of date for now)
 
 This library mainly provides following supports.
