@@ -31,7 +31,7 @@ PSSigner::key_gen()
   Fr y_item;
   G1 Y_item;
   G2 YY_item;
-  for (int i = 0; i < m_attribute_num; i++) {
+  for (size_t i = 0; i < m_attribute_num; i++) {
     y_item.setByCSPRNG();
     G1::mul(Y_item, m_g, y_item);
     m_pk_Yi.push_back(Y_item);
@@ -68,7 +68,7 @@ PSSigner::nizk_verify_request(const G1& A, const Fr& c, const std::vector<Fr>& r
   G1::mul(_temp, m_g, rs[0]);
   G1::add(_V, _V, _temp);
   int j = 1;
-  for (int i = 0; i < attributes.size(); i++) {
+  for (size_t i = 0; i < attributes.size(); i++) {
     if (attributes[i] == "") {
       G1::mul(_temp, m_pk_Yi[i], rs[j]);
       j++;
@@ -98,7 +98,7 @@ PSSigner::sign_hybrid(const G1& A, const std::vector<std::string>& attributes) c
   G1 _final_A = A;
   G1 _temp_yi_hash;
   Fr _temp_hash;
-  for (int i = 0; i < attributes.size(); i++) {
+  for (size_t i = 0; i < attributes.size(); i++) {
     if (attributes[i] == "") {
       continue;
     }
@@ -174,7 +174,7 @@ PSRequester::generate_request(const std::vector<std::tuple<std::string, bool>> a
   // prepare for V
   G1 _V;
   G1::mul(_V, m_g, _temp_randomness);
-  for (int i = 0; i < attributes.size(); i++) {
+  for (size_t i = 0; i < attributes.size(); i++) {
     if (std::get<1>(attributes[i])) {
       // this attribute needs to be commitmented
       // calculate A
@@ -204,7 +204,7 @@ PSRequester::generate_request(const std::vector<std::tuple<std::string, bool>> a
   Fr::mul(_r_temp, m_t1, _c);
   Fr::sub(_r_temp, _randomnesses[0], _r_temp);
   _rs.push_back(_r_temp);
-  for (int i = 0; i < _attribute_hashes.size(); i++) {
+  for (size_t i = 0; i < _attribute_hashes.size(); i++) {
     Fr::mul(_r_temp, _attribute_hashes[i], _c);
     Fr::sub(_r_temp, _randomnesses[i + 1], _r_temp);
     _rs.push_back(_r_temp);
@@ -212,7 +212,7 @@ PSRequester::generate_request(const std::vector<std::tuple<std::string, bool>> a
   // plaintext attributes
   std::vector<std::string> _plaintext_attributes;
   _plaintext_attributes.reserve(attributes.size());
-  for (int i = 0; i < attributes.size(); i++) {
+  for (size_t i = 0; i < attributes.size(); i++) {
     if (std::get<1>(attributes[i])) {
       _plaintext_attributes.push_back("");
     }
@@ -310,7 +310,7 @@ PSRequester::el_passo_prove_id(const G1& sig1, const G1& sig2,
   G2 _yy_hash;
   std::vector<Fr> _attribute_hashes;
   _attribute_hashes.reserve(attributes.size());
-  for (int i = 0; i < attributes.size(); i++) {
+  for (size_t i = 0; i < attributes.size(); i++) {
     if (std::get<1>(attributes[i])) {
       _attribute_hash.setHashOf(std::get<0>(attributes[i]));
       _attribute_hashes.push_back(_attribute_hash);
@@ -348,7 +348,7 @@ PSRequester::el_passo_prove_id(const G1& sig1, const G1& sig2,
   Fr _temp_randomness;
   G2 _yy_randomness;
   _randomnesses.reserve(attributes.size() + 2);
-  for (int i = 0; i < attributes.size(); i++) {
+  for (size_t i = 0; i < attributes.size(); i++) {
     if (std::get<1>(attributes[i])) {
       _temp_randomness.setByCSPRNG();
       _randomnesses.push_back(_temp_randomness);
@@ -401,7 +401,7 @@ PSRequester::el_passo_prove_id(const G1& sig1, const G1& sig2,
   Fr _temp_r;
   Fr _secret_c;
   _rs.reserve(attributes.size() + 3);
-  for (int i = 0; i < _attribute_hashes.size(); i++) {
+  for (size_t i = 0; i < _attribute_hashes.size(); i++) {
     Fr::mul(_secret_c, _attribute_hashes[i], _c);
     Fr::sub(_temp_r, _randomnesses[i], _secret_c);
     _rs.push_back(_temp_r);
@@ -416,7 +416,7 @@ PSRequester::el_passo_prove_id(const G1& sig1, const G1& sig2,
   // plaintext attributes
   std::vector<std::string> _plaintext_attributes;
   _plaintext_attributes.reserve(attributes.size());
-  for (int i = 0; i < attributes.size(); i++) {
+  for (size_t i = 0; i < attributes.size(); i++) {
     if (std::get<1>(attributes[i])) {
       _plaintext_attributes.push_back("");
     }
@@ -466,7 +466,7 @@ PSRequester::el_passo_verify_id(const G1& sig1, const G1& sig2, const G2& k, con
   G2::mul(_V_k, k, c);
   int counter = 0;
   G2 _base_r;
-  for (int i = 0; i < attributes.size(); i++) {
+  for (size_t i = 0; i < attributes.size(); i++) {
     if (attributes[i] == "") {
       G2::mul(_base_r, m_pk_YYi[i], rs[counter]);
       counter++;
@@ -536,7 +536,7 @@ PSRequester::prepare_hybrid_verification(const G2& k, const std::vector<std::str
   G2 _final_k = k;
   G2 _temp_yyi_hash;
   Fr _temp_hash;
-  for (int i = 0; i < attributes.size(); i++) {
+  for (size_t i = 0; i < attributes.size(); i++) {
     if (attributes[i] == "") {
       continue;
     }
