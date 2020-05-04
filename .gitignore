@@ -2,9 +2,8 @@
 build
 *.o
 *.bc
-*.wasm
-*.js
 *.a
 *.so
 ps-tests
 encoding-tests
+third-parties/mcl-wasm

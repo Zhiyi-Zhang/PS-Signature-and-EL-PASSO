@@ -36,8 +36,8 @@ MCL_DIR = ./third-parties/mcl
 EMCC = em++
 EMCC_OPT = -I./src -I./test -I$(MCL_DIR)/include -I$(MCL_DIR)/src -Wall -Wextra
 EMCC_OPT += -O3 -DNDEBUG
-EMCC_OPT += -s WASM=1 -s NO_EXIT_RUNTIME=1 -s MODULARIZE=1
-EMCC_OPT += -DCYBOZU_MINIMUM_EXCEPTION
+EMCC_OPT += -s WASM=1 -s NO_EXIT_RUNTIME=1 -s # MODULARIZE=1
+# EMCC_OPT += -DCYBOZU_MINIMUM_EXCEPTION
 EMCC_OPT += -s ABORTING_MALLOC=0
 MCL_C_DEP = $(MCL_DIR)/src/fp.cpp $(MCL_DIR)/include/mcl/impl/bn_c_impl.hpp $(MCL_DIR)/include/mcl/bn.hpp $(MCL_DIR)/include/mcl/fp.hpp $(MCL_DIR)/include/mcl/op.hpp
 
@@ -53,11 +53,14 @@ MCL_C_DEP = $(MCL_DIR)/src/fp.cpp $(MCL_DIR)/include/mcl/impl/bn_c_impl.hpp $(MC
 ps.js : src/ps.cc $(MCL_DIR)/src/fp.cpp
 	$(EMCC) -o $@ $(MCL_DIR)/src/fp.cpp src/ps.cc $(EMCC_OPT) -DMCL_DONT_USE_XBYAK -DMCL_DONT_USE_OPENSSL -DMCL_USE_VINT -DMCL_SIZEOF_UNIT=8 -DMCL_VINT_64BIT_PORTABLE -DMCL_VINT_FIXED_BUFFER -DMCL_MAX_BIT_SIZE=384
 
+ps-tests.js : test/ps-tests.cc $(MCL_DIR)/src/fp.cpp
+	$(EMCC) -o $@ test/ps-tests.cc $(MCL_DIR)/src/fp.cpp src/ps.cc $(EMCC_OPT) -DMCL_DONT_USE_XBYAK -DMCL_DONT_USE_OPENSSL -DMCL_USE_VINT -DMCL_SIZEOF_UNIT=8 -DMCL_VINT_64BIT_PORTABLE -DMCL_VINT_FIXED_BUFFER -DMCL_MAX_BIT_SIZE=384
+
+ps-tests.html : test/ps-tests.cc $(MCL_DIR)/src/fp.cpp
+	$(EMCC) -o $@ test/ps-tests.cc $(MCL_DIR)/src/fp.cpp src/ps.cc $(EMCC_OPT) -DMCL_DONT_USE_XBYAK -DMCL_DONT_USE_OPENSSL -DMCL_USE_VINT -DMCL_SIZEOF_UNIT=8 -DMCL_VINT_64BIT_PORTABLE -DMCL_VINT_FIXED_BUFFER -DMCL_MAX_BIT_SIZE=384
+
 clean:
 	rm -f $(OBJECTS)
-	rm -f $(JS_OBJECTS)
-	rm -f *.bc
-	rm -f *.o
-	rm -f *.js
+	rm -f *.bc *.o
 	rm -f js.wasm
 	rm -f $(PROGRAMS)
