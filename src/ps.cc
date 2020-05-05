@@ -1,5 +1,6 @@
 #include "ps.h"
 #include <cybozu/sha2.hpp>
+#include <chrono>
 
 using namespace mcl::bls12;
 
@@ -82,9 +83,9 @@ PSSigner::nizk_verify_request(const G1& A, const Fr& c, const std::vector<Fr>& r
   digest_engine.update(_V.serializeToHexStr());
   auto _c_str = digest_engine.digest(associated_data);
   _m_c.setHashOf(_c_str);
-  std::cout << "sign: A: " << A.serializeToHexStr() << std::endl;
-  std::cout << "sign: V: " << _V.serializeToHexStr() << std::endl;
-  std::cout << "sign: c: " << _m_c.serializeToHexStr() << std::endl;
+  // std::cout << "sign: A: " << A.serializeToHexStr() << std::endl;
+  // std::cout << "sign: V: " << _V.serializeToHexStr() << std::endl;
+  // std::cout << "sign: c: " << _m_c.serializeToHexStr() << std::endl;
   // check if NIZK verification is successful
   if (_m_c != c) {
     return false;
@@ -193,12 +194,12 @@ PSRequester::generate_request(const std::vector<std::tuple<std::string, bool>> a
   // Calculate c
   cybozu::Sha256 digest_engine;
   digest_engine.update(_A.serializeToHexStr());
-  std::cout << "parepare: A: " << _A.serializeToHexStr() << std::endl;
+  // std::cout << "parepare: A: " << _A.serializeToHexStr() << std::endl;
   digest_engine.update(_V.serializeToHexStr());
-  std::cout << "parepare: V: " << _V.serializeToHexStr() << std::endl;
+  // std::cout << "parepare: V: " << _V.serializeToHexStr() << std::endl;
   auto _c_str = digest_engine.digest(associated_data);
   _c.setHashOf(_c_str);
-  std::cout << "parepare: c: " << _c.serializeToHexStr() << std::endl;
+  // std::cout << "parepare: c: " << _c.serializeToHexStr() << std::endl;
   // Calculate rs
   Fr _r_temp;
   Fr::mul(_r_temp, m_t1, _c);
@@ -391,10 +392,10 @@ PSRequester::el_passo_prove_id(const G1& sig1, const G1& sig2,
   digest_engine.update(_V_E2.serializeToHexStr());
   auto _c_str = digest_engine.digest(associated_data);
   _c.setHashOf(_c_str);
-  std::cout << "parepare: V k: " << _V_k.serializeToHexStr() << std::endl;
-  std::cout << "parepare: V phi: " << _V_phi.serializeToHexStr() << std::endl;
-  std::cout << "parepare: V E1: " << _V_E1.serializeToHexStr() << std::endl;
-  std::cout << "parepare: V E2: " << _V_E2.serializeToHexStr() << std::endl;
+  // std::cout << "parepare: V k: " << _V_k.serializeToHexStr() << std::endl;
+  // std::cout << "parepare: V phi: " << _V_phi.serializeToHexStr() << std::endl;
+  // std::cout << "parepare: V E1: " << _V_E1.serializeToHexStr() << std::endl;
+  // std::cout << "parepare: V E2: " << _V_E2.serializeToHexStr() << std::endl;
 
   // Calculate Rs
   std::vector<Fr> _rs;
@@ -513,10 +514,10 @@ PSRequester::el_passo_verify_id(const G1& sig1, const G1& sig2, const G2& k, con
   digest_engine.update(_V_E2.serializeToHexStr());
   auto _c_str = digest_engine.digest(associated_data);
   _local_c.setHashOf(_c_str);
-  std::cout << "parepare: V k: " << _V_k.serializeToHexStr() << std::endl;
-  std::cout << "parepare: V phi: " << _V_phi.serializeToHexStr() << std::endl;
-  std::cout << "parepare: V E1: " << _V_E1.serializeToHexStr() << std::endl;
-  std::cout << "parepare: V E2: " << _V_E2.serializeToHexStr() << std::endl;
+  // std::cout << "parepare: V k: " << _V_k.serializeToHexStr() << std::endl;
+  // std::cout << "parepare: V phi: " << _V_phi.serializeToHexStr() << std::endl;
+  // std::cout << "parepare: V E1: " << _V_E1.serializeToHexStr() << std::endl;
+  // std::cout << "parepare: V E2: " << _V_E2.serializeToHexStr() << std::endl;
 
   if (c != _local_c) {
     return false;

@@ -34,7 +34,7 @@ encoding-tests: $(OBJECTS_PROTOBUF)
 
 MCL_DIR = ./third-parties/mcl
 EMCC = em++
-EMCC_OPT = -I./src -I./test -I$(MCL_DIR)/include -I$(MCL_DIR)/src -Wall -Wextra
+EMCC_OPT = -std=c++17 -Wall -Wextra -I./src -I./test -I$(MCL_DIR)/include -I$(MCL_DIR)/src
 EMCC_OPT += -O3 -DNDEBUG
 EMCC_OPT += -s WASM=1 -s NO_EXIT_RUNTIME=1 -s # MODULARIZE=1
 # EMCC_OPT += -DCYBOZU_MINIMUM_EXCEPTION
