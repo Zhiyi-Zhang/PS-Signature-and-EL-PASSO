@@ -62,5 +62,5 @@ ps-tests.html : test/ps-tests.cc $(MCL_DIR)/src/fp.cpp
 clean:
 	rm -f $(OBJECTS)
 	rm -f *.bc *.o
-	rm -f js.wasm
+	rm -f *.js *.wasm
 	rm -f $(PROGRAMS)
