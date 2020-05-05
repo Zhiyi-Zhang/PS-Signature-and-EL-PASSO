@@ -12,11 +12,6 @@ message PSPubKey {
   repeated bytes YYi = 5;
 }
 
-message PSCredential {
-  bytes sig1 = 1;
-  bytes sig2 = 2;
-}
-
 message PSCredRequest {
   bytes A = 1;
   bytes c = 2;
@@ -24,17 +19,19 @@ message PSCredRequest {
   repeated string attributes = 4;
 }
 
-message PSCredProof {
-  repeated bytes as = 1;
-  repeated bytes vs = 2;
-  repeated bytes rs = 3;
-  repeated bytes attributes = 4;
+message PSCredential {
+  bytes sig1 = 1;
+  bytes sig2 = 2;
 }
 
-message IdRecoveryToken {
-  bytes g = 1;
-  bytes h = 2;
-  repeated bytes as = 3;
-  repeated bytes vs = 4;
-  repeated bytes rs = 5;
+message ProveID {
+  bytes sig1 = 1;
+  bytes sig2 = 2;
+  bytes k = 3;
+  bytes phi = 4;
+  bytes E1 = 5;
+  bytes E2 = 6;
+  bytes c = 7;
+  repeated bytes rs = 8;
+  repeated string attributes = 9;
 }

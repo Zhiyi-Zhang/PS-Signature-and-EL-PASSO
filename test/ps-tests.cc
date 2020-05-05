@@ -1,7 +1,6 @@
 #include <ps.h>
 #include <nizk-schnorr.h>
 #include <iostream>
-#include <emscripten/emscripten.h>
 
 using namespace mcl::bls12;
 
@@ -135,22 +134,10 @@ test_el_passo(size_t total_attribute_num)
   std::cout << "****test_el_passo ends without errors****\n" << std::endl;
 }
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-void EMSCRIPTEN_KEEPALIVE run_tests(){
-  initPairing();
-  test_el_passo(3);
-}
-
-#ifdef __cplusplus
-}
-#endif
-/*int
+int
 main(int argc, char const *argv[])
 {
   initPairing();
   test_ps_sign_verify();
-  test_el_passo();
-}*/
+  test_el_passo(3);
+}

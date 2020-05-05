@@ -184,7 +184,7 @@ public:
   bool
   el_passo_verify_id(const G1& sig1, const G1& sig2, const G2& k, const G1& phi,
                      const G1& E1, const G1& E2, const Fr& c,
-                     const std::vector<Fr>& rsize_t, const std::vector<std::string>& attributes,
+                     const std::vector<Fr>& rs, const std::vector<std::string>& attributes,
                      const std::string& associated_data,
                      const std::string& service_name,
                      const G1& authority_pk, const G1& g, const G1& h);
