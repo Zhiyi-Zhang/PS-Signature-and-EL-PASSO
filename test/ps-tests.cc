@@ -1,6 +1,7 @@
 #include <ps.h>
 #include <nizk-schnorr.h>
 #include <iostream>
+#include <emscripten/emscripten.h>
 
 using namespace mcl::bls12;
 
@@ -134,10 +135,25 @@ test_el_passo()
 //   std::cout << "****test_zk_sig_prove ends without errors****\n" << std::endl;
 // }
 
-int
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void EMSCRIPTEN_KEEPALIVE run_tests(){
+  printf("MyFunction Called\n");
+  initPairing();
+  test_ps_sign_verify();
+  test_el_passo();
+}
+
+#ifdef __cplusplus
+}
+#endif
+/*int
 main(int argc, char const *argv[])
 {
   initPairing();
   test_ps_sign_verify();
   test_el_passo();
-}
+}*/

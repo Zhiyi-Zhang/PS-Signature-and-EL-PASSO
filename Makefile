@@ -57,10 +57,12 @@ ps-tests.js : test/ps-tests.cc $(MCL_DIR)/src/fp.cpp
 	$(EMCC) -o $@ test/ps-tests.cc $(MCL_DIR)/src/fp.cpp src/ps.cc $(EMCC_OPT) -DMCL_DONT_USE_XBYAK -DMCL_DONT_USE_OPENSSL -DMCL_USE_VINT -DMCL_SIZEOF_UNIT=8 -DMCL_VINT_64BIT_PORTABLE -DMCL_VINT_FIXED_BUFFER -DMCL_MAX_BIT_SIZE=384
 
 ps-tests.html : test/ps-tests.cc $(MCL_DIR)/src/fp.cpp
-	$(EMCC) -o $@ test/ps-tests.cc $(MCL_DIR)/src/fp.cpp src/ps.cc $(EMCC_OPT) -DMCL_DONT_USE_XBYAK -DMCL_DONT_USE_OPENSSL -DMCL_USE_VINT -DMCL_SIZEOF_UNIT=8 -DMCL_VINT_64BIT_PORTABLE -DMCL_VINT_FIXED_BUFFER -DMCL_MAX_BIT_SIZE=384
+	$(EMCC) -o $@ test/ps-tests.cc $(MCL_DIR)/src/fp.cpp src/ps.cc $(EMCC_OPT) -DMCL_DONT_USE_XBYAK -DMCL_DONT_USE_OPENSSL -DMCL_USE_VINT -DMCL_SIZEOF_UNIT=8 -DMCL_VINT_64BIT_PORTABLE -DMCL_VINT_FIXED_BUFFER -DMCL_MAX_BIT_SIZE=384 --shell-file html_template/shell_minimal.html -s "EXTRA_EXPORTED_RUNTIME_METHODS=['ccall']"
+	cp ./html_template/ps-tests.html .
 
 clean:
 	rm -f $(OBJECTS)
 	rm -f *.bc *.o
 	rm -f *.js *.wasm
+	rm -f *.html
 	rm -f $(PROGRAMS)
