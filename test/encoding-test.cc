@@ -4,6 +4,39 @@
 #include <iostream>
 
 using namespace mcl::bls12;
+char m_buf[128];
+
+void
+test_pk_with_different_attr_num()
+{
+  std::cout << "****test_pk_with_different_attr_num Start****" << std::endl;
+  G1 g;
+  G2 gg;
+  hashAndMapToG1(g, "abc");
+  hashAndMapToG2(gg, "edf");
+
+  Fr num;
+  num.setByCSPRNG();
+
+  size_t size = g.serialize(m_buf, sizeof(m_buf));
+  std::cout << "G1 element size: " << size << std::endl;
+  size = gg.serialize(m_buf, sizeof(m_buf));
+  std::cout << "G2 element size: " << size << std::endl;
+  size = num.serialize(m_buf, sizeof(m_buf));
+  std::cout << "Fr element size: " << size << std::endl;
+
+  PSSigner idp(3, g, gg);
+  auto [pk_g, pk_gg, pk_XX, pk_Yi, pk_YYi] = idp.key_gen();
+  auto pk_msg = protobuf_encode_ps_pk(pk_g, pk_gg, pk_XX, pk_Yi, pk_YYi);
+  std::cout << "3 total attributes. Public Key Size: " << pk_msg->SerializeAsString().size() << std::endl;
+
+  PSSigner idp2(20, g, gg);
+  std::tie(pk_g, pk_gg, pk_XX, pk_Yi, pk_YYi) = idp2.key_gen();
+  pk_msg = protobuf_encode_ps_pk(pk_g, pk_gg, pk_XX, pk_Yi, pk_YYi);
+  std::cout << "20 total attributes. Public Key Size: " << pk_msg->SerializeAsString().size() << std::endl;
+  std::cout << "****test_pk_with_different_attr_num ends without errors****\n"
+            << std::endl;
+}
 
 void
 test_ps_sign_verify()
@@ -161,5 +194,6 @@ int
 main(int argc, char const *argv[])
 {
   initPairing();
+  test_pk_with_different_attr_num();
   test_el_passo(3);
 }
