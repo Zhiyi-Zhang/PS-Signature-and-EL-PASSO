@@ -3,11 +3,11 @@ LIBS = -L./third-parties/mcl/lib -lgmp -lmcl -lprotobuf
 CXXFLAGS = -g -std=c++17 -Wall -I./src -I./third-parties/mcl/include -DMCL_DONT_USE_OPENSSL -I/usr/local/include
 
 VPATH = ./src ./test
-BUILDDIR = ./build
+BUILD_DIR = build
 
-PROGRAMS = ps-tests encoding-tests
-OBJECTS = ps-tests.o ps.o
-OBJECTS_PROTOBUF = encoding-test.o ps.pb.o ps.o protobuf-encoding.o
+PROGRAMS = $(BUILD_DIR)/ps-tests $(BUILD_DIR)/encoding-tests
+OBJECTS = $(BUILD_DIR)/ps-tests.o $(BUILD_DIR)/ps.o
+OBJECTS_PROTOBUF = $(BUILD_DIR)/encoding-test.o $(BUILD_DIR)/ps.pb.o $(BUILD_DIR)/ps.o $(BUILD_DIR)/protobuf-encoding.o
 
 all: $(PROGRAMS)
 
@@ -19,15 +19,16 @@ mcl:
 protobuf: ps.proto
 	protoc --cpp_out=src ps.proto
 
-%.o: %.cc
+$(BUILD_DIR)/%.o: %.cc
+	mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-unit-tests: $(PROGRAMS)
-
-ps-tests: $(OBJECTS)
+$(BUILD_DIR)/ps-tests: $(OBJECTS)
+	mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LIBS)
 
-encoding-tests: $(OBJECTS_PROTOBUF)
+$(BUILD_DIR)/encoding-tests: $(OBJECTS_PROTOBUF)
+	mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LIBS)
 
 # **********************************WASM************************************

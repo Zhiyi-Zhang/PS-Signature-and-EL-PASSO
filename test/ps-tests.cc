@@ -1,5 +1,5 @@
 #include <ps.h>
-#include <nizk-schnorr.h>
+
 #include <iostream>
 
 using namespace mcl::bls12;

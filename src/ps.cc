@@ -130,7 +130,10 @@ PSSigner::sign_commitment(const G1& commitment) const
 /*==============PSRequester==============*/
 
 PSRequester::PSRequester()
-{}
+{
+  m_dev_x = Fr::one();
+  m_dev_y = Fr::one();
+}
 
 void
 PSRequester::init_with_pk(const G1& g, const G2& gg, const G2& XX,
@@ -546,4 +549,18 @@ PSRequester::prepare_hybrid_verification(const G2& k, const std::vector<std::str
     G2::add(_final_k, _final_k, _temp_yyi_hash);
   }
   return _final_k;
+}
+
+std::tuple<Fr, Fr, G2, G2>
+PSRequester::el_passo_derive_device_key(const std::string& attribute_s, const std::string& service_name)
+{
+  if (!m_dev_x.isOne()) {
+    m_dev_x.setHashOf(attribute_s);
+    m_dev_y.setHashOf(m_dev_x.serializeToHexStr());
+  }
+  G2 _h, _pk_1, _pk_2;
+  hashAndMapToG2(_h, service_name);
+  G2::mul(_pk_1, _h, m_dev_x);
+  G2::mul(_pk_2, _h, m_dev_y);
+  return std::make_tuple(m_dev_x, m_dev_y, _pk_1, _pk_2);
 }

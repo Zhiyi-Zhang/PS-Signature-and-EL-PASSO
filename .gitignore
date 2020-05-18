@@ -7,3 +7,4 @@ build
 ps-tests
 encoding-tests
 third-parties/mcl-wasm
+temp

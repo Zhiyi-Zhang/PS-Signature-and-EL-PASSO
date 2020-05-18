@@ -189,6 +189,22 @@ public:
                      const std::string& service_name,
                      const G1& authority_pk, const G1& g, const G1& h);
 
+
+  /**
+   * EL PASSO DeriveKeyDev
+   * Derive a key pair from a secret s and the service name.
+   *
+   * @p attribute_s, input, the secret attribute s.
+   * @p service_name, input, the service name, e.g., domain name.
+   * @return
+   *  - Fr, derived secret key, the first part
+   *  - Fr, derived secret key, the second part
+   *  - G2, derived public key, the first part
+   *  - G2, derived public key, the second part
+   */
+  std::tuple<Fr, Fr, G2, G2>
+  el_passo_derive_device_key(const std::string& attribute_s, const std::string& service_name);
+
 private:
   G2
   prepare_hybrid_verification(const G2& k, const std::vector<std::string>& attributes) const;
@@ -202,6 +218,9 @@ private:
   std::vector<G1> m_pk_Yi; // public key, yi
   std::vector<G2> m_pk_YYi; // public key, yyi
   Fr m_t1; // used in commitment attributes
+
+  Fr m_dev_x; // used in device key derivation
+  Fr m_dev_y; // used in device key derivation
 };
 
 #endif // PS_SRC_PS_H_
