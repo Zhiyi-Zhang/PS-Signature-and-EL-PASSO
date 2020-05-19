@@ -1,6 +1,14 @@
 CXX = g++
 LIBS = -L./third-parties/mcl/lib -lgmp -lmcl -lprotobuf
-CXXFLAGS = -g -std=c++17 -Wall -I./src -I./third-parties/mcl/include -DMCL_DONT_USE_OPENSSL -I/usr/local/include
+CXXFLAGS = -std=c++17 -Wall -I./src -I./third-parties/mcl/include -DMCL_DONT_USE_OPENSSL -I/usr/local/include
+
+ifeq ($(BUILD),debug)
+# "Debug" build - no optimization, and debugging symbols
+CXXFLAGS += -g
+else
+# "Release" build - optimization, and no debug symbols
+CXXFLAGS += -O3 -DNDEBUG
+endif
 
 VPATH = ./src ./test
 BUILD_DIR = build
@@ -18,6 +26,9 @@ mcl:
 
 protobuf: ps.proto
 	protoc --cpp_out=src ps.proto
+
+debug:
+	make "BUILD=debug"
 
 $(BUILD_DIR)/%.o: %.cc
 	mkdir -p $(@D)

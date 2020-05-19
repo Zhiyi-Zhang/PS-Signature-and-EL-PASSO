@@ -25,10 +25,16 @@ public:
    * Generate PS private key and public key.
    * Caution: This function will overwrite the existing private key!
    *
-   * @return the public key
+   * @return the public key.
    */
   std::tuple<G1, G2, G2, std::vector<G1>, std::vector<G2>>
   key_gen();
+
+  /**
+   * Get the public key.
+   */
+  std::tuple<G1, G2, G2, std::vector<G1>, std::vector<G2>>
+  get_pub_key();
 
   /**
    * EL PASSO ProvideID.

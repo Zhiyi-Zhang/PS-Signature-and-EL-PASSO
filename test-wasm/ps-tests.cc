@@ -134,6 +134,95 @@ test_el_passo(size_t total_attribute_num)
   std::cout << "****test_el_passo ends without errors****\n" << std::endl;
 }
 
+
+void
+test_el_pass_multi_device(int total_attribute_num)
+{
+  std::cout << "****test_el_pass_multi_device Start****" << std::endl;
+  G1 g;
+  G2 gg;
+  hashAndMapToG1(g, "abc");
+  hashAndMapToG2(gg, "edf");
+  PSSigner idp(total_attribute_num, g, gg);
+
+  // IDP-KeyGen
+  auto [pk_g, pk_gg, pk_XX, pk_Yi, pk_YYi] = idp.key_gen();
+
+  // User-RequestID
+  PSRequester old_dev;
+  old_dev.init_with_pk(pk_g, pk_gg, pk_XX, pk_Yi, pk_YYi);
+  std::vector<std::tuple<std::string, bool>> attributes;
+  attributes.push_back(std::make_tuple("s", true));
+  attributes.push_back(std::make_tuple("gamma", true));
+  attributes.push_back(std::make_tuple("tp", false));
+  auto [request_A, request_c, request_rs, request_attributes] = old_dev.el_passo_request_id(attributes, "hello");
+
+  // IDP-ProvideID
+  G1 sig1, sig2;
+  bool sign_result = idp.el_passo_provide_id(request_A, request_c, request_rs, request_attributes, "hello", sig1, sig2);
+  if (!sign_result) {
+    std::cout << "sign request failure" << std::endl;
+    return;
+  }
+
+  // User-UnblindID
+  auto [ubld_sig1, ubld_sig2] = old_dev.unblind_credential(sig1, sig2);
+
+  // Derive device key to signer2
+  auto begin = std::chrono::steady_clock::now();
+  auto signer_2 = old_dev.el_passo_derive_device_key("s", "service1");
+    auto end = std::chrono::steady_clock::now();
+  std::cout << "Old Device: Derive Key: "
+            << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
+            << "[µs]" << std::endl;
+
+  // New Device
+  PSRequester new_dev;
+  std::tie(pk_g, pk_gg, pk_XX, pk_Yi, pk_YYi) = signer_2->get_pub_key();
+  new_dev.init_with_pk(pk_g, pk_gg, pk_XX, pk_Yi, pk_YYi);
+
+  // New Device prepare request
+  attributes.clear();
+  attributes.push_back(std::make_tuple("secret2", true));
+  begin = std::chrono::steady_clock::now();
+  std::tie(request_A, request_c, request_rs, request_attributes) = new_dev.el_passo_request_id(attributes, "fordevice");
+  end = std::chrono::steady_clock::now();
+  std::cout << "New Device: RequestID: "
+            << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
+            << "[µs]" << std::endl;
+
+  // Signer2 signs the request
+  begin = std::chrono::steady_clock::now();
+  sign_result = signer_2->el_passo_provide_id(request_A, request_c, request_rs, request_attributes, "fordevice", sig1, sig2);
+  end = std::chrono::steady_clock::now();
+  std::cout << "Old Device: ProvideID: "
+            << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
+            << "[µs]" << std::endl;
+  if (!sign_result) {
+    std::cout << "Signer2: sign request failure" << std::endl;
+    return;
+  }
+
+  // unblind
+  begin = std::chrono::steady_clock::now();
+  std::tie(ubld_sig1, ubld_sig2) = new_dev.unblind_credential(sig1, sig2);
+  end = std::chrono::steady_clock::now();
+  std::cout << "New Device: UnblindID: "
+            << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
+            << "[µs]" << std::endl;
+
+  // verify signature
+  std::vector<std::string> all_attributes;
+  all_attributes.push_back("secret2");
+  if (!new_dev.verify(ubld_sig1, ubld_sig2, all_attributes)) {
+    std::cout << "New device: unblinded credential verification failure" << std::endl;
+    return;
+  }
+
+  std::cout << "****test_el_pass_multi_device ends without errors****\n"
+            << std::endl;
+}
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -141,6 +230,7 @@ extern "C" {
 void EMSCRIPTEN_KEEPALIVE run_tests(){
   initPairing();
   test_el_passo(3);
+  test_el_pass_multi_device(3);
 }
 
 #ifdef __cplusplus

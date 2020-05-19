@@ -57,6 +57,12 @@ PSSigner::key_gen()
   return std::make_tuple(m_g, m_gg, m_pk_XX, m_pk_Yi, m_pk_YYi);
 }
 
+std::tuple<G1, G2, G2, std::vector<G1>, std::vector<G2>>
+PSSigner::get_pub_key()
+{
+  return std::make_tuple(m_g, m_gg, m_pk_XX, m_pk_Yi, m_pk_YYi);
+}
+
 bool
 PSSigner::el_passo_provide_id(const G1& A, const Fr& c, const std::vector<Fr>& rs,
                               const std::vector<std::string>& attributes,
@@ -169,7 +175,7 @@ PSRequester::el_passo_request_id(const std::vector<std::tuple<std::string, bool>
 {
   /** NIZK Prove:
    * Public Value: A = g^t * PI{Yi^(attribute_i)}, will be sent
-   * Public Random Value: V = g^random1 * PI{Yi^(random2_i)}, will not be sent
+   * Public Random Value: V = g^random1 * PROD{Yi^(random2_i)}, will not be sent
    * c = hash( A || V || associated_data);, will be sent
    * r0 = random1 - t*c; r1 = random2_i - attribute_i * c, will be sent
    */
@@ -214,11 +220,11 @@ PSRequester::el_passo_request_id(const std::vector<std::tuple<std::string, bool>
   // Calculate c
   cybozu::Sha256 digest_engine;
   digest_engine.update(_A.serializeToHexStr());
-  // std::cout << "parepare: A: " << _A.serializeToHexStr() << std::endl;
   digest_engine.update(_V.serializeToHexStr());
-  // std::cout << "parepare: V: " << _V.serializeToHexStr() << std::endl;
   auto _c_str = digest_engine.digest(associated_data);
   _c.setHashOf(_c_str);
+  // std::cout << "parepare: A: " << _A.serializeToHexStr() << std::endl;
+  // std::cout << "parepare: V: " << _V.serializeToHexStr() << std::endl;
   // std::cout << "parepare: c: " << _c.serializeToHexStr() << std::endl;
   // Calculate rs
   Fr _r_temp;
