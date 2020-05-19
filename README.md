@@ -126,16 +126,16 @@ c_attributes.push_back("secret1");
 c_attributes.push_back("secret2");
 std::list<std::string> attributes; // attributes that can be kept as plaintext
 attributes.push_back("plain1");
-auto request = user.generate_request(c_attributes, attributes);
+auto request = user.el_passo_request_id(c_attributes, attributes);
 ```
 
 #### 1.3 Signer: Verify Request and Sign the Credential
 
 Use PSSigner to sign the request.
-**Importantly, `sign_cred_request` will invoke Non-interactive Zero-knowledge Schnorr Verification Protocol to verify requester's ownership of hidden attributes.**
+**Importantly, `el_passo_provide_id` will invoke Non-interactive Zero-knowledge Schnorr Verification Protocol to verify requester's ownership of hidden attributes.**
 
 ```C++
-auto cred1 = signer.sign_cred_request(*request);
+auto cred1 = signer.el_passo_provide_id(*request);
 ```
 
 #### 1.4 Requester: Unblind, Verify, and Random the Credential

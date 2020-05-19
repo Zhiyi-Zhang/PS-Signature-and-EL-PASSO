@@ -1,32 +1,47 @@
 #include "ps.h"
-#include <cybozu/sha2.hpp>
+
 #include <chrono>
+#include <cybozu/sha2.hpp>
 
 using namespace mcl::bls12;
 
 /*==============PSSigner==============*/
 
 PSSigner::PSSigner(size_t attribute_num, const G1& g, const G2& gg)
-  : m_attribute_num(attribute_num)
-  , m_g(g)
-  , m_gg(gg)
+    : m_attribute_num(attribute_num)
+    , m_g(g)
+    , m_gg(gg)
 {
   m_pk_Yi.reserve(m_attribute_num);
   m_pk_YYi.reserve(m_attribute_num);
 }
 
-std::tuple<G1, G2, G2, std::vector<G1>, std::vector<G2>> // g, gg, XX, Yi, YYi
+PSSigner::PSSigner(size_t attribute_num, const G1& g, const G2& gg,
+                   const G1& sk_X, const G2& pk_XX,
+                   const std::vector<G1>& pk_Yi, const std::vector<G2>& pk_YYi)
+    : m_attribute_num(attribute_num)
+    , m_g(g)
+    , m_gg(gg)
+    , m_sk_X(sk_X)
+    , m_pk_XX(pk_XX)
+    , m_pk_Yi(pk_Yi)
+    , m_pk_YYi(pk_YYi)
+{
+}
+
+std::tuple<G1, G2, G2, std::vector<G1>, std::vector<G2>>  // g, gg, XX, Yi, YYi
 PSSigner::key_gen()
 {
   // generate private key
   // m_x
-  m_sk_x.setByCSPRNG();
+  Fr _sk_x;
+  _sk_x.setByCSPRNG();
   // m_X
-  G1::mul(m_sk_X, m_g, m_sk_x);
+  G1::mul(m_sk_X, m_g, _sk_x);
 
   // generate public key
   // public key: XX
-  G2::mul(m_pk_XX, m_gg, m_sk_x);
+  G2::mul(m_pk_XX, m_gg, _sk_x);
 
   // public key: Y and YY for each attribute
   Fr y_item;
@@ -43,11 +58,11 @@ PSSigner::key_gen()
 }
 
 bool
-PSSigner::sign_cred_request(const G1& A, const Fr& c, const std::vector<Fr>& rs,
-                            const std::vector<std::string>& attributes,
-                            const std::string& associated_data, G1& sig1, G1& sig2) const
+PSSigner::el_passo_provide_id(const G1& A, const Fr& c, const std::vector<Fr>& rs,
+                              const std::vector<std::string>& attributes,
+                              const std::string& associated_data, G1& sig1, G1& sig2) const
 {
-  if (!nizk_verify_request(A, c, rs, attributes, associated_data)) {
+  if (!el_passo_nizk_verify_request(A, c, rs, attributes, associated_data)) {
     return false;
   }
   std::tie(sig1, sig2) = sign_hybrid(A, attributes);
@@ -55,9 +70,9 @@ PSSigner::sign_cred_request(const G1& A, const Fr& c, const std::vector<Fr>& rs,
 }
 
 bool
-PSSigner::nizk_verify_request(const G1& A, const Fr& c, const std::vector<Fr>& rs,
-                              const std::vector<std::string>& attributes,
-                              const std::string& associated_data) const
+PSSigner::el_passo_nizk_verify_request(const G1& A, const Fr& c, const std::vector<Fr>& rs,
+                                       const std::vector<std::string>& attributes,
+                                       const std::string& associated_data) const
 {
   // NIZK proof
   // V: A^c * g^r0 * Yi^ri
@@ -94,9 +109,12 @@ PSSigner::nizk_verify_request(const G1& A, const Fr& c, const std::vector<Fr>& r
 }
 
 std::tuple<G1, G1>
-PSSigner::sign_hybrid(const G1& A, const std::vector<std::string>& attributes) const
+PSSigner::sign_hybrid(const G1& commitment, const std::vector<std::string>& attributes) const
 {
-  G1 _final_A = A;
+  if (attributes.size() == 1) {
+    return this->sign_commitment(commitment);
+  }
+  G1 _final_A = commitment;
   G1 _temp_yi_hash;
   Fr _temp_hash;
   for (size_t i = 0; i < attributes.size(); i++) {
@@ -132,7 +150,6 @@ PSSigner::sign_commitment(const G1& commitment) const
 PSRequester::PSRequester()
 {
   m_dev_x = Fr::one();
-  m_dev_y = Fr::one();
 }
 
 void
@@ -147,8 +164,8 @@ PSRequester::init_with_pk(const G1& g, const G2& gg, const G2& XX,
 }
 
 std::tuple<G1, Fr, std::vector<Fr>, std::vector<std::string>>
-PSRequester::generate_request(const std::vector<std::tuple<std::string, bool>> attributes, // string is the attribute, bool whether to hide
-                              const std::string& associated_data)
+PSRequester::el_passo_request_id(const std::vector<std::tuple<std::string, bool>> attributes,  // string is the attribute, bool whether to hide
+                                 const std::string& associated_data)
 {
   /** NIZK Prove:
    * Public Value: A = g^t * PI{Yi^(attribute_i)}, will be sent
@@ -174,7 +191,7 @@ PSRequester::generate_request(const std::vector<std::tuple<std::string, bool>> a
   _randomnesses.reserve(attributes.size() + 1);
   Fr _temp_randomness;
   _temp_randomness.setByCSPRNG();
-  _randomnesses.push_back(_temp_randomness); // the randomness for g^t
+  _randomnesses.push_back(_temp_randomness);  // the randomness for g^t
   // prepare for V
   G1 _V;
   G1::mul(_V, m_g, _temp_randomness);
@@ -188,7 +205,7 @@ PSRequester::generate_request(const std::vector<std::tuple<std::string, bool>> a
       G1::add(_A, _A, _Yi_hash);
       // generate randomness
       _temp_randomness.setByCSPRNG();
-      _randomnesses.push_back(_temp_randomness); // the randomness for message i
+      _randomnesses.push_back(_temp_randomness);  // the randomness for message i
       // calculate V
       G1::mul(_Yi_randomness, m_pk_Yi[i], _temp_randomness);
       G1::add(_V, _V, _Yi_randomness);
@@ -273,7 +290,7 @@ PSRequester::randomize_credential(const G1& sig1, const G1& sig2) const
   return std::make_tuple(_new_sig1, _new_sig2);
 }
 
-std::tuple<G1, G1, G2, G1, G1, G1, Fr, std::vector<Fr>, std::vector<std::string>> // sig1, sig2, k, phi, E1, E2, c, rs, attributes
+std::tuple<G1, G1, G2, G1, G1, G1, Fr, std::vector<Fr>, std::vector<std::string>>  // sig1, sig2, k, phi, E1, E2, c, rs, attributes
 PSRequester::el_passo_prove_id(const G1& sig1, const G1& sig2,
                                const std::vector<std::tuple<std::string, bool>> attributes,
                                const std::string& associated_data,
@@ -361,25 +378,25 @@ PSRequester::el_passo_prove_id(const G1& sig1, const G1& sig2,
     }
   }
   _temp_randomness.setByCSPRNG();
-  _randomnesses.push_back(_temp_randomness); // random2
+  _randomnesses.push_back(_temp_randomness);  // random2
   G2::mul(_yy_randomness, m_gg, _temp_randomness);
   G2::add(_V_k, _V_k, _yy_randomness);
 
   // V_phi
   G1 _V_phi;
-  G1::mul(_V_phi, _service_hash, _randomnesses[0]); // random1_s
+  G1::mul(_V_phi, _service_hash, _randomnesses[0]);  // random1_s
 
   // V_E1 = g^random_3
   G1 _V_E1;
   _temp_randomness.setByCSPRNG();
-  _randomnesses.push_back(_temp_randomness); // random 3
+  _randomnesses.push_back(_temp_randomness);  // random 3
   G1::mul(_V_E1, g, _temp_randomness);
 
   // V_E2 = y^random_3 * h^random1_gamma
   G1 _V_E2;
   G1 _h_random;
   G1::mul(_V_E2, authority_pk, _temp_randomness);
-  G1::mul(_h_random, h, _randomnesses[1]); // random1_gamma
+  G1::mul(_h_random, h, _randomnesses[1]);  // random1_gamma
   G1::add(_V_E2, _V_E2, _h_random);
 
   // Calculate c = hash(k || phi || E1 || E2 || V_k || V_phi || V_E1 || V_E2 || associated_data )
@@ -551,16 +568,24 @@ PSRequester::prepare_hybrid_verification(const G2& k, const std::vector<std::str
   return _final_k;
 }
 
-std::tuple<Fr, Fr, G2, G2>
+std::shared_ptr<PSSigner>
 PSRequester::el_passo_derive_device_key(const std::string& attribute_s, const std::string& service_name)
 {
   if (!m_dev_x.isOne()) {
     m_dev_x.setHashOf(attribute_s);
-    m_dev_y.setHashOf(m_dev_x.serializeToHexStr());
   }
-  G2 _h, _pk_1, _pk_2;
+  Fr _dev_y;
+  _dev_y.setByCSPRNG();
+  G1 _sk, _pk_1;
+  G1::mul(_sk, m_g, m_dev_x);
+  G1::mul(_pk_1, m_g, _dev_y);
+  G2 _h, _pk_2, _pk_3;
   hashAndMapToG2(_h, service_name);
-  G2::mul(_pk_1, _h, m_dev_x);
-  G2::mul(_pk_2, _h, m_dev_y);
-  return std::make_tuple(m_dev_x, m_dev_y, _pk_1, _pk_2);
+  G2::mul(_pk_2, _h, m_dev_x);
+  G2::mul(_pk_3, _h, _dev_y);
+  std::vector<G1> _pk_Yi;
+  _pk_Yi.push_back(_pk_1);
+  std::vector<G2> _pk_YYi;
+  _pk_YYi.push_back(_pk_3);
+  return std::make_shared<PSSigner>(1, m_g, _h, _sk, _pk_2, _pk_Yi, _pk_YYi);
 }

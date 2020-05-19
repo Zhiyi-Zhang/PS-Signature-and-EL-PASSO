@@ -21,10 +21,10 @@ test_ps_sign_verify()
   attributes.push_back(std::make_tuple("secret1", true));
   attributes.push_back(std::make_tuple("secret2", true));
   attributes.push_back(std::make_tuple("plain1", false));
-  auto [request_A, request_c, request_rs, request_attributes] = user.generate_request(attributes, "hello");
+  auto [request_A, request_c, request_rs, request_attributes] = user.el_passo_request_id(attributes, "hello");
 
   G1 sig1, sig2;
-  if (!idp.sign_cred_request(request_A, request_c, request_rs, request_attributes, "hello", sig1, sig2)) {
+  if (!idp.el_passo_provide_id(request_A, request_c, request_rs, request_attributes, "hello", sig1, sig2)) {
     std::cout << "sign request failure" << std::endl;
     return;
   }
@@ -73,7 +73,7 @@ test_el_passo(size_t total_attribute_num)
   attributes.push_back(std::make_tuple("gamma", true));
   attributes.push_back(std::make_tuple("tp", false));
   begin = std::chrono::steady_clock::now();
-  auto [request_A, request_c, request_rs, request_attributes] = user.generate_request(attributes, "hello");
+  auto [request_A, request_c, request_rs, request_attributes] = user.el_passo_request_id(attributes, "hello");
   end = std::chrono::steady_clock::now();
   std::cout << "User-RequestID: "
   << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
@@ -82,7 +82,7 @@ test_el_passo(size_t total_attribute_num)
   // IDP-ProvideID
   G1 sig1, sig2;
   begin = std::chrono::steady_clock::now();
-  bool sign_result = idp.sign_cred_request(request_A, request_c, request_rs, request_attributes, "hello", sig1, sig2);
+  bool sign_result = idp.el_passo_provide_id(request_A, request_c, request_rs, request_attributes, "hello", sig1, sig2);
   end = std::chrono::steady_clock::now();
   std::cout << "IDP-ProvideID: "
   << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
