@@ -52,8 +52,7 @@ ps-tests.html : test-wasm/ps-tests.cc $(MCL_DIR)/src/fp.cpp
 	cp ./html_template/ps-tests.html .
 
 clean:
-	rm -f $(OBJECTS)
-	rm -f *.bc *.o
-	rm -f *.js *.wasm
-	rm -f *.html
-	rm -f $(PROGRAMS)
+	rm -rf build
+
+cleanjs:
+	rm -f *.js *.wasm *.html *.bc
