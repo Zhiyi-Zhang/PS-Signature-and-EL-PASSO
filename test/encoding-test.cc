@@ -163,12 +163,12 @@ test_el_passo(size_t total_attribute_num)
   std::cout << "User-ProveID: "
             << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
             << "[µs]" << std::endl;
-  auto prove_id_msg = protobuf_encode_prove_id(prove_id_sig1, prove_id_sig2, prove_id_k, prove_id_phi, prove_id_E1,
+  auto prove_id_msg = protobuf_encode_id_proof(prove_id_sig1, prove_id_sig2, prove_id_k, prove_id_phi, prove_id_E1,
                                                prove_id_E2, prove_id_c, prove_id_rs, prove_id_plaintext_attributes);
   std::cout << "Sign-on Request Packet Size: " << prove_id_msg->SerializeAsString().size() << std::endl;
 
   // RP-VerifyID
-  protobuf_decode_prove_id(*prove_id_msg, prove_id_sig1, prove_id_sig2, prove_id_k, prove_id_phi, prove_id_E1,
+  protobuf_decode_id_proof(*prove_id_msg, prove_id_sig1, prove_id_sig2, prove_id_k, prove_id_phi, prove_id_E1,
                            prove_id_E2, prove_id_c, prove_id_rs, prove_id_plaintext_attributes);
   PSRequester rp;
   rp.init_with_pk(pk_g, pk_gg, pk_XX, pk_Yi, pk_YYi);
@@ -190,10 +190,113 @@ test_el_passo(size_t total_attribute_num)
             << std::endl;
 }
 
+void
+test_el_pass_multi_device(int total_attribute_num)
+{
+  std::cout << "****test_el_pass_multi_device Start****" << std::endl;
+  G1 g;
+  G2 gg;
+  hashAndMapToG1(g, "abc");
+  hashAndMapToG2(gg, "edf");
+  PSSigner idp(total_attribute_num, g, gg);
+
+  // IDP-KeyGen
+  auto [pk_g, pk_gg, pk_XX, pk_Yi, pk_YYi] = idp.key_gen();
+
+  // User-RequestID
+  PSRequester old_dev;
+  old_dev.init_with_pk(pk_g, pk_gg, pk_XX, pk_Yi, pk_YYi);
+
+  // Derive device key to signer2
+  auto begin = std::chrono::steady_clock::now();
+  auto old_dev_signer = old_dev.el_passo_derive_device_key("old_s", "service1");
+  auto end = std::chrono::steady_clock::now();
+  std::cout << "Old Device: Derive Key: "
+            << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
+            << "[µs]" << std::endl;
+
+  // New Device
+  std::tie(pk_g, pk_gg, pk_XX, pk_Yi, pk_YYi) = old_dev_signer->get_pub_key();
+  auto pk_msg = protobuf_encode_ps_pk(pk_g, pk_gg, pk_XX, pk_Yi, pk_YYi);
+  std::cout << "Device Public Key Packet Size: " << pk_msg->SerializeAsString().size() << std::endl;
+  protobuf_decode_ps_pk(*pk_msg, pk_g, pk_gg, pk_XX, pk_Yi, pk_YYi);
+  PSRequester new_dev;
+  new_dev.init_with_pk(pk_g, pk_gg, pk_XX, pk_Yi, pk_YYi);
+
+  // New Device prepare request
+  std::vector<std::tuple<std::string, bool>> attributes;
+  attributes.push_back(std::make_tuple("new_s", true));
+  begin = std::chrono::steady_clock::now();
+  auto [request_A, request_c, request_rs, request_attributes] = new_dev.el_passo_request_id(attributes, "fordevice");
+  end = std::chrono::steady_clock::now();
+  std::cout << "New Device: RequestID: "
+            << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
+            << "[µs]" << std::endl;
+
+  // Signer2 signs the request
+  G1 sig1, sig2;
+  begin = std::chrono::steady_clock::now();
+  bool sign_result = old_dev_signer->el_passo_provide_id(request_A, request_c, request_rs, request_attributes, "fordevice", sig1, sig2);
+  end = std::chrono::steady_clock::now();
+  std::cout << "Old Device: ProvideID: "
+            << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
+            << "[µs]" << std::endl;
+  if (!sign_result) {
+    std::cout << "Signer2: sign request failure" << std::endl;
+    return;
+  }
+
+  // unblind
+  begin = std::chrono::steady_clock::now();
+  auto [ubld_sig1, ubld_sig2] = new_dev.unblind_credential(sig1, sig2);
+  end = std::chrono::steady_clock::now();
+  std::cout << "New Device: UnblindID: "
+            << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
+            << "[µs]" << std::endl;
+
+  // verify signature
+  std::vector<std::string> all_attributes;
+  all_attributes.push_back("new_s");
+  if (!new_dev.verify(ubld_sig1, ubld_sig2, all_attributes)) {
+    std::cout << "New device: unblinded credential verification failure" << std::endl;
+    return;
+  }
+
+  // RP's another verifier
+  PSRequester RP_new_dev_verifier;
+  RP_new_dev_verifier.init_with_pk(pk_g, pk_gg, pk_XX, pk_Yi, pk_YYi);
+
+  // New Device's ProveID
+  auto [prove_id_sig1, prove_id_sig2, prove_id_k,
+        prove_id_phi, prove_id_c, prove_id_rs,
+        prove_id_plaintext_attributes] = new_dev.el_passo_prove_id_without_id_retrieval(ubld_sig1, ubld_sig2,
+                                                                                        attributes, "newDev@RP",
+                                                                                        "service1");
+  auto id_proof_msg = protobuf_encode_id_proof_without_id_retrieval(prove_id_sig1, prove_id_sig2, prove_id_k, prove_id_phi,
+                                                                    prove_id_c, prove_id_rs, prove_id_plaintext_attributes);
+  std::cout << "New Device Additional Sign-on Request Packet Size: " << id_proof_msg->SerializeAsString().size() << std::endl;
+
+  // RP's VerifyID
+  protobuf_decode_id_proof_without_id_retrieval(*id_proof_msg, prove_id_sig1, prove_id_sig2, prove_id_k, prove_id_phi,
+                                                prove_id_c, prove_id_rs, prove_id_plaintext_attributes);
+  bool result = RP_new_dev_verifier.el_passo_verify_id_without_id_retrieval(prove_id_sig1, prove_id_sig2, prove_id_k,
+                                                                            prove_id_phi, prove_id_c, prove_id_rs,
+                                                                            prove_id_plaintext_attributes, "newDev@RP", "service1");
+
+  if (!result) {
+    std::cout << "RP: New device VerifyID failed" << std::endl;
+    return;
+  }
+
+  std::cout << "****test_el_pass_multi_device ends without errors****\n"
+            << std::endl;
+}
+
 int
 main(int argc, char const *argv[])
 {
   initPairing();
   test_pk_with_different_attr_num();
   test_el_passo(3);
+  test_el_pass_multi_device(3);
 }

@@ -455,6 +455,127 @@ PSRequester::el_passo_prove_id(const G1& sig1, const G1& sig2,
   return std::make_tuple(_new_sig1, _new_sig2, _k, _phi, _E1, _E2, _c, _rs, _plaintext_attributes);
 }
 
+std::tuple<G1, G1, G2, G1, Fr, std::vector<Fr>, std::vector<std::string>>  // sig1, sig2, k, phi, c, rs, attributes
+PSRequester::el_passo_prove_id_without_id_retrieval(const G1& sig1, const G1& sig2,
+                                         const std::vector<std::tuple<std::string, bool>> attributes,
+                                         const std::string& associated_data,
+                                         const std::string& service_name)
+{
+  // new_sig = sig1^r, sig2 + sig1^t)^r
+  G1 _new_sig1, _new_sig2;
+  Fr _t, _r;
+  _t.setByCSPRNG();
+  _r.setByCSPRNG();
+  G1::mul(_new_sig1, sig1, _r);
+  G1::mul(_new_sig2, sig1, _t);
+  G1::add(_new_sig2, _new_sig2, sig2);
+  G1::mul(_new_sig2, _new_sig2, _r);
+
+  // phi = hash(service_name)^s
+  G1 _phi;
+  G1 _service_hash;
+  Fr _s;
+  hashAndMapToG1(_service_hash, service_name);
+  _s.setHashOf(std::get<0>(attributes[0]));
+  G1::mul(_phi, _service_hash, _s);
+
+  // k = XX * PI{ YYj^mj } * gg^t
+  G2 _k = m_pk_XX;
+  Fr _attribute_hash;
+  G2 _yy_hash;
+  std::vector<Fr> _attribute_hashes;
+  _attribute_hashes.reserve(attributes.size());
+  for (size_t i = 0; i < attributes.size(); i++) {
+    if (std::get<1>(attributes[i])) {
+      _attribute_hash.setHashOf(std::get<0>(attributes[i]));
+      _attribute_hashes.push_back(_attribute_hash);
+      G2::mul(_yy_hash, m_pk_YYi[i], _attribute_hash);
+      G2::add(_k, _k, _yy_hash);
+    }
+  }
+  G2::mul(_yy_hash, m_gg, _t);
+  G2::add(_k, _k, _yy_hash);
+
+  /** NIZK Prove:
+   * Public Value: will be sent
+   * * k = XX * PI{ YY_j^attribute_j } * gg^t
+   * * phi = hash(domain)^s
+   *
+   * Public Random Value: will not be sent
+   * * V_k = XX * PI{ YYj^random1_j } * gg^random_2
+   * * V_phi = hash(domain)^random1_s
+   *
+   * c: will be sent
+   * c = hash(k || phi || V_k || V_phi || associated_data )
+   *
+   * Rs: will be sent
+   * * random1_j - attribute_j * c
+   * * random2 - t * c
+   */
+  // V_k
+  G2 _V_k = m_pk_XX;
+  std::vector<Fr> _randomnesses;
+  Fr _temp_randomness;
+  G2 _yy_randomness;
+  _randomnesses.reserve(attributes.size() + 1);
+  for (size_t i = 0; i < attributes.size(); i++) {
+    if (std::get<1>(attributes[i])) {
+      _temp_randomness.setByCSPRNG();
+      _randomnesses.push_back(_temp_randomness);
+      G2::mul(_yy_randomness, m_pk_YYi[i], _temp_randomness);
+      G2::add(_V_k, _V_k, _yy_randomness);
+    }
+  }
+  _temp_randomness.setByCSPRNG();
+  _randomnesses.push_back(_temp_randomness);  // random2
+  G2::mul(_yy_randomness, m_gg, _temp_randomness);
+  G2::add(_V_k, _V_k, _yy_randomness);
+
+  // V_phi
+  G1 _V_phi;
+  G1::mul(_V_phi, _service_hash, _randomnesses[0]);  // random1_s
+
+  // Calculate c = hash(k || phi || V_k || V_phi || associated_data )
+  Fr _c;
+  cybozu::Sha256 digest_engine;
+  digest_engine.update(_k.serializeToHexStr());
+  digest_engine.update(_phi.serializeToHexStr());
+  digest_engine.update(_V_k.serializeToHexStr());
+  digest_engine.update(_V_phi.serializeToHexStr());
+  auto _c_str = digest_engine.digest(associated_data);
+  _c.setHashOf(_c_str);
+  // std::cout << "parepare: V k: " << _V_k.serializeToHexStr() << std::endl;
+  // std::cout << "parepare: V phi: " << _V_phi.serializeToHexStr() << std::endl;
+
+  // Calculate Rs
+  std::vector<Fr> _rs;
+  Fr _temp_r;
+  Fr _secret_c;
+  _rs.reserve(attributes.size() + 1);
+  for (size_t i = 0; i < _attribute_hashes.size(); i++) {
+    Fr::mul(_secret_c, _attribute_hashes[i], _c);
+    Fr::sub(_temp_r, _randomnesses[i], _secret_c);
+    _rs.push_back(_temp_r);
+  }
+  Fr::mul(_secret_c, _t, _c);
+  Fr::sub(_temp_r, _randomnesses[_randomnesses.size() - 1], _secret_c);
+  _rs.push_back(_temp_r);
+
+  // plaintext attributes
+  std::vector<std::string> _plaintext_attributes;
+  _plaintext_attributes.reserve(attributes.size());
+  for (size_t i = 0; i < attributes.size(); i++) {
+    if (std::get<1>(attributes[i])) {
+      _plaintext_attributes.push_back("");
+    }
+    else {
+      _plaintext_attributes.push_back(std::get<0>(attributes[i]));
+    }
+  }
+  // sig1, sig2, k, phi, E1, E2, c, rs, attributes
+  return std::make_tuple(_new_sig1, _new_sig2, _k, _phi, _c, _rs, _plaintext_attributes);
+}
+
 bool
 PSRequester::el_passo_verify_id(const G1& sig1, const G1& sig2, const G2& k, const G1& phi,
                                 const G1& E1, const G1& E2, const Fr& c,
@@ -544,6 +665,81 @@ PSRequester::el_passo_verify_id(const G1& sig1, const G1& sig2, const G2& k, con
   // std::cout << "parepare: V phi: " << _V_phi.serializeToHexStr() << std::endl;
   // std::cout << "parepare: V E1: " << _V_E1.serializeToHexStr() << std::endl;
   // std::cout << "parepare: V E2: " << _V_E2.serializeToHexStr() << std::endl;
+
+  if (c != _local_c) {
+    return false;
+  }
+
+  // signature verification, e(sigma’_1, k) ?= e(sigma’_2, gg)
+  G2 _final_k = prepare_hybrid_verification(k, attributes);
+  GT lhs, rhs;
+  pairing(lhs, sig1, _final_k);
+  pairing(rhs, sig2, m_gg);
+  return lhs == rhs;
+}
+
+bool
+PSRequester::el_passo_verify_id_without_id_retrieval(const G1& sig1, const G1& sig2, const G2& k, const G1& phi,
+                                          const Fr& c, const std::vector<Fr>& rs,
+                                          const std::vector<std::string>& attributes,
+                                          const std::string& associated_data, const std::string& service_name)
+{
+  /** NIZK Verify:
+   * Public Value:
+   * * k = XX * PI{ YY_j^attribute_j } * gg^t
+   * * phi = hash(domain)^s
+   *
+   * Public Random Value:
+   * * V_k = XX * PI{ YYj^random1_j } * gg^random_2
+   *       = k^c * XX^(1-c) * PI{ YYj^r1_j } ** gg^r2
+   * * V_phi = hash(domain)^random1_s
+   *         = phi^c * hash(domain)^r1_s
+   *
+   * c: to be compared
+   * c = hash(k || phi || E1 || E2 || V_k || V_phi || associated_data )
+   *
+   * Rs:
+   * * r1_j: random1_j - attribute_j * c
+   * * r2: random2 - t * c
+   */
+  // V_k = k^c * XX^(1-c) * PI{ YYj^r1_j } ** gg^r2
+  G2 _V_k;
+  G2::mul(_V_k, k, c);
+  int counter = 0;
+  G2 _base_r;
+  for (size_t i = 0; i < attributes.size(); i++) {
+    if (attributes[i] == "") {
+      G2::mul(_base_r, m_pk_YYi[i], rs[counter]);
+      counter++;
+      G2::add(_V_k, _V_k, _base_r);
+    }
+  }
+  G2::mul(_base_r, m_gg, rs[rs.size() - 1]);
+  G2::add(_V_k, _V_k, _base_r);
+  Fr _1_c = Fr::one();
+  Fr::sub(_1_c, _1_c, c);
+  G2::mul(_base_r, m_pk_XX, _1_c);
+  G2::add(_V_k, _V_k, _base_r);
+
+  // V_phi = phi^c * hash(domain)^r1_s
+  G1 _V_phi;
+  G1::mul(_V_phi, phi, c);
+  G1 _temp;
+  hashAndMapToG1(_temp, service_name);
+  G1::mul(_temp, _temp, rs[0]);
+  G1::add(_V_phi, _V_phi, _temp);
+
+  // Calculate c = hash(k || phi || V_k || V_phi || associated_data )
+  Fr _local_c;
+  cybozu::Sha256 digest_engine;
+  digest_engine.update(k.serializeToHexStr());
+  digest_engine.update(phi.serializeToHexStr());
+  digest_engine.update(_V_k.serializeToHexStr());
+  digest_engine.update(_V_phi.serializeToHexStr());
+  auto _c_str = digest_engine.digest(associated_data);
+  _local_c.setHashOf(_c_str);
+  // std::cout << "parepare: V k: " << _V_k.serializeToHexStr() << std::endl;
+  // std::cout << "parepare: V phi: " << _V_phi.serializeToHexStr() << std::endl;
 
   if (c != _local_c) {
     return false;

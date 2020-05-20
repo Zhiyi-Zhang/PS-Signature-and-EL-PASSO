@@ -53,10 +53,11 @@ make protobuf
 ```
 
 Otherwise you are all set.
-You can test PSSignature with `unit_tests`.
+You can test PSSignature with unit tests.
 
 ```bash
-./unit_tests
+./build/ps-tests
+./build/encoding-tests
 ```
 
 ## Web Assembly

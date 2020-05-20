@@ -14,8 +14,10 @@ VPATH = ./src ./test
 BUILD_DIR = build
 
 PROGRAMS = $(BUILD_DIR)/ps-tests $(BUILD_DIR)/encoding-tests
+SRCS = $(wildcard src/*.cpp)
 OBJECTS = $(BUILD_DIR)/ps-tests.o $(BUILD_DIR)/ps.o
 OBJECTS_PROTOBUF = $(BUILD_DIR)/encoding-test.o $(BUILD_DIR)/ps.pb.o $(BUILD_DIR)/ps.o $(BUILD_DIR)/protobuf-encoding.o
+
 
 all: $(PROGRAMS)
 
@@ -24,8 +26,8 @@ all: $(PROGRAMS)
 mcl:
 	./install-mcl.sh
 
-protobuf: ps.proto
-	protoc --cpp_out=src ps.proto
+protobuf: src/ps.proto
+	protoc --proto_path=src --cpp_out=src src/ps.proto
 
 debug:
 	make "BUILD=debug"
@@ -34,11 +36,11 @@ $(BUILD_DIR)/%.o: %.cc
 	mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-$(BUILD_DIR)/ps-tests: $(OBJECTS)
+$(BUILD_DIR)/ps-tests: $(OBJECTS) $(SRCS)
 	mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LIBS)
 
-$(BUILD_DIR)/encoding-tests: $(OBJECTS_PROTOBUF)
+$(BUILD_DIR)/encoding-tests: $(OBJECTS_PROTOBUF) $(SRCS)
 	mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LIBS)
 

@@ -175,7 +175,7 @@ public:
    * This function will generate:
    *   -# a randomized PS signature (random_sig1, random_sig2).
    *   -# a unique ID (phi) of the user derived from RP's service name and user's primary secret.
-   *   -# an identity recovery token (E1, E2) that can only be decrypted by the authority.
+   *   -# an identity retrieval token (E1, E2) that can only be decrypted by the authority.
    *   -# an NIZK proof of the PS signature, recovery token, and phi.
    *   -# a list of attributes where the committed attribute slot is "" and plaintext attribute is the full attribute.
    *
@@ -187,26 +187,33 @@ public:
    * @p associated_data, input, an associated data (e.g., session ID) bound with the NIZK proof used for authentication.
    * @p service_name, input, the RP's service name, e.g., RP's domain name.
    * @p authority_pk, input, the EL Gamal public key (a G1 point) of an accountability authority.
-   * @p g, input, a G1 point that both prover and verifier agree on for NIZK of the identity recovery token
-   * @p h, input, a G1 point that both prover and verifier agree on for NIZK of the identity recovery token
+   * @p g, input, a G1 point that both prover and verifier agree on for NIZK of the identity retrieval token
+   * @p h, input, a G1 point that both prover and verifier agree on for NIZK of the identity retrieval token
    * @return
    *   - G1, random_sig1, randomized signature, first part.
    *   - G1, random_sig2, randomized signature, second part.
    *   - G2, k, a part of the public value used for signature verification and NIZK Schnorr verification.
    *   - G1, phi, user's unique ID at RP.
-   *   - G1, E1, El Gamal ciphertext as the identity recovery token, first part.
-   *   - G1, E2, El Gamal ciphertext as the identity recovery token, second part.
+   *   - G1, E1, El Gamal ciphertext as the identity retrieval token, first part.
+   *   - G1, E2, El Gamal ciphertext as the identity retrieval token, second part.
    *   - Fr, c, used for NIZK Schnorr verification.
    *   - std::vector<Fr>, rs, used for NIZK Schnorr verification.
    *   - std::vector<std::string>, attributes, attributes that only contain plaintext attributes
    *     and "" for committed attributes. The order of attributes is the same as @p attributes.
    */
-  std::tuple<G1, G1, G2, G1, G1, G1, Fr, std::vector<Fr>, std::vector<std::string>>  // sig1, sig2, k, phi, E1, E2, c, rs
+  std::tuple<G1, G1, G2, G1, G1, G1, Fr, std::vector<Fr>, std::vector<std::string>>  // sig1, sig2, k, phi, E1, E2, c, rs, attributes
   el_passo_prove_id(const G1& sig1, const G1& sig2,
                     const std::vector<std::tuple<std::string, bool>> attributes,
                     const std::string& associated_data,
                     const std::string& service_name,
                     const G1& authority_pk, const G1& g, const G1& h);
+
+
+  std::tuple<G1, G1, G2, G1, Fr, std::vector<Fr>, std::vector<std::string>>  // sig1, sig2, k, phi, c, rs, attributes
+  el_passo_prove_id_without_id_retrieval(const G1& sig1, const G1& sig2,
+                                         const std::vector<std::tuple<std::string, bool>> attributes,
+                                         const std::string& associated_data,
+                                         const std::string& service_name);
 
   /**
    * EL PASSO VerifyID
@@ -218,8 +225,8 @@ public:
    * @p sig2, input, the randomized PS signature, second part.
    * @p k, input, used for signature verification and NIZK Schnorr verification.
    * @p phi, input, user's unique ID at RP.
-   * @p E1, input, El Gamal ciphertext as the identity recovery token, first part.
-   * @p E2, input, El Gamal ciphertext as the identity recovery token, second part.
+   * @p E1, input, El Gamal ciphertext as the identity retrieval token, first part.
+   * @p E2, input, El Gamal ciphertext as the identity retrieval token, second part.
    * @p c, input, used for NIZK Schnorr verification.
    * @p rs, input, used for NIZK Schnorr verification.
    * @p attributes, input, user's attributes including
@@ -228,8 +235,8 @@ public:
    * @p associated_data, input, an associated data (e.g., session ID) bound with the NIZK proof used for authentication.
    * @p service_name, input, the RP's service name, e.g., RP's domain name.
    * @p authority_pk, input, the EL Gamal public key (a G1 point) of an accountability authority.
-   * @p g, input, a G1 point that both prover and verifier agree on for NIZK of the identity recovery token
-   * @p h, input, a G1 point that both prover and verifier agree on for NIZK of the identity recovery token
+   * @p g, input, a G1 point that both prover and verifier agree on for NIZK of the identity retrieval token
+   * @p h, input, a G1 point that both prover and verifier agree on for NIZK of the identity retrieval token
    * @return true if both the NIZK proof and signature are valid.
    */
   bool
@@ -239,6 +246,12 @@ public:
                      const std::string& associated_data,
                      const std::string& service_name,
                      const G1& authority_pk, const G1& g, const G1& h);
+
+  bool
+  el_passo_verify_id_without_id_retrieval(const G1& sig1, const G1& sig2, const G2& k, const G1& phi,
+                                          const Fr& c, const std::vector<Fr>& rs,
+                                          const std::vector<std::string>& attributes,
+                                          const std::string& associated_data, const std::string& service_name);
 
   /**
    * EL PASSO DeriveKeyDev

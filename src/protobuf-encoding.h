@@ -39,14 +39,23 @@ protobuf_decode_sign_request(const PSCredRequest& request, G1& A, Fr& c, std::ve
 /**
  * ID Prove Encoding and Decoding.
  */
-std::shared_ptr<ProveID>
-protobuf_encode_prove_id(const G1& sig1, const G1& sig2, const G2& k, const G1& phi,
+std::shared_ptr<IdProof>
+protobuf_encode_id_proof(const G1& sig1, const G1& sig2, const G2& k, const G1& phi,
                          const G1& E1, const G1& E2, const Fr& c,
-                         const std::vector<Fr>& rsize_t, const std::vector<std::string>& attributes);
+                         const std::vector<Fr>& rs, const std::vector<std::string>& attributes);
 
 void
-protobuf_decode_prove_id(const ProveID& prove_id, G1& sig1, G1& sig2, G2& k, G1& phi,
+protobuf_decode_id_proof(const IdProof& id_proof, G1& sig1, G1& sig2, G2& k, G1& phi,
                          G1& E1, G1& E2, Fr& c,
-                         std::vector<Fr>& rsize_t, std::vector<std::string>& attributes);
+                         std::vector<Fr>& rs, std::vector<std::string>& attributes);
+
+std::shared_ptr<IdProof>
+protobuf_encode_id_proof_without_id_retrieval(const G1& sig1, const G1& sig2, const G2& k, const G1& phi,
+                                              const Fr& c, const std::vector<Fr>& rs,
+                                              const std::vector<std::string>& attributes);
+
+void
+protobuf_decode_id_proof_without_id_retrieval(const IdProof& id_proof, G1& sig1, G1& sig2, G2& k, G1& phi,
+                                              Fr& c, std::vector<Fr>& rs, std::vector<std::string>& attributes);
 
 #endif  // PS_SRC_PROTOBUF_ENCODING_H_

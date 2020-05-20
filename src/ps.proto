@@ -1,9 +1,5 @@
 syntax = "proto3";
 
-message G1Point {
-  bytes g = 1;
-}
-
 message PSPubKey {
   bytes g = 1;
   bytes gg = 2;
@@ -24,7 +20,7 @@ message PSCredential {
   bytes sig2 = 2;
 }
 
-message ProveID {
+message IdProof {
   bytes sig1 = 1;
   bytes sig2 = 2;
   bytes k = 3;
