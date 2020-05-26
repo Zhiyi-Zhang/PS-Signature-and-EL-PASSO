@@ -265,8 +265,8 @@ public:
    *  - G2, derived public key, the second part
    *  - G2, derived public key, the third part
    */
-  std::shared_ptr<PSSigner>
-  el_passo_derive_device_key(const std::string& attribute_s, const std::string& service_name);
+  // std::shared_ptr<PSSigner>
+  // el_passo_derive_device_key(const std::string& attribute_s, const std::string& service_name);
 
 private:
   G2
@@ -284,5 +284,14 @@ private:
 
   Fr m_dev_x;  // used in device key derivation
 };
+
+std::tuple<G1, Fr> // pub_key, prv_key
+el_gammal_key_gen(const G1& generator);
+
+std::tuple<G1, G1> // cipher 1, cipher 2
+el_gammal_encrypt(const G1& generator, const G1& pub_key, const Fr& payload);
+
+Fr // payload
+el_gammal_decrypt(const G1& generator, const Fr& prv_key, const G1& cipher_1, const G1& cipher_2);
 
 #endif  // PS_SRC_PS_H_

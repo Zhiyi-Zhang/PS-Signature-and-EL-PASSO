@@ -770,24 +770,44 @@ PSRequester::prepare_hybrid_verification(const G2& k, const std::vector<std::str
   return _final_k;
 }
 
-std::shared_ptr<PSSigner>
-PSRequester::el_passo_derive_device_key(const std::string& attribute_s, const std::string& service_name)
+// std::shared_ptr<PSSigner>
+// PSRequester::el_passo_derive_device_key(const std::string& attribute_s, const std::string& service_name)
+// {
+//   if (!m_dev_x.isOne()) {
+//     m_dev_x.setHashOf(attribute_s);
+//   }
+//   Fr _dev_y;
+//   _dev_y.setByCSPRNG();
+//   G1 _sk, _pk_1;
+//   G1::mul(_sk, m_g, m_dev_x);
+//   G1::mul(_pk_1, m_g, _dev_y);
+//   G2 _h, _pk_2, _pk_3;
+//   hashAndMapToG2(_h, service_name);
+//   G2::mul(_pk_2, _h, m_dev_x);
+//   G2::mul(_pk_3, _h, _dev_y);
+//   std::vector<G1> _pk_Yi;
+//   _pk_Yi.push_back(_pk_1);
+//   std::vector<G2> _pk_YYi;
+//   _pk_YYi.push_back(_pk_3);
+//   return std::make_shared<PSSigner>(1, m_g, _h, _sk, _pk_2, _pk_Yi, _pk_YYi);
+// }
+
+std::tuple<G1, Fr> // pub_key, prv_key
+el_gamma_key_gen(const G1& generator)
 {
-  if (!m_dev_x.isOne()) {
-    m_dev_x.setHashOf(attribute_s);
-  }
-  Fr _dev_y;
-  _dev_y.setByCSPRNG();
-  G1 _sk, _pk_1;
-  G1::mul(_sk, m_g, m_dev_x);
-  G1::mul(_pk_1, m_g, _dev_y);
-  G2 _h, _pk_2, _pk_3;
-  hashAndMapToG2(_h, service_name);
-  G2::mul(_pk_2, _h, m_dev_x);
-  G2::mul(_pk_3, _h, _dev_y);
-  std::vector<G1> _pk_Yi;
-  _pk_Yi.push_back(_pk_1);
-  std::vector<G2> _pk_YYi;
-  _pk_YYi.push_back(_pk_3);
-  return std::make_shared<PSSigner>(1, m_g, _h, _sk, _pk_2, _pk_Yi, _pk_YYi);
+  Fr x;
+  x.setByCSPRNG();
+  G1 h = generator;
+  G1::mul(h, h, x);
+  return std::make_tuple(h, x);
 }
+
+std::tuple<G1, G1> // cipher 1, cipher 2
+el_gamma_encrypt(const G1& generator, const G1& pub_key, const Fr& payload)
+{
+  Fr y;
+  y.setByCSPRNG();
+}
+
+Fr // payload
+el_gamma_decrypt(const G1& generator, const Fr& prv_key, const G1& cipher_1, const G1& cipher_2);
