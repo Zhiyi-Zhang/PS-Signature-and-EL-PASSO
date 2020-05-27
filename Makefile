@@ -83,7 +83,7 @@ $(WASM_BUILD_DIR)/el-passo-user.js : test-wasm/el-passo-user.cc $(MCL_DIR)/src/f
 el-pass-wasm : $(WASM_BUILD_DIR)/el-passo-user.js $(WASM_BUILD_DIR)/el-passo-rp.js $(WASM_BUILD_DIR)/el-passo-idp.js $(WASM_BUILD_DIR)/ps-tests.html
 
 clean:
-	rm -rf build
+	rm -rf $(BUILD_DIR)
 
 cleanjs:
-	rm -f *.js *.wasm *.html *.bc
+	rm -rf $(WASM_BUILD_DIR)
