@@ -1,5 +1,7 @@
 #include <protobuf-encoding.h>
-#include <ps.h>
+#include <ps-requester.h>
+#include <ps-signer.h>
+#include <ps-verifier.h>
 #include <iostream>
 #include <emscripten/emscripten.h>
 
@@ -170,7 +172,7 @@ test_el_passo(size_t total_attribute_num)
   // RP-VerifyID
   protobuf_decode_prove_id(*prove_id_msg, prove_id_sig1, prove_id_sig2, prove_id_k, prove_id_phi, prove_id_E1,
                            prove_id_E2, prove_id_c, prove_id_rs, prove_id_plaintext_attributes);
-  PSRequester rp;
+  PSVerifier rp;
   rp.init_with_pk(pk_g, pk_gg, pk_XX, pk_Yi, pk_YYi);
   begin = std::chrono::steady_clock::now();
   bool result = rp.el_passo_verify_id(
