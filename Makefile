@@ -55,10 +55,6 @@ EMCC_OPT += -s WASM=1 -s NO_EXIT_RUNTIME=1 -s
 EMCC_OPT += -s ABORTING_MALLOC=0
 MCL_C_DEP = $(MCL_DIR)/src/fp.cpp $(MCL_DIR)/include/mcl/impl/bn_c_impl.hpp $(MCL_DIR)/include/mcl/bn.hpp $(MCL_DIR)/include/mcl/fp.hpp $(MCL_DIR)/include/mcl/op.hpp
 
-$(WASM_BUILD_DIR)/ps.js : src/ps.cc $(MCL_DIR)/src/fp.cpp
-	mkdir -p $(@D)
-	$(EMCC) -o $@ $(MCL_DIR)/src/fp.cpp src/ps.cc $(EMCC_OPT) -DMCL_DONT_USE_XBYAK -DMCL_DONT_USE_OPENSSL -DMCL_USE_VINT -DMCL_SIZEOF_UNIT=8 -DMCL_VINT_64BIT_PORTABLE -DMCL_VINT_FIXED_BUFFER -DMCL_MAX_BIT_SIZE=384
-
 $(WASM_BUILD_DIR)/ps-tests.js : test-wasm/ps-tests.cc $(MCL_DIR)/src/fp.cpp $(SRCS)
 	mkdir -p $(@D)
 	$(EMCC) -o $@ test-wasm/ps-tests.cc $(MCL_DIR)/src/fp.cpp src/ps-signer.cc src/ps-verifier.cc src/ps-requester.cc $(EMCC_OPT) -DMCL_DONT_USE_XBYAK -DMCL_DONT_USE_OPENSSL -DMCL_USE_VINT -DMCL_SIZEOF_UNIT=8 -DMCL_VINT_64BIT_PORTABLE -DMCL_VINT_FIXED_BUFFER -DMCL_MAX_BIT_SIZE=384
@@ -79,6 +75,10 @@ $(WASM_BUILD_DIR)/el-passo-rp.js : test-wasm/el-passo-rp.cc $(MCL_DIR)/src/fp.cp
 $(WASM_BUILD_DIR)/el-passo-user.js : test-wasm/el-passo-user.cc $(MCL_DIR)/src/fp.cpp $(SRCS)
 	mkdir -p $(@D)
 	$(EMCC) -o $@ test-wasm/el-passo-user.cc src/ps-requester.cc $(MCL_DIR)/src/fp.cpp $(EMCC_OPT) -DMCL_DONT_USE_XBYAK -DMCL_DONT_USE_OPENSSL -DMCL_USE_VINT -DMCL_SIZEOF_UNIT=8 -DMCL_VINT_64BIT_PORTABLE -DMCL_VINT_FIXED_BUFFER -DMCL_MAX_BIT_SIZE=384
+
+$(WASM_BUILD_DIR)/el-passo-all.js : test-wasm/el-passo-all.cc $(MCL_DIR)/src/fp.cpp $(SRCS)
+	mkdir -p $(@D)
+	$(EMCC) -o $@ test-wasm/el-passo-all.cc src/ps-signer.cc src/ps-requester.cc src/ps-verifier.cc $(MCL_DIR)/src/fp.cpp $(EMCC_OPT) -DMCL_DONT_USE_XBYAK -DMCL_DONT_USE_OPENSSL -DMCL_USE_VINT -DMCL_SIZEOF_UNIT=8 -DMCL_VINT_64BIT_PORTABLE -DMCL_VINT_FIXED_BUFFER -DMCL_MAX_BIT_SIZE=384
 
 el-pass-wasm : $(WASM_BUILD_DIR)/el-passo-user.js $(WASM_BUILD_DIR)/el-passo-rp.js $(WASM_BUILD_DIR)/el-passo-idp.js $(WASM_BUILD_DIR)/ps-tests.html
 
