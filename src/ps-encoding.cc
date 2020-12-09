@@ -248,7 +248,8 @@ PSBuffer::appendStrList(const std::vector<std::string>& strs)
   this->appendType(PSEncodingType::StrList);
   this->appendVar(strs.size());
   for (const auto& item : strs) {
-    this->reserve(this->size() + item.size());
+    this->reserve(this->size() + probeVarSize(item.size()) + item.size());
+    this->appendVar(item.size());
     this->insert(this->end(), item.c_str(), item.c_str() + item.size());
   }
 }
@@ -372,8 +373,11 @@ IdProof::fromBufferString(const PSBuffer& buf)
   step += buf.parseFrList(step, proof.rs);
   step += buf.parseStrList(step, proof.attributes);
   if (step < buf.size()) {
-    step += buf.parseG1Element(step, proof.E1.value());
-    step += buf.parseG1Element(step, proof.E2.value());
+    G1 e1, e2;
+    step += buf.parseG1Element(step, e1);
+    step += buf.parseG1Element(step, e2);
+    proof.E1 = e1;
+    proof.E2 = e2;
   }
   return proof;
 }
