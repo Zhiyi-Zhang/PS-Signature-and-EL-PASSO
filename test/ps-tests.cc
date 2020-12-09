@@ -21,26 +21,26 @@ test_ps_sign_verify()
   attributes.push_back(std::make_tuple("secret1", true));
   attributes.push_back(std::make_tuple("secret2", true));
   attributes.push_back(std::make_tuple("plain1", false));
-  auto [request_A, request_c, request_rs, request_attributes] = user.el_passo_request_id(attributes, "hello");
+  auto request = user.el_passo_request_id(attributes, "hello");
 
-  G1 sig1, sig2;
-  if (!idp.el_passo_provide_id(request_A, request_c, request_rs, request_attributes, "hello", sig1, sig2)) {
+  PSCredential sig;
+  if (!idp.el_passo_provide_id(request, "hello", sig)) {
     std::cout << "sign request failure" << std::endl;
     return;
   }
 
-  auto [ubld_sig1, ubld_sig2] = user.unblind_credential(sig1, sig2);
+  auto ubld_sig = user.unblind_credential(sig);
   std::vector<std::string> all_attributes;
   all_attributes.push_back("secret1");
   all_attributes.push_back("secret2");
   all_attributes.push_back("plain1");
-  if (!user.verify(ubld_sig1, ubld_sig2, all_attributes)) {
+  if (!user.verify(ubld_sig, all_attributes)) {
     std::cout << "unblinded credential verification failure" << std::endl;
     return;
   }
 
-  auto [rand_sig1, rand_sig2] = user.randomize_credential(ubld_sig1, ubld_sig2);
-  if (!user.verify(rand_sig1, rand_sig2, all_attributes)) {
+  auto rand_sig = user.randomize_credential(ubld_sig);
+  if (!user.verify(rand_sig, all_attributes)) {
     std::cout << "randomized credential verification failure" << std::endl;
     return;
   }
@@ -73,16 +73,16 @@ test_el_passo(size_t total_attribute_num)
   attributes.push_back(std::make_tuple("gamma", true));
   attributes.push_back(std::make_tuple("tp", false));
   begin = std::chrono::steady_clock::now();
-  auto [request_A, request_c, request_rs, request_attributes] = user.el_passo_request_id(attributes, "hello");
+  auto request = user.el_passo_request_id(attributes, "hello");
   end = std::chrono::steady_clock::now();
   std::cout << "User-RequestID: "
             << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
             << "[µs]" << std::endl;
 
   // IDP-ProvideID
-  G1 sig1, sig2;
+  PSCredential sig;
   begin = std::chrono::steady_clock::now();
-  bool sign_result = idp.el_passo_provide_id(request_A, request_c, request_rs, request_attributes, "hello", sig1, sig2);
+  bool sign_result = idp.el_passo_provide_id(request, "hello", sig);
   end = std::chrono::steady_clock::now();
   std::cout << "IDP-ProvideID: "
             << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
@@ -94,7 +94,7 @@ test_el_passo(size_t total_attribute_num)
 
   // User-UnblindID
   begin = std::chrono::steady_clock::now();
-  auto [ubld_sig1, ubld_sig2] = user.unblind_credential(sig1, sig2);
+  auto ubld_sig = user.unblind_credential(sig);
   end = std::chrono::steady_clock::now();
   std::cout << "User-UnblindID: "
             << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
@@ -108,7 +108,7 @@ test_el_passo(size_t total_attribute_num)
   begin = std::chrono::steady_clock::now();
   auto [prove_id_sig1, prove_id_sig2, prove_id_k, prove_id_phi, prove_id_E1,
         prove_id_E2, prove_id_c, prove_id_rs, prove_id_plaintext_attributes] =
-      user.el_passo_prove_id(ubld_sig1, ubld_sig2, attributes, "hello", "service", authority_pk, g, h);
+      user.el_passo_prove_id(ubld_sig, attributes, "hello", "service", authority_pk, g, h);
   end = std::chrono::steady_clock::now();
   std::cout << "User-ProveID: "
             << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()

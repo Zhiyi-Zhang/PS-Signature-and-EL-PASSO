@@ -14,7 +14,7 @@ VPATH = ./src ./test
 BUILD_DIR = build
 
 PROGRAMS = $(BUILD_DIR)/ps-tests $(BUILD_DIR)/encoding-tests
-SRCS = $(wildcard src/*.cpp)
+SRCS = $(wildcard src/*.cc)
 OBJECTS = $(BUILD_DIR)/ps-verifier.o $(BUILD_DIR)/ps-signer.o $(BUILD_DIR)/ps-requester.o $(BUILD_DIR)/ps-encoding.o
 PS_TEST_OBJECTS = $(BUILD_DIR)/ps-tests.o $(OBJECTS)
 ENCODING_TEST_OBJECTS = $(BUILD_DIR)/encoding-test.o $(OBJECTS)
@@ -36,11 +36,11 @@ $(BUILD_DIR)/%.o: %.cc
 	mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-$(BUILD_DIR)/ps-tests: $(PS_TEST_OBJECTS) $(SRCS)
+$(BUILD_DIR)/ps-tests: $(PS_TEST_OBJECTS)
 	mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LIBS)
 
-$(BUILD_DIR)/encoding-tests: $(ENCODING_TEST_OBJECTS) $(SRCS)
+$(BUILD_DIR)/encoding-tests: $(ENCODING_TEST_OBJECTS)
 	mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LIBS)
 

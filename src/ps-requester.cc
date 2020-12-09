@@ -10,7 +10,7 @@ PSRequester::PSRequester(const PSPubKey& pk)
 {
 }
 
-std::tuple<G1, Fr, std::vector<Fr>, std::vector<std::string>>
+PSCredRequest
 PSRequester::el_passo_request_id(const std::vector<std::tuple<std::string, bool>> attributes,  // string is the attribute, bool whether to hide
                                  const std::string& associated_data)
 {
@@ -22,13 +22,11 @@ PSRequester::el_passo_request_id(const std::vector<std::tuple<std::string, bool>
    */
 
   // parameters to send:
-  G1 _A;
-  Fr _c;
-  std::vector<Fr> _rs;
-  _rs.reserve(attributes.size() + 1);
+  PSCredRequest request;
+  request.rs.reserve(attributes.size() + 1);
   // Prepare for A
   m_t1.setByCSPRNG();
-  G1::mul(_A, m_pk.g, m_t1);
+  G1::mul(request.A, m_pk.g, m_t1);
   Fr _attribute_hash;
   G1 _Yi_hash, _Yi_randomness;
   std::vector<Fr> _attribute_hashes;
@@ -49,7 +47,7 @@ PSRequester::el_passo_request_id(const std::vector<std::tuple<std::string, bool>
       _attribute_hash.setHashOf(std::get<0>(attributes[i]));
       _attribute_hashes.push_back(_attribute_hash);
       G1::mul(_Yi_hash, m_pk.Yi[i], _attribute_hash);
-      G1::add(_A, _A, _Yi_hash);
+      G1::add(request.A, request.A, _Yi_hash);
       // generate randomness
       _temp_randomness.setByCSPRNG();
       _randomnesses.push_back(_temp_randomness);  // the randomness for message i
@@ -60,52 +58,54 @@ PSRequester::el_passo_request_id(const std::vector<std::tuple<std::string, bool>
   }
   // Calculate c
   cybozu::Sha256 digest_engine;
-  digest_engine.update(_A.serializeToHexStr());
+  digest_engine.update(request.A.serializeToHexStr());
   digest_engine.update(_V.serializeToHexStr());
   auto _c_str = digest_engine.digest(associated_data);
-  _c.setHashOf(_c_str);
-  // std::cout << "parepare: A: " << _A.serializeToHexStr() << std::endl;
+  request.c.setHashOf(_c_str);
+  // std::cout << "parepare: A: " << request.A.serializeToHexStr() << std::endl;
   // std::cout << "parepare: V: " << _V.serializeToHexStr() << std::endl;
-  // std::cout << "parepare: c: " << _c.serializeToHexStr() << std::endl;
+  // std::cout << "parepare: c: " << request.c.serializeToHexStr() << std::endl;
   // Calculate rs
   Fr _r_temp;
-  Fr::mul(_r_temp, m_t1, _c);
+  Fr::mul(_r_temp, m_t1, request.c);
   Fr::sub(_r_temp, _randomnesses[0], _r_temp);
-  _rs.push_back(_r_temp);
+  request.rs.push_back(_r_temp);
   for (size_t i = 0; i < _attribute_hashes.size(); i++) {
-    Fr::mul(_r_temp, _attribute_hashes[i], _c);
+    Fr::mul(_r_temp, _attribute_hashes[i], request.c);
     Fr::sub(_r_temp, _randomnesses[i + 1], _r_temp);
-    _rs.push_back(_r_temp);
+    request.rs.push_back(_r_temp);
   }
   // plaintext attributes
-  std::vector<std::string> _plaintext_attributes;
-  _plaintext_attributes.reserve(attributes.size());
+  request.attributes.reserve(attributes.size());
   for (size_t i = 0; i < attributes.size(); i++) {
     if (std::get<1>(attributes[i])) {
-      _plaintext_attributes.push_back("");
+      request.attributes.push_back("");
     }
     else {
-      _plaintext_attributes.push_back(std::get<0>(attributes[i]));
+      request.attributes.push_back(std::get<0>(attributes[i]));
     }
   }
-  return std::make_tuple(_A, _c, _rs, _plaintext_attributes);
+  return request;
 }
 
-std::tuple<G1, G1>
-PSRequester::unblind_credential(const G1& sig1, const G1& sig2) const
+PSCredential
+PSRequester::unblind_credential(const PSCredential& sig) const
 {
   // unblinded_sig <- (sig_1, sig_2 / sig_1^t)
+  PSCredential newSig;
+  newSig.sig1 = sig.sig1;
+
   G1 _sig1_t;
-  G1 _unblinded_sig2;
-  G1::mul(_sig1_t, sig1, m_t1);
-  G1::sub(_unblinded_sig2, sig2, _sig1_t);
-  return std::make_tuple(sig1, _unblinded_sig2);
+  G1::mul(_sig1_t, sig.sig1, m_t1);
+  G1::sub(newSig.sig2, sig.sig2, _sig1_t);
+
+  return newSig;
 }
 
 bool
-PSRequester::verify(const G1& sig1, const G1& sig2, const std::vector<std::string>& all_attributes) const
+PSRequester::verify(const PSCredential& sig, const std::vector<std::string>& all_attributes) const
 {
-  if (sig1.isZero()) {
+  if (sig.sig1.isZero()) {
     return false;
   }
 
@@ -121,24 +121,24 @@ PSRequester::verify(const G1& sig1, const G1& sig2, const std::vector<std::strin
   }
 
   GT _lhs, _rhs;
-  pairing(_lhs, sig1, _yy_hash_sum);
-  pairing(_rhs, sig2, m_pk.gg);
+  pairing(_lhs, sig.sig1, _yy_hash_sum);
+  pairing(_rhs, sig.sig2, m_pk.gg);
   return _lhs == _rhs;
 }
 
-std::tuple<G1, G1>
-PSRequester::randomize_credential(const G1& sig1, const G1& sig2) const
+PSCredential
+PSRequester::randomize_credential(const PSCredential& sig) const
 {
-  G1 _new_sig1, _new_sig2;
+  PSCredential newSig;
   Fr t;
   t.setByCSPRNG();
-  G1::mul(_new_sig1, sig1, t);
-  G1::mul(_new_sig2, sig2, t);
-  return std::make_tuple(_new_sig1, _new_sig2);
+  G1::mul(newSig.sig1, sig.sig1, t);
+  G1::mul(newSig.sig2, sig.sig2, t);
+  return newSig;
 }
 
 std::tuple<G1, G1, G2, G1, G1, G1, Fr, std::vector<Fr>, std::vector<std::string>>  // sig1, sig2, k, phi, E1, E2, c, rs, attributes
-PSRequester::el_passo_prove_id(const G1& sig1, const G1& sig2,
+PSRequester::el_passo_prove_id(const PSCredential& sig,
                                const std::vector<std::tuple<std::string, bool>> attributes,
                                const std::string& associated_data,
                                const std::string& service_name,
@@ -149,9 +149,9 @@ PSRequester::el_passo_prove_id(const G1& sig1, const G1& sig2,
   Fr _t, _r;
   _t.setByCSPRNG();
   _r.setByCSPRNG();
-  G1::mul(_new_sig1, sig1, _r);
-  G1::mul(_new_sig2, sig1, _t);
-  G1::add(_new_sig2, _new_sig2, sig2);
+  G1::mul(_new_sig1, sig.sig1, _r);
+  G1::mul(_new_sig2, sig.sig1, _t);
+  G1::add(_new_sig2, _new_sig2, sig.sig2);
   G1::mul(_new_sig2, _new_sig2, _r);
 
   // El Gamal Cipher E = g^epsilon, y^epsilon * h^gamma
@@ -297,7 +297,7 @@ PSRequester::el_passo_prove_id(const G1& sig1, const G1& sig2,
 }
 
 std::tuple<G1, G1, G2, G1, Fr, std::vector<Fr>, std::vector<std::string>>  // sig1, sig2, k, phi, c, rs, attributes
-PSRequester::el_passo_prove_id_without_id_retrieval(const G1& sig1, const G1& sig2,
+PSRequester::el_passo_prove_id_without_id_retrieval(const PSCredential& sig,
                                                     const std::vector<std::tuple<std::string, bool>> attributes,
                                                     const std::string& associated_data,
                                                     const std::string& service_name)
@@ -307,9 +307,9 @@ PSRequester::el_passo_prove_id_without_id_retrieval(const G1& sig1, const G1& si
   Fr _t, _r;
   _t.setByCSPRNG();
   _r.setByCSPRNG();
-  G1::mul(_new_sig1, sig1, _r);
-  G1::mul(_new_sig2, sig1, _t);
-  G1::add(_new_sig2, _new_sig2, sig2);
+  G1::mul(_new_sig1, sig.sig1, _r);
+  G1::mul(_new_sig2, sig.sig1, _t);
+  G1::add(_new_sig2, _new_sig2, sig.sig2);
   G1::mul(_new_sig2, _new_sig2, _r);
 
   // phi = hash(service_name)^s

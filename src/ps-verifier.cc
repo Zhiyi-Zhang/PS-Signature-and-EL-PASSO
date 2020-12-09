@@ -11,9 +11,9 @@ PSVerifier::PSVerifier(const PSPubKey& pk)
 }
 
 bool
-PSVerifier::verify(const G1& sig1, const G1& sig2, const std::vector<std::string>& all_attributes) const
+PSVerifier::verify(const PSCredential& sig, const std::vector<std::string>& all_attributes) const
 {
-  if (sig1.isZero()) {
+  if (sig.sig1.isZero()) {
     return false;
   }
 
@@ -29,8 +29,8 @@ PSVerifier::verify(const G1& sig1, const G1& sig2, const std::vector<std::string
   }
 
   GT _lhs, _rhs;
-  pairing(_lhs, sig1, _yy_hash_sum);
-  pairing(_rhs, sig2, m_pk.gg);
+  pairing(_lhs, sig.sig1, _yy_hash_sum);
+  pairing(_rhs, sig.sig2, m_pk.gg);
   return _lhs == _rhs;
 }
 

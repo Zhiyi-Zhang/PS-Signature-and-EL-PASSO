@@ -44,9 +44,8 @@ public:
    *   and @p sig1 and @p sig2 will not be initialized.
    */
   bool
-  el_passo_provide_id(const G1& A, const Fr& c, const std::vector<Fr>& rs,
-                      const std::vector<std::string>& attributes,
-                      const std::string& associated_data, G1& sig1, G1& sig2) const;
+  el_passo_provide_id(const PSCredRequest& request,
+                      const std::string& associated_data, PSCredential& sig) const;
 
   /**
    * Use PS key to sign over a committed message.
@@ -56,7 +55,7 @@ public:
    *  - G1, the PS signature, first element
    *  - G2, the PS signature, second element
    */
-  std::tuple<G1, G1>
+  PSCredential
   sign_commitment(const G1& commitment) const;
 
   /**
@@ -70,19 +69,18 @@ public:
    *  - G1, the PS signature, first element
    *  - G2, the PS signature, second element
    */
-  std::tuple<G1, G1>
+  PSCredential
   sign_hybrid(const G1& commitment, const std::vector<std::string>& attributes) const;
 
 private:
   bool
-  el_passo_nizk_verify_request(const G1& A, const Fr& c, const std::vector<Fr>& rs,
-                               const std::vector<std::string>& attributes,
+  el_passo_nizk_verify_request(const PSCredRequest& request,
                                const std::string& associated_data) const;
 
 private:
-  size_t m_attribute_num;    // maximum supported number of attributes
-  G1 m_sk_X;                 // private key, X
-  PSPubKey m_pk;
+  size_t m_attribute_num;  // maximum supported number of attributes
+  G1 m_sk_X;               // private key, X
+  PSPubKey m_pk;           // public key
 };
 
 #endif  // PS_SRC_PS_SIGNER_H_

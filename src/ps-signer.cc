@@ -61,20 +61,18 @@ PSSigner::get_pub_key()
 }
 
 bool
-PSSigner::el_passo_provide_id(const G1& A, const Fr& c, const std::vector<Fr>& rs,
-                              const std::vector<std::string>& attributes,
-                              const std::string& associated_data, G1& sig1, G1& sig2) const
+PSSigner::el_passo_provide_id(const PSCredRequest& request,
+                              const std::string& associated_data, PSCredential& sig) const
 {
-  if (!el_passo_nizk_verify_request(A, c, rs, attributes, associated_data)) {
+  if (!el_passo_nizk_verify_request(request, associated_data)) {
     return false;
   }
-  std::tie(sig1, sig2) = sign_hybrid(A, attributes);
+  sig = sign_hybrid(request.A, request.attributes);
   return true;
 }
 
 bool
-PSSigner::el_passo_nizk_verify_request(const G1& A, const Fr& c, const std::vector<Fr>& rs,
-                                       const std::vector<std::string>& attributes,
+PSSigner::el_passo_nizk_verify_request(const PSCredRequest& request,
                                        const std::string& associated_data) const
 {
   // NIZK proof
@@ -82,14 +80,14 @@ PSSigner::el_passo_nizk_verify_request(const G1& A, const Fr& c, const std::vect
   // true if hash( A || V || associated_data ) = c
   // prepare V
   G1 _V;
-  G1::mul(_V, A, c);
+  G1::mul(_V, request.A, request.c);
   G1 _temp;
-  G1::mul(_temp, m_pk.g, rs[0]);
+  G1::mul(_temp, m_pk.g, request.rs[0]);
   G1::add(_V, _V, _temp);
   int j = 1;
-  for (size_t i = 0; i < attributes.size(); i++) {
-    if (attributes[i] == "") {
-      G1::mul(_temp, m_pk.Yi[i], rs[j]);
+  for (size_t i = 0; i < request.attributes.size(); i++) {
+    if (request.attributes[i] == "") {
+      G1::mul(_temp, m_pk.Yi[i], request.rs[j]);
       j++;
       G1::add(_V, _V, _temp);
     }
@@ -97,21 +95,21 @@ PSSigner::el_passo_nizk_verify_request(const G1& A, const Fr& c, const std::vect
   // prepare c
   Fr _m_c;
   cybozu::Sha256 digest_engine;
-  digest_engine.update(A.serializeToHexStr());
+  digest_engine.update(request.A.serializeToHexStr());
   digest_engine.update(_V.serializeToHexStr());
   auto _c_str = digest_engine.digest(associated_data);
   _m_c.setHashOf(_c_str);
-  // std::cout << "sign: A: " << A.serializeToHexStr() << std::endl;
+  // std::cout << "sign: A: " << request.A.serializeToHexStr() << std::endl;
   // std::cout << "sign: V: " << _V.serializeToHexStr() << std::endl;
   // std::cout << "sign: c: " << _m_c.serializeToHexStr() << std::endl;
   // check if NIZK verification is successful
-  if (_m_c != c) {
+  if (_m_c != request.c) {
     return false;
   }
   return true;
 }
 
-std::tuple<G1, G1>
+PSCredential
 PSSigner::sign_hybrid(const G1& commitment, const std::vector<std::string>& attributes) const
 {
   if (attributes.size() == 1) {
@@ -131,19 +129,18 @@ PSSigner::sign_hybrid(const G1& commitment, const std::vector<std::string>& attr
   return this->sign_commitment(_final_A);
 }
 
-std::tuple<G1, G1>
+PSCredential
 PSSigner::sign_commitment(const G1& commitment) const
 {
   Fr u;
   u.setByCSPRNG();
 
+  PSCredential sig;
   // sig 1
-  G1 sig1;
-  G1::mul(sig1, m_pk.g, u);
+  G1::mul(sig.sig1, m_pk.g, u);
   // sig 2
-  G1 sig2;
-  G1::add(sig2, m_sk_X, commitment);
-  G1::mul(sig2, sig2, u);
+  G1::add(sig.sig2, m_sk_X, commitment);
+  G1::mul(sig.sig2, sig.sig2, u);
 
-  return std::make_tuple(sig1, sig2);
+  return sig;
 }

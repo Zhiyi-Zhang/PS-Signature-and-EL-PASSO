@@ -32,7 +32,7 @@ public:
    * @return true if the signature is valid.
    */
   bool
-  verify(const G1& sig1, const G1& sig2, const std::vector<std::string>& all_attributes) const;
+  verify(const PSCredential& sig, const std::vector<std::string>& all_attributes) const;
 
   /**
    * EL PASSO VerifyID
@@ -77,10 +77,10 @@ private:
   prepare_hybrid_verification(const G2& k, const std::vector<std::string>& attributes) const;
 
 private:
-  PSPubKey m_pk;
-  Fr m_sk_x;  // private key, x
-  G1 m_sk_X;  // private key, X
-  Fr m_t1;    // used for commiting attributes
+  PSPubKey m_pk;  // public key
+  Fr m_sk_x;      // private key, x
+  G1 m_sk_X;      // private key, X
+  Fr m_t1;        // used for commiting attributes
 };
 
 #endif  // PS_SRC_PS_VERIFIER_H_

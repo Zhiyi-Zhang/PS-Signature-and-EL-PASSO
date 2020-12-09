@@ -37,7 +37,7 @@ public:
    *   - std::vector<std::string>, attributes, attributes that only contain plaintext attributes
    *     and "" for committed attributes. The order of attributes is the same as @p attributes.
    */
-  std::tuple<G1, Fr, std::vector<Fr>, std::vector<std::string>>
+  PSCredRequest
   el_passo_request_id(const std::vector<std::tuple<std::string, bool>> attributes,  // string is the attribute, bool whether to hide
                       const std::string& associated_data);
 
@@ -50,8 +50,8 @@ public:
    *   - G1, unblinded PS signature, part one.
    *   - G1, unblinded PS signature, part two.
    */
-  std::tuple<G1, G1>
-  unblind_credential(const G1& sig1, const G1& sig2) const;
+  PSCredential
+  unblind_credential(const PSCredential& sig) const;
 
   /**
    * Verify the signature over the given attributes (all in plaintext).
@@ -63,7 +63,7 @@ public:
    * @return true if the signature is valid.
    */
   bool
-  verify(const G1& sig1, const G1& sig2, const std::vector<std::string>& all_attributes) const;
+  verify(const PSCredential& sig, const std::vector<std::string>& all_attributes) const;
 
   /**
    * Randomize a signature.
@@ -74,8 +74,8 @@ public:
    *   - G1, randomized PS signature, part one.
    *   - G1, randomized PS signature, part two.
    */
-  std::tuple<G1, G1>
-  randomize_credential(const G1& sig1, const G1& sig2) const;
+  PSCredential
+  randomize_credential(const PSCredential& sig) const;
 
   /**
    * EL PASSO ProveID
@@ -109,14 +109,14 @@ public:
    *     and "" for committed attributes. The order of attributes is the same as @p attributes.
    */
   std::tuple<G1, G1, G2, G1, G1, G1, Fr, std::vector<Fr>, std::vector<std::string>>  // sig1, sig2, k, phi, E1, E2, c, rs, attributes
-  el_passo_prove_id(const G1& sig1, const G1& sig2,
+  el_passo_prove_id(const PSCredential& sig,
                     const std::vector<std::tuple<std::string, bool>> attributes,
                     const std::string& associated_data,
                     const std::string& service_name,
                     const G1& authority_pk, const G1& g, const G1& h);
 
   std::tuple<G1, G1, G2, G1, Fr, std::vector<Fr>, std::vector<std::string>>  // sig1, sig2, k, phi, c, rs, attributes
-  el_passo_prove_id_without_id_retrieval(const G1& sig1, const G1& sig2,
+  el_passo_prove_id_without_id_retrieval(const PSCredential& sig,
                                          const std::vector<std::tuple<std::string, bool>> attributes,
                                          const std::string& associated_data,
                                          const std::string& service_name);
@@ -126,10 +126,10 @@ private:
   prepare_hybrid_verification(const G2& k, const std::vector<std::string>& attributes) const;
 
 private:
-  PSPubKey m_pk;
-  Fr m_sk_x;  // private key, x
-  G1 m_sk_X;  // private key, X
-  Fr m_t1;    // used for commiting attributes
+  PSPubKey m_pk;  // public key
+  Fr m_sk_x;      // private key, x
+  G1 m_sk_X;      // private key, X
+  Fr m_t1;        // used for commiting attributes
 };
 
 #endif  // PS_SRC_PS_REQUESTER_H_
