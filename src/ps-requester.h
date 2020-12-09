@@ -11,26 +11,21 @@ using namespace mcl::bls12;
 class PSRequester {
 public:
   /**
-   * Add PS public key.
-   * This function should be called before any other PS related functions.
+   * @brief Construct a new PSRequester object
    *
-   * @p g, input, generator of G1.
-   * @p gg, input, generator of G2.
-   * @p XX, input, gg^x, a point in G2.
-   * @p Yi, input, g^yi, points in G1. Yi.size() is the fixed based on PS public key's allowed attribute size.
-   * @p YYi, input, gg^yi, points in G2. Yi.size() is the fixed based on PS public key's allowed attribute size.
+   * @param pk input The public key of the PSSigner.
    */
   PSRequester(const PSPubKey& pk);
 
   /**
-   * Generate a request along with a NIZK proof for a PSSigner to sign over requester's
-   * blinded attributes and plaintext attributes.
+   * @brief Generate a request along with a NIZK proof for the PSSigner to sign over requester's
+   *        blinded attributes and plaintext attributes.
    *
    * @p attributes, input, user's attributes in the format of tuple<std::string, bool>.
    *   - std::string, the value of the attribute.
    *   - bool, true if the attribute should be committed.
    * @p associated_data, input, used for NIZK Schnorr verification.
-   * @return
+   * @return PSCredRequest containing
    *   - G1, A, committed attributes
    *   - Fr, c, used for NIZK Schnorr verification.
    *   - std::vector<Fr>, rs, used for NIZK Schnorr verification.
@@ -44,9 +39,8 @@ public:
   /**
    * Unblind the signature after the PSSigner signs requester's attribtues.
    *
-   * @p sig1, the PS signature returned by the PSSigner, part one.
-   * @p sig2, the PS signature returned by the PSSigner, part two.
-   * @return
+   * @p sig, the PS signature (certificate) returned by the PSSigner.
+   * @return PSCredential containing
    *   - G1, unblinded PS signature, part one.
    *   - G1, unblinded PS signature, part two.
    */
@@ -56,8 +50,7 @@ public:
   /**
    * Verify the signature over the given attributes (all in plaintext).
    *
-   * @p sig1, the PS signature, part one.
-   * @p sig2, the PS signature, part two.
+   * @p sig, the PS signature.
    * @p all_attributes, the attributes in the same order as when the PS signature is requested.
    *                    All in plaintext.
    * @return true if the signature is valid.
@@ -68,9 +61,8 @@ public:
   /**
    * Randomize a signature.
    *
-   * @p sig1, the PS signature, part one.
-   * @p sig2, the PS signature, part two.
-   * @return
+   * @p sig, the PS signature.
+   * @return PSCredential containing
    *   - G1, randomized PS signature, part one.
    *   - G1, randomized PS signature, part two.
    */
@@ -86,8 +78,7 @@ public:
    *   -# an NIZK proof of the PS signature, recovery token, and phi.
    *   -# a list of attributes where the committed attribute slot is "" and plaintext attribute is the full attribute.
    *
-   * @p sig1, input, the original PS signature, first part.
-   * @p sig2, input, the original PS signature, second part.
+   * @p sig, input, the original PS signature.
    * @p attributes, input, user's attributes in the format of tuple<std::string, bool>.
    *   - std::string, the value of the attribute.
    *   - bool, true if the attribute should be committed.
@@ -96,26 +87,27 @@ public:
    * @p authority_pk, input, the EL Gamal public key (a G1 point) of an accountability authority.
    * @p g, input, a G1 point that both prover and verifier agree on for NIZK of the identity retrieval token
    * @p h, input, a G1 point that both prover and verifier agree on for NIZK of the identity retrieval token
-   * @return
+   * @return IdProof containing
    *   - G1, random_sig1, randomized signature, first part.
    *   - G1, random_sig2, randomized signature, second part.
    *   - G2, k, a part of the public value used for signature verification and NIZK Schnorr verification.
    *   - G1, phi, user's unique ID at RP.
-   *   - G1, E1, El Gamal ciphertext as the identity retrieval token, first part.
-   *   - G1, E2, El Gamal ciphertext as the identity retrieval token, second part.
    *   - Fr, c, used for NIZK Schnorr verification.
    *   - std::vector<Fr>, rs, used for NIZK Schnorr verification.
    *   - std::vector<std::string>, attributes, attributes that only contain plaintext attributes
    *     and "" for committed attributes. The order of attributes is the same as @p attributes.
+   *  When id retrieval is enabled, two addition elements are included:
+   *   - G1, E1, El Gamal ciphertext as the identity retrieval token, first part.
+   *   - G1, E2, El Gamal ciphertext as the identity retrieval token, second part.
    */
-  IdProof  // sig1, sig2, k, phi, E1, E2, c, rs, attributes
+  IdProof
   el_passo_prove_id(const PSCredential& sig,
                     const std::vector<std::tuple<std::string, bool>> attributes,
                     const std::string& associated_data,
                     const std::string& service_name,
                     const G1& authority_pk, const G1& g, const G1& h);
 
-  IdProof  // sig1, sig2, k, phi, c, rs, attributes
+  IdProof
   el_passo_prove_id_without_id_retrieval(const PSCredential& sig,
                                          const std::vector<std::tuple<std::string, bool>> attributes,
                                          const std::string& associated_data,

@@ -2,10 +2,10 @@
 #define PS_SRC_ENCODING_H_
 
 #include <iostream>
-#include <vector>
 #include <mcl/bls12_381.hpp>
 #include <optional>
 #include <string>
+#include <vector>
 
 using namespace mcl::bls12;
 
@@ -20,14 +20,14 @@ enum class PSEncodingType : uint8_t {
 };
 
 class PSBuffer : public std::vector<uint8_t> {
-public: // used for base64 encoding and decoding
+public:  // used for base64 encoding and decoding
   static PSBuffer
   fromBase64(const std::string& base64Str);
 
   std::string
   toBase64();
 
-public: // used for TLV encoding and decoding
+public:  // used for TLV encoding and decoding
   void
   appendType(PSEncodingType type);
 
@@ -83,9 +83,18 @@ public: // used for TLV encoding and decoding
   parseStrList(size_t offset, std::vector<std::string>& strs) const;
 };
 
+/**
+ * @brief A PS Signature. Used as credential/certificate in EL PASSO.
+ */
 class PSCredential {
 public:
+  /**
+   * @brief The part one of the signature.
+   */
   G1 sig1;
+  /**
+   * @brief The part one of the signature.
+   */
   G1 sig2;
 
 public:
@@ -96,13 +105,32 @@ public:
   fromBufferString(const PSBuffer& buf);
 };
 
+/**
+ * @brief Public key used in PS Signature and EL PASSO.
+ */
 class PSPubKey {
 public:
+  /**
+   * @brief Generator of group G1.
+   */
   G1 g;
+  /**
+   * @brief Generator of group G2.
+   */
   G2 gg;
+  /**
+   * @brief gg^x, a point in G2.
+   */
   G2 XX;
+  /**
+   * @brief g^yi, points in G1. Yi.size() is fixed based on PS public key's allowed attribute size.
+   */
   std::vector<G1> Yi;
+  /**
+   * @brief gg^yi, points in G2. YYi.size() is fixed based on PS public key's allowed attribute size.
+   */
   std::vector<G2> YYi;
+
 public:
   PSBuffer
   toBufferString();
@@ -111,12 +139,28 @@ public:
   fromBufferString(const PSBuffer& buf);
 };
 
+/**
+ * @brief Certificate request for a PSRequester to get a certificate from the PSSigner.
+ */
 class PSCredRequest {
 public:
+  /**
+   * @brief A G1 point to which all hidden attributes (secrets) are committed.
+   */
   G1 A;
+  /**
+   * @brief Used for NIZK Schnorr verification.
+   */
   Fr c;
+  /**
+   * @brief Used for NIZK Schnorr verification.
+   */
   std::vector<Fr> rs;
+  /**
+   * @brief A list of plaintext attributes. Empty strings are placeholders for committed attributes.
+   */
   std::vector<std::string> attributes;
+
 public:
   PSBuffer
   toBufferString();
@@ -125,17 +169,48 @@ public:
   fromBufferString(const PSBuffer& buf);
 };
 
+/**
+ * @brief PSRequester's certificate, attributes, unique ID at RP, ID recovery token and corresponding proofs.
+ */
 class IdProof {
 public:
+  /**
+   * @brief Randomized signature, first part.
+   */
   G1 sig1;
+  /**
+   * @brief Randomized signature, first part.
+   */
   G1 sig2;
+  /**
+   * @brief A public value used for signature verification and NIZK Schnorr verification.
+   */
   G2 k;
+  /**
+   * @brief PSRequester's unique ID at RP.
+   */
   G1 phi;
+  /**
+   * @brief used for NIZK Schnorr verification.
+   */
   Fr c;
+  /**
+   * @brief used for NIZK Schnorr verification.
+   */
   std::vector<Fr> rs;
+  /**
+   * @brief A list of plaintext attributes. Empty strings are placeholders for committed attributes.
+   */
   std::vector<std::string> attributes;
+  /**
+   * @brief El Gamal ciphertext as the identity retrieval token, first part.
+   */
   std::optional<G1> E1;
+  /**
+   * @brief El Gamal ciphertext as the identity retrieval token, first part.
+   */
   std::optional<G1> E2;
+
 public:
   PSBuffer
   toBufferString();
@@ -144,4 +219,4 @@ public:
   fromBufferString(const PSBuffer& buf);
 };
 
-#endif // PS_SRC_ENCODING_H_
+#endif  // PS_SRC_ENCODING_H_
