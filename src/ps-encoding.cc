@@ -2,18 +2,6 @@
 
 char buf[1024];
 
-static size_t
-probeVarSize(size_t var)
-{
-  if (var < 253) {
-    return 1;
-  }
-  else if (var <= 0xFFFF) {
-    return 3;
-  }
-  return 0;
-}
-
 static const std::string base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
 static inline bool
@@ -105,6 +93,18 @@ base64_decode(const std::string& encoded_string)
     for (j = 0; (j < i - 1); j++) ret.push_back(char_array_3[j]);
   }
   return ret;
+}
+
+static size_t
+probeVarSize(size_t var)
+{
+  if (var < 253) {
+    return 1;
+  }
+  else if (var <= 0xFFFF) {
+    return 3;
+  }
+  return 0;
 }
 
 PSBuffer
