@@ -16,8 +16,10 @@ protobuf_encode_ps_credential(const G1& sig1, const G1& sig2)
 {
   auto credential = std::make_shared<PSCredential>();
   size_t size = sig1.serialize(buf, sizeof(buf));
+  std::cout << size << std::endl;
   credential->set_sig1(buf, size);
   size = sig2.serialize(buf, sizeof(buf));
+  std::cout << size << std::endl;
   credential->set_sig2(buf, size);
   return credential;
 }

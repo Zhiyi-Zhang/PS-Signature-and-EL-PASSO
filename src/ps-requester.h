@@ -1,9 +1,7 @@
 #ifndef PS_SRC_PS_REQUESTER_H_
 #define PS_SRC_PS_REQUESTER_H_
 
-#include <iostream>
-#include <mcl/bls12_381.hpp>
-#include <string>
+#include "ps-encoding.h"
 
 using namespace mcl::bls12;
 
@@ -12,8 +10,6 @@ using namespace mcl::bls12;
  */
 class PSRequester {
 public:
-  PSRequester();
-
   /**
    * Add PS public key.
    * This function should be called before any other PS related functions.
@@ -24,9 +20,7 @@ public:
    * @p Yi, input, g^yi, points in G1. Yi.size() is the fixed based on PS public key's allowed attribute size.
    * @p YYi, input, gg^yi, points in G2. Yi.size() is the fixed based on PS public key's allowed attribute size.
    */
-  void
-  init_with_pk(const G1& g, const G2& gg, const G2& XX,
-               const std::vector<G1>& Yi, const std::vector<G2>& YYi);
+  PSRequester(const PSPubKey& pk);
 
   /**
    * Generate a request along with a NIZK proof for a PSSigner to sign over requester's
@@ -121,7 +115,6 @@ public:
                     const std::string& service_name,
                     const G1& authority_pk, const G1& g, const G1& h);
 
-
   std::tuple<G1, G1, G2, G1, Fr, std::vector<Fr>, std::vector<std::string>>  // sig1, sig2, k, phi, c, rs, attributes
   el_passo_prove_id_without_id_retrieval(const G1& sig1, const G1& sig2,
                                          const std::vector<std::tuple<std::string, bool>> attributes,
@@ -133,14 +126,10 @@ private:
   prepare_hybrid_verification(const G2& k, const std::vector<std::string>& attributes) const;
 
 private:
-  G1 m_g;                    // G1 generator
-  G2 m_gg;                   // G2 generator
-  Fr m_sk_x;                 // private key, x
-  G1 m_sk_X;                 // private key, X
-  G2 m_pk_XX;                // public key, XX
-  std::vector<G1> m_pk_Yi;   // public key, yi
-  std::vector<G2> m_pk_YYi;  // public key, yyi
-  Fr m_t1;                   // used for commiting attributes
+  PSPubKey m_pk;
+  Fr m_sk_x;  // private key, x
+  G1 m_sk_X;  // private key, X
+  Fr m_t1;    // used for commiting attributes
 };
 
 #endif  // PS_SRC_PS_REQUESTER_H_

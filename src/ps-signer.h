@@ -1,9 +1,7 @@
 #ifndef PS_SRC_PS_SIGNER_H_
 #define PS_SRC_PS_SIGNER_H_
 
-#include <iostream>
-#include <mcl/bls12_381.hpp>
-#include <string>
+#include "ps-encoding.h"
 
 using namespace mcl::bls12;
 
@@ -21,13 +19,13 @@ public:
    *
    * @return the public key.
    */
-  std::tuple<G1, G2, G2, std::vector<G1>, std::vector<G2>>
+  PSPubKey
   key_gen();
 
   /**
    * Get the public key.
    */
-  std::tuple<G1, G2, G2, std::vector<G1>, std::vector<G2>>
+  PSPubKey
   get_pub_key();
 
   /**
@@ -83,12 +81,8 @@ private:
 
 private:
   size_t m_attribute_num;    // maximum supported number of attributes
-  G1 m_g;                    // G1 generator
-  G2 m_gg;                   // G2 generator
   G1 m_sk_X;                 // private key, X
-  G2 m_pk_XX;                // public key, XX
-  std::vector<G1> m_pk_Yi;   // public key, yi
-  std::vector<G2> m_pk_YYi;  // public key, yyi
+  PSPubKey m_pk;
 };
 
 #endif  // PS_SRC_PS_SIGNER_H_

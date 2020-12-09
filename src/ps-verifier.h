@@ -1,9 +1,7 @@
 #ifndef PS_SRC_PS_VERIFIER_H_
 #define PS_SRC_PS_VERIFIER_H_
 
-#include <iostream>
-#include <mcl/bls12_381.hpp>
-#include <string>
+#include "ps-encoding.h"
 
 using namespace mcl::bls12;
 
@@ -12,8 +10,6 @@ using namespace mcl::bls12;
  */
 class PSVerifier {
 public:
-  PSVerifier();
-
   /**
    * Add PS public key.
    * This function should be called before any other PS related functions.
@@ -24,9 +20,7 @@ public:
    * @p Yi, input, g^yi, points in G1. Yi.size() is the fixed based on PS public key's allowed attribute size.
    * @p YYi, input, gg^yi, points in G2. Yi.size() is the fixed based on PS public key's allowed attribute size.
    */
-  void
-  init_with_pk(const G1& g, const G2& gg, const G2& XX,
-               const std::vector<G1>& Yi, const std::vector<G2>& YYi);
+  PSVerifier(const PSPubKey& pk);
 
   /**
    * Verify the signature over the given attributes (all in plaintext).
@@ -83,14 +77,10 @@ private:
   prepare_hybrid_verification(const G2& k, const std::vector<std::string>& attributes) const;
 
 private:
-  G1 m_g;                    // G1 generator
-  G2 m_gg;                   // G2 generator
-  Fr m_sk_x;                 // private key, x
-  G1 m_sk_X;                 // private key, X
-  G2 m_pk_XX;                // public key, XX
-  std::vector<G1> m_pk_Yi;   // public key, yi
-  std::vector<G2> m_pk_YYi;  // public key, yyi
-  Fr m_t1;                   // used for commiting attributes
+  PSPubKey m_pk;
+  Fr m_sk_x;  // private key, x
+  G1 m_sk_X;  // private key, X
+  Fr m_t1;    // used for commiting attributes
 };
 
 #endif  // PS_SRC_PS_VERIFIER_H_

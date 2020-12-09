@@ -5,19 +5,9 @@
 
 using namespace mcl::bls12;
 
-PSRequester::PSRequester()
+PSRequester::PSRequester(const PSPubKey& pk)
+    : m_pk(pk)
 {
-}
-
-void
-PSRequester::init_with_pk(const G1& g, const G2& gg, const G2& XX,
-                          const std::vector<G1>& Yi, const std::vector<G2>& YYi)
-{
-  m_g = g;
-  m_gg = gg;
-  m_pk_XX = XX;
-  m_pk_Yi = Yi;
-  m_pk_YYi = YYi;
 }
 
 std::tuple<G1, Fr, std::vector<Fr>, std::vector<std::string>>
@@ -38,7 +28,7 @@ PSRequester::el_passo_request_id(const std::vector<std::tuple<std::string, bool>
   _rs.reserve(attributes.size() + 1);
   // Prepare for A
   m_t1.setByCSPRNG();
-  G1::mul(_A, m_g, m_t1);
+  G1::mul(_A, m_pk.g, m_t1);
   Fr _attribute_hash;
   G1 _Yi_hash, _Yi_randomness;
   std::vector<Fr> _attribute_hashes;
@@ -51,20 +41,20 @@ PSRequester::el_passo_request_id(const std::vector<std::tuple<std::string, bool>
   _randomnesses.push_back(_temp_randomness);  // the randomness for g^t
   // prepare for V
   G1 _V;
-  G1::mul(_V, m_g, _temp_randomness);
+  G1::mul(_V, m_pk.g, _temp_randomness);
   for (size_t i = 0; i < attributes.size(); i++) {
     if (std::get<1>(attributes[i])) {
       // this attribute needs to be commitmented
       // calculate A
       _attribute_hash.setHashOf(std::get<0>(attributes[i]));
       _attribute_hashes.push_back(_attribute_hash);
-      G1::mul(_Yi_hash, m_pk_Yi[i], _attribute_hash);
+      G1::mul(_Yi_hash, m_pk.Yi[i], _attribute_hash);
       G1::add(_A, _A, _Yi_hash);
       // generate randomness
       _temp_randomness.setByCSPRNG();
       _randomnesses.push_back(_temp_randomness);  // the randomness for message i
       // calculate V
-      G1::mul(_Yi_randomness, m_pk_Yi[i], _temp_randomness);
+      G1::mul(_Yi_randomness, m_pk.Yi[i], _temp_randomness);
       G1::add(_V, _V, _Yi_randomness);
     }
   }
@@ -120,19 +110,19 @@ PSRequester::verify(const G1& sig1, const G1& sig2, const std::vector<std::strin
   }
 
   Fr _attribute_hash;
-  G2 _yy_hash_sum = m_pk_XX;
+  G2 _yy_hash_sum = m_pk.XX;
   int counter = 0;
   G2 _yyi_hash_product;
   for (const auto& attribute : all_attributes) {
     _attribute_hash.setHashOf(attribute);
-    G2::mul(_yyi_hash_product, m_pk_YYi[counter], _attribute_hash);
+    G2::mul(_yyi_hash_product, m_pk.YYi[counter], _attribute_hash);
     G2::add(_yy_hash_sum, _yy_hash_sum, _yyi_hash_product);
     counter++;
   }
 
   GT _lhs, _rhs;
   pairing(_lhs, sig1, _yy_hash_sum);
-  pairing(_rhs, sig2, m_gg);
+  pairing(_rhs, sig2, m_pk.gg);
   return _lhs == _rhs;
 }
 
@@ -183,7 +173,7 @@ PSRequester::el_passo_prove_id(const G1& sig1, const G1& sig2,
   G1::mul(_phi, _service_hash, _s);
 
   // k = XX * PI{ YYj^mj } * gg^t
-  G2 _k = m_pk_XX;
+  G2 _k = m_pk.XX;
   Fr _attribute_hash;
   G2 _yy_hash;
   std::vector<Fr> _attribute_hashes;
@@ -192,11 +182,11 @@ PSRequester::el_passo_prove_id(const G1& sig1, const G1& sig2,
     if (std::get<1>(attributes[i])) {
       _attribute_hash.setHashOf(std::get<0>(attributes[i]));
       _attribute_hashes.push_back(_attribute_hash);
-      G2::mul(_yy_hash, m_pk_YYi[i], _attribute_hash);
+      G2::mul(_yy_hash, m_pk.YYi[i], _attribute_hash);
       G2::add(_k, _k, _yy_hash);
     }
   }
-  G2::mul(_yy_hash, m_gg, _t);
+  G2::mul(_yy_hash, m_pk.gg, _t);
   G2::add(_k, _k, _yy_hash);
 
   /** NIZK Prove:
@@ -221,7 +211,7 @@ PSRequester::el_passo_prove_id(const G1& sig1, const G1& sig2,
    * * random3 - epsilon * c
    */
   // V_k
-  G2 _V_k = m_pk_XX;
+  G2 _V_k = m_pk.XX;
   std::vector<Fr> _randomnesses;
   Fr _temp_randomness;
   G2 _yy_randomness;
@@ -230,13 +220,13 @@ PSRequester::el_passo_prove_id(const G1& sig1, const G1& sig2,
     if (std::get<1>(attributes[i])) {
       _temp_randomness.setByCSPRNG();
       _randomnesses.push_back(_temp_randomness);
-      G2::mul(_yy_randomness, m_pk_YYi[i], _temp_randomness);
+      G2::mul(_yy_randomness, m_pk.YYi[i], _temp_randomness);
       G2::add(_V_k, _V_k, _yy_randomness);
     }
   }
   _temp_randomness.setByCSPRNG();
   _randomnesses.push_back(_temp_randomness);  // random2
-  G2::mul(_yy_randomness, m_gg, _temp_randomness);
+  G2::mul(_yy_randomness, m_pk.gg, _temp_randomness);
   G2::add(_V_k, _V_k, _yy_randomness);
 
   // V_phi
@@ -308,9 +298,9 @@ PSRequester::el_passo_prove_id(const G1& sig1, const G1& sig2,
 
 std::tuple<G1, G1, G2, G1, Fr, std::vector<Fr>, std::vector<std::string>>  // sig1, sig2, k, phi, c, rs, attributes
 PSRequester::el_passo_prove_id_without_id_retrieval(const G1& sig1, const G1& sig2,
-                                         const std::vector<std::tuple<std::string, bool>> attributes,
-                                         const std::string& associated_data,
-                                         const std::string& service_name)
+                                                    const std::vector<std::tuple<std::string, bool>> attributes,
+                                                    const std::string& associated_data,
+                                                    const std::string& service_name)
 {
   // new_sig = sig1^r, sig2 + sig1^t)^r
   G1 _new_sig1, _new_sig2;
@@ -331,7 +321,7 @@ PSRequester::el_passo_prove_id_without_id_retrieval(const G1& sig1, const G1& si
   G1::mul(_phi, _service_hash, _s);
 
   // k = XX * PI{ YYj^mj } * gg^t
-  G2 _k = m_pk_XX;
+  G2 _k = m_pk.XX;
   Fr _attribute_hash;
   G2 _yy_hash;
   std::vector<Fr> _attribute_hashes;
@@ -340,11 +330,11 @@ PSRequester::el_passo_prove_id_without_id_retrieval(const G1& sig1, const G1& si
     if (std::get<1>(attributes[i])) {
       _attribute_hash.setHashOf(std::get<0>(attributes[i]));
       _attribute_hashes.push_back(_attribute_hash);
-      G2::mul(_yy_hash, m_pk_YYi[i], _attribute_hash);
+      G2::mul(_yy_hash, m_pk.YYi[i], _attribute_hash);
       G2::add(_k, _k, _yy_hash);
     }
   }
-  G2::mul(_yy_hash, m_gg, _t);
+  G2::mul(_yy_hash, m_pk.gg, _t);
   G2::add(_k, _k, _yy_hash);
 
   /** NIZK Prove:
@@ -364,7 +354,7 @@ PSRequester::el_passo_prove_id_without_id_retrieval(const G1& sig1, const G1& si
    * * random2 - t * c
    */
   // V_k
-  G2 _V_k = m_pk_XX;
+  G2 _V_k = m_pk.XX;
   std::vector<Fr> _randomnesses;
   Fr _temp_randomness;
   G2 _yy_randomness;
@@ -373,13 +363,13 @@ PSRequester::el_passo_prove_id_without_id_retrieval(const G1& sig1, const G1& si
     if (std::get<1>(attributes[i])) {
       _temp_randomness.setByCSPRNG();
       _randomnesses.push_back(_temp_randomness);
-      G2::mul(_yy_randomness, m_pk_YYi[i], _temp_randomness);
+      G2::mul(_yy_randomness, m_pk.YYi[i], _temp_randomness);
       G2::add(_V_k, _V_k, _yy_randomness);
     }
   }
   _temp_randomness.setByCSPRNG();
   _randomnesses.push_back(_temp_randomness);  // random2
-  G2::mul(_yy_randomness, m_gg, _temp_randomness);
+  G2::mul(_yy_randomness, m_pk.gg, _temp_randomness);
   G2::add(_V_k, _V_k, _yy_randomness);
 
   // V_phi

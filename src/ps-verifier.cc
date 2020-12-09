@@ -5,19 +5,9 @@
 
 using namespace mcl::bls12;
 
-PSVerifier::PSVerifier()
+PSVerifier::PSVerifier(const PSPubKey& pk)
+  : m_pk(pk)
 {
-}
-
-void
-PSVerifier::init_with_pk(const G1& g, const G2& gg, const G2& XX,
-                          const std::vector<G1>& Yi, const std::vector<G2>& YYi)
-{
-  m_g = g;
-  m_gg = gg;
-  m_pk_XX = XX;
-  m_pk_Yi = Yi;
-  m_pk_YYi = YYi;
 }
 
 bool
@@ -28,19 +18,19 @@ PSVerifier::verify(const G1& sig1, const G1& sig2, const std::vector<std::string
   }
 
   Fr _attribute_hash;
-  G2 _yy_hash_sum = m_pk_XX;
+  G2 _yy_hash_sum = m_pk.XX;
   int counter = 0;
   G2 _yyi_hash_product;
   for (const auto& attribute : all_attributes) {
     _attribute_hash.setHashOf(attribute);
-    G2::mul(_yyi_hash_product, m_pk_YYi[counter], _attribute_hash);
+    G2::mul(_yyi_hash_product, m_pk.YYi[counter], _attribute_hash);
     G2::add(_yy_hash_sum, _yy_hash_sum, _yyi_hash_product);
     counter++;
   }
 
   GT _lhs, _rhs;
   pairing(_lhs, sig1, _yy_hash_sum);
-  pairing(_rhs, sig2, m_gg);
+  pairing(_rhs, sig2, m_pk.gg);
   return _lhs == _rhs;
 }
 
@@ -84,16 +74,16 @@ PSVerifier::el_passo_verify_id(const G1& sig1, const G1& sig2, const G2& k, cons
   G2 _base_r;
   for (size_t i = 0; i < attributes.size(); i++) {
     if (attributes[i] == "") {
-      G2::mul(_base_r, m_pk_YYi[i], rs[counter]);
+      G2::mul(_base_r, m_pk.YYi[i], rs[counter]);
       counter++;
       G2::add(_V_k, _V_k, _base_r);
     }
   }
-  G2::mul(_base_r, m_gg, rs[rs.size() - 2]);
+  G2::mul(_base_r, m_pk.gg, rs[rs.size() - 2]);
   G2::add(_V_k, _V_k, _base_r);
   Fr _1_c = Fr::one();
   Fr::sub(_1_c, _1_c, c);
-  G2::mul(_base_r, m_pk_XX, _1_c);
+  G2::mul(_base_r, m_pk.XX, _1_c);
   G2::add(_V_k, _V_k, _base_r);
 
   // V_phi = phi^c * hash(domain)^r1_s
@@ -142,7 +132,7 @@ PSVerifier::el_passo_verify_id(const G1& sig1, const G1& sig2, const G2& k, cons
   G2 _final_k = prepare_hybrid_verification(k, attributes);
   GT lhs, rhs;
   pairing(lhs, sig1, _final_k);
-  pairing(rhs, sig2, m_gg);
+  pairing(rhs, sig2, m_pk.gg);
   return lhs == rhs;
 }
 
@@ -177,16 +167,16 @@ PSVerifier::el_passo_verify_id_without_id_retrieval(const G1& sig1, const G1& si
   G2 _base_r;
   for (size_t i = 0; i < attributes.size(); i++) {
     if (attributes[i] == "") {
-      G2::mul(_base_r, m_pk_YYi[i], rs[counter]);
+      G2::mul(_base_r, m_pk.YYi[i], rs[counter]);
       counter++;
       G2::add(_V_k, _V_k, _base_r);
     }
   }
-  G2::mul(_base_r, m_gg, rs[rs.size() - 1]);
+  G2::mul(_base_r, m_pk.gg, rs[rs.size() - 1]);
   G2::add(_V_k, _V_k, _base_r);
   Fr _1_c = Fr::one();
   Fr::sub(_1_c, _1_c, c);
-  G2::mul(_base_r, m_pk_XX, _1_c);
+  G2::mul(_base_r, m_pk.XX, _1_c);
   G2::add(_V_k, _V_k, _base_r);
 
   // V_phi = phi^c * hash(domain)^r1_s
@@ -217,7 +207,7 @@ PSVerifier::el_passo_verify_id_without_id_retrieval(const G1& sig1, const G1& si
   G2 _final_k = prepare_hybrid_verification(k, attributes);
   GT lhs, rhs;
   pairing(lhs, sig1, _final_k);
-  pairing(rhs, sig2, m_gg);
+  pairing(rhs, sig2, m_pk.gg);
   return lhs == rhs;
 }
 
@@ -232,7 +222,7 @@ PSVerifier::prepare_hybrid_verification(const G2& k, const std::vector<std::stri
       continue;
     }
     _temp_hash.setHashOf(attributes[i]);
-    G2::mul(_temp_yyi_hash, m_pk_YYi[i], _temp_hash);
+    G2::mul(_temp_yyi_hash, m_pk.YYi[i], _temp_hash);
     G2::add(_final_k, _final_k, _temp_yyi_hash);
   }
   return _final_k;
