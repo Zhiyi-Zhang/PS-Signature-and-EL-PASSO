@@ -1,6 +1,7 @@
 #include <ps-requester.h>
 #include <ps-signer.h>
 #include <ps-verifier.h>
+
 #include <iostream>
 
 using namespace mcl::bls12;
@@ -106,9 +107,7 @@ test_el_passo(size_t total_attribute_num)
   hashAndMapToG1(authority_pk, "ghi");
   hashAndMapToG1(h, "jkl");
   begin = std::chrono::steady_clock::now();
-  auto [prove_id_sig1, prove_id_sig2, prove_id_k, prove_id_phi, prove_id_E1,
-        prove_id_E2, prove_id_c, prove_id_rs, prove_id_plaintext_attributes] =
-      user.el_passo_prove_id(ubld_sig, attributes, "hello", "service", authority_pk, g, h);
+  auto prove = user.el_passo_prove_id(ubld_sig, attributes, "hello", "service", authority_pk, g, h);
   end = std::chrono::steady_clock::now();
   std::cout << "User-ProveID: "
             << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
@@ -117,10 +116,7 @@ test_el_passo(size_t total_attribute_num)
   // RP-VerifyID
   PSVerifier rp(pubKey);
   begin = std::chrono::steady_clock::now();
-  bool result = rp.el_passo_verify_id(
-      prove_id_sig1, prove_id_sig2, prove_id_k, prove_id_phi, prove_id_E1,
-      prove_id_E2, prove_id_c, prove_id_rs, prove_id_plaintext_attributes,
-      "hello", "service", authority_pk, g, h);
+  bool result = rp.el_passo_verify_id(prove, "hello", "service", authority_pk, g, h);
   end = std::chrono::steady_clock::now();
   std::cout << "RP-VerifyID: "
             << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()

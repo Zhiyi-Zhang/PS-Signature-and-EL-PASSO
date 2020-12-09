@@ -2,6 +2,7 @@
 #include <ps-requester.h>
 #include <ps-signer.h>
 #include <ps-verifier.h>
+
 #include <iostream>
 
 using namespace mcl::bls12;
@@ -65,7 +66,7 @@ test_ps_buffer_encoding()
   for (size_t i = 0; i < 10; i++) {
     if (newg1List[i] != g || newg2List[i] != gg || newfrList[i] != num) {
       std::cout << "test_ps_buffer_encoding num failure" << std::endl;
-    return;
+      return;
     }
   }
   std::cout << "****test_ps_buffer_encoding without errors****" << std::endl;
@@ -103,163 +104,147 @@ test_pk_with_different_attr_num()
   PSSigner idp2(20, g, gg);
   pubKey = idp2.key_gen();
   std::cout << "20 total attributes. Public Key Size: " << pubKey.toBufferString().size() << std::endl;
-  std::cout << "****test_pk_with_different_attr_num ends without errors****\n" << std::endl;
+  std::cout << "****test_pk_with_different_attr_num ends without errors****\n"
+            << std::endl;
 }
 
-// void
-// test_ps_sign_verify()
-// {
-//   std::cout << "****test_ps_sign_verify Start****" << std::endl;
-//   G1 g;
-//   G2 gg;
-//   hashAndMapToG1(g, "abc");
-//   hashAndMapToG2(gg, "edf");
-//   PSSigner idp(3, g, gg);
-//   auto pubKey = idp.key_gen();
-//   auto pk_msg = protobuf_encode_ps_pk(pk_g, pk_gg, pk_XX, pk_Yi, pk_YYi);
+void
+test_ps_sign_verify()
+{
+  std::cout << "****test_ps_sign_verify Start****" << std::endl;
+  G1 g;
+  G2 gg;
+  hashAndMapToG1(g, "abc");
+  hashAndMapToG2(gg, "edf");
+  PSSigner idp(3, g, gg);
+  auto pubKey = idp.key_gen();
+  pubKey = PSPubKey::fromBufferString(pubKey.toBufferString());
 
-//   PSRequester user;
-//   protobuf_decode_ps_pk(*pk_msg, pk_g, pk_gg, pk_XX, pk_Yi, pk_YYi);
-//   user.init_with_pk(pubKey);
-//   std::vector<std::tuple<std::string, bool>> attributes;
-//   attributes.push_back(std::make_tuple("secret1", true));
-//   attributes.push_back(std::make_tuple("secret2", true));
-//   attributes.push_back(std::make_tuple("plain1", false));
-//   auto [request_A, request_c, request_rs, request_attributes] = user.el_passo_request_id(attributes, "hello");
-//   auto request_msg = protobuf_encode_sign_request(request_A, request_c, request_rs, request_attributes);
+  PSRequester user(pubKey);
+  std::vector<std::tuple<std::string, bool>> attributes;
+  attributes.push_back(std::make_tuple("secret1", true));
+  attributes.push_back(std::make_tuple("secret2", true));
+  attributes.push_back(std::make_tuple("plain1", false));
+  auto request = user.el_passo_request_id(attributes, "hello");
+  request = PSCredRequest::fromBufferString(request.toBufferString());
 
-//   protobuf_decode_sign_request(*request_msg, request_A, request_c, request_rs, request_attributes);
-//   G1 sig1, sig2;
-//   if (!idp.el_passo_provide_id(request_A, request_c, request_rs, request_attributes, "hello", sig1, sig2)) {
-//     std::cout << "sign request failure" << std::endl;
-//     return;
-//   }
-//   auto credential_msg = protobuf_encode_ps_credential(sig1, sig2);
+  PSCredential sig;
+  if (!idp.el_passo_provide_id(request, "hello", sig)) {
+    std::cout << "sign request failure" << std::endl;
+    return;
+  }
+  sig = PSCredential::fromBufferString(sig.toBufferString());
 
-//   protobuf_decode_ps_credential(*credential_msg, sig1, sig2);
-//   auto [ubld_sig1, ubld_sig2] = user.unblind_credential(sig1, sig2);
-//   std::vector<std::string> all_attributes;
-//   all_attributes.push_back("secret1");
-//   all_attributes.push_back("secret2");
-//   all_attributes.push_back("plain1");
-//   if (!user.verify(ubld_sig1, ubld_sig2, all_attributes)) {
-//     std::cout << "unblinded credential verification failure" << std::endl;
-//     return;
-//   }
+  auto ubld_sig = user.unblind_credential(sig);
+  std::vector<std::string> all_attributes;
+  all_attributes.push_back("secret1");
+  all_attributes.push_back("secret2");
+  all_attributes.push_back("plain1");
+  if (!user.verify(ubld_sig, all_attributes)) {
+    std::cout << "unblinded credential verification failure" << std::endl;
+    return;
+  }
 
-//   auto [rand_sig1, rand_sig2] = user.randomize_credential(ubld_sig1, ubld_sig2);
-//   if (!user.verify(rand_sig1, rand_sig2, all_attributes)) {
-//     std::cout << "randomized credential verification failure" << std::endl;
-//     return;
-//   }
-//   std::cout << "****test_ps_sign_verify ends without errors****\n"
-//             << std::endl;
-// }
+  auto rand_sig = user.randomize_credential(ubld_sig);
+  if (!user.verify(rand_sig, all_attributes)) {
+    std::cout << "randomized credential verification failure" << std::endl;
+    return;
+  }
+  std::cout << "****test_ps_sign_verify ends without errors****\n"
+            << std::endl;
+}
 
-// void
-// test_el_passo(size_t total_attribute_num)
-// {
-//   std::cout << "****test_el_passo Start****" << std::endl;
-//   G1 g;
-//   G2 gg;
-//   hashAndMapToG1(g, "abc");
-//   hashAndMapToG2(gg, "edf");
-//   PSSigner idp(total_attribute_num, g, gg);
+void
+test_el_passo(size_t total_attribute_num)
+{
+  std::cout << "****test_el_passo Start****" << std::endl;
+  G1 g;
+  G2 gg;
+  hashAndMapToG1(g, "abc");
+  hashAndMapToG2(gg, "edf");
+  PSSigner idp(total_attribute_num, g, gg);
 
-//   // IDP-KeyGen
-//   auto begin = std::chrono::steady_clock::now();
-//   auto [pk_g, pk_gg, pk_XX, pk_Yi, pk_YYi] = idp.key_gen();
-//   auto end = std::chrono::steady_clock::now();
-//   std::cout << "IDP-KeyGen over " << total_attribute_num << " attributes: "
-//             << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
-//             << "[µs]" << std::endl;
-//   auto pk_msg = protobuf_encode_ps_pk(pk_g, pk_gg, pk_XX, pk_Yi, pk_YYi);
-//   std::cout << "Public Key Response Packet Size: " << pk_msg->SerializeAsString().size() << std::endl;
+  // IDP-KeyGen
+  auto begin = std::chrono::steady_clock::now();
+  auto pk = idp.key_gen();
+  auto end = std::chrono::steady_clock::now();
+  std::cout << "IDP-KeyGen over " << total_attribute_num << " attributes: "
+            << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
+            << "[µs]" << std::endl;
+  std::cout << "Public Key Response Packet Size: " << pk.toBufferString().size() << std::endl;
 
-//   // User-RequestID
-//   protobuf_decode_ps_pk(*pk_msg, pk_g, pk_gg, pk_XX, pk_Yi, pk_YYi);
-//   PSRequester user;
-//   user.init_with_pk(pk_g, pk_gg, pk_XX, pk_Yi, pk_YYi);
-//   std::vector<std::tuple<std::string, bool>> attributes;
-//   attributes.push_back(std::make_tuple("s", true));
-//   attributes.push_back(std::make_tuple("gamma", true));
-//   attributes.push_back(std::make_tuple("tp", false));
-//   if (total_attribute_num >= 4) {
-//     attributes.push_back(std::make_tuple("s-new", true));
-//   }
-//   begin = std::chrono::steady_clock::now();
-//   auto [request_A, request_c, request_rs, request_attributes] = user.el_passo_request_id(attributes, "hello");
-//   end = std::chrono::steady_clock::now();
-//   std::cout << "User-RequestID: "
-//             << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
-//             << "[µs]" << std::endl;
-//   auto request_msg = protobuf_encode_sign_request(request_A, request_c, request_rs, request_attributes);
-//   std::cout << "Setup Request Packet Size: " << request_msg->SerializeAsString().size() << std::endl;
+  // User-RequestID
+  pk = PSPubKey::fromBufferString(pk.toBufferString());
+  PSRequester user(pk);
+  std::vector<std::tuple<std::string, bool>> attributes;
+  attributes.push_back(std::make_tuple("s", true));
+  attributes.push_back(std::make_tuple("gamma", true));
+  attributes.push_back(std::make_tuple("tp", false));
+  if (total_attribute_num >= 4) {
+    attributes.push_back(std::make_tuple("s-new", true));
+  }
+  begin = std::chrono::steady_clock::now();
+  auto request = user.el_passo_request_id(attributes, "hello");
+  end = std::chrono::steady_clock::now();
+  std::cout << "User-RequestID: "
+            << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
+            << "[µs]" << std::endl;
+  std::cout << "Setup Request Packet Size: " << request.toBufferString().size() << std::endl;
 
-//   // IDP-ProvideID
-//   protobuf_decode_sign_request(*request_msg, request_A, request_c, request_rs, request_attributes);
-//   G1 sig1, sig2;
-//   begin = std::chrono::steady_clock::now();
-//   bool sign_result = idp.el_passo_provide_id(request_A, request_c, request_rs, request_attributes, "hello", sig1, sig2);
-//   end = std::chrono::steady_clock::now();
-//   std::cout << "IDP-ProvideID: "
-//             << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
-//             << "[µs]" << std::endl;
-//   auto credential_msg = protobuf_encode_ps_credential(sig1, sig2);
-//   std::cout << "Setup Response Packet Size: " << credential_msg->SerializeAsString().size() << std::endl;
-//   if (!sign_result) {
-//     std::cout << "sign request failure" << std::endl;
-//     return;
-//   }
+  // IDP-ProvideID
+  request = PSCredRequest::fromBufferString(request.toBufferString());
+  PSCredential sig;
+  begin = std::chrono::steady_clock::now();
+  bool sign_result = idp.el_passo_provide_id(request, "hello", sig);
+  end = std::chrono::steady_clock::now();
+  std::cout << "IDP-ProvideID: "
+            << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
+            << "[µs]" << std::endl;
+  std::cout << "Setup Response Packet Size: " << sig.toBufferString().size() << std::endl;
+  if (!sign_result) {
+    std::cout << "sign request failure" << std::endl;
+    return;
+  }
 
-//   // User-UnblindID
-//   protobuf_decode_ps_credential(*credential_msg, sig1, sig2);
-//   begin = std::chrono::steady_clock::now();
-//   auto [ubld_sig1, ubld_sig2] = user.unblind_credential(sig1, sig2);
-//   end = std::chrono::steady_clock::now();
-//   std::cout << "User-UnblindID: "
-//             << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
-//             << "[µs]" << std::endl;
+  // User-UnblindID
+  sig = PSCredential::fromBufferString(sig.toBufferString());
+  begin = std::chrono::steady_clock::now();
+  auto ubld_sig = user.unblind_credential(sig);
+  end = std::chrono::steady_clock::now();
+  std::cout << "User-UnblindID: "
+            << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
+            << "[µs]" << std::endl;
 
-//   // User-ProveID
-//   G1 authority_pk;
-//   G1 h;
-//   hashAndMapToG1(authority_pk, "ghi");
-//   hashAndMapToG1(h, "jkl");
-//   begin = std::chrono::steady_clock::now();
-//   auto [prove_id_sig1, prove_id_sig2, prove_id_k, prove_id_phi, prove_id_E1,
-//         prove_id_E2, prove_id_c, prove_id_rs, prove_id_plaintext_attributes] =
-//       user.el_passo_prove_id(ubld_sig1, ubld_sig2, attributes, "hello", "service", authority_pk, g, h);
-//   end = std::chrono::steady_clock::now();
-//   std::cout << "User-ProveID: "
-//             << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
-//             << "[µs]" << std::endl;
-//   auto prove_id_msg = protobuf_encode_id_proof(prove_id_sig1, prove_id_sig2, prove_id_k, prove_id_phi, prove_id_E1,
-//                                                prove_id_E2, prove_id_c, prove_id_rs, prove_id_plaintext_attributes);
-//   std::cout << "Sign-on Request Packet Size: " << prove_id_msg->SerializeAsString().size() << std::endl;
+  // User-ProveID
+  G1 authority_pk;
+  G1 h;
+  hashAndMapToG1(authority_pk, "ghi");
+  hashAndMapToG1(h, "jkl");
+  begin = std::chrono::steady_clock::now();
+  auto prove = user.el_passo_prove_id(ubld_sig, attributes, "hello", "service", authority_pk, g, h);
+  end = std::chrono::steady_clock::now();
+  std::cout << "User-ProveID: "
+            << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
+            << "[µs]" << std::endl;
+  std::cout << "Sign-on Request Packet Size: " << prove.toBufferString().size() << std::endl;
 
-//   // RP-VerifyID
-//   protobuf_decode_id_proof(*prove_id_msg, prove_id_sig1, prove_id_sig2, prove_id_k, prove_id_phi, prove_id_E1,
-//                            prove_id_E2, prove_id_c, prove_id_rs, prove_id_plaintext_attributes);
-//   PSVerifier rp;
-//   rp.init_with_pk(pk_g, pk_gg, pk_XX, pk_Yi, pk_YYi);
-//   begin = std::chrono::steady_clock::now();
-//   bool result = rp.el_passo_verify_id(
-//       prove_id_sig1, prove_id_sig2, prove_id_k, prove_id_phi, prove_id_E1,
-//       prove_id_E2, prove_id_c, prove_id_rs, prove_id_plaintext_attributes,
-//       "hello", "service", authority_pk, g, h);
-//   end = std::chrono::steady_clock::now();
-//   std::cout << "RP-VerifyID: "
-//             << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
-//             << "[µs]" << std::endl;
+  // RP-VerifyID
+  prove = IdProof::fromBufferString(prove.toBufferString());
+  PSVerifier rp(pk);
+  begin = std::chrono::steady_clock::now();
+  bool result = rp.el_passo_verify_id(prove, "hello", "service", authority_pk, g, h);
+  end = std::chrono::steady_clock::now();
+  std::cout << "RP-VerifyID: "
+            << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
+            << "[µs]" << std::endl;
 
-//   if (!result) {
-//     std::cout << "EL PASSO Verify ID failed" << std::endl;
-//   }
+  if (!result) {
+    std::cout << "EL PASSO Verify ID failed" << std::endl;
+  }
 
-//   std::cout << "****test_el_passo ends without errors****\n"
-//             << std::endl;
-// }
+  std::cout << "****test_el_passo ends without errors****\n"
+            << std::endl;
+}
 
 int
 main(int argc, char const *argv[])
@@ -267,6 +252,7 @@ main(int argc, char const *argv[])
   initPairing();
   test_ps_buffer_encoding();
   test_pk_with_different_attr_num();
-  // test_el_passo(3);
-  // test_el_passo(4);
+  test_ps_sign_verify();
+  test_el_passo(3);
+  test_el_passo(4);
 }

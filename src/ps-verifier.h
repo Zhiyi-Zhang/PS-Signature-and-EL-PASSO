@@ -59,17 +59,13 @@ public:
    * @return true if both the NIZK proof and signature are valid.
    */
   bool
-  el_passo_verify_id(const G1& sig1, const G1& sig2, const G2& k, const G1& phi,
-                     const G1& E1, const G1& E2, const Fr& c,
-                     const std::vector<Fr>& rs, const std::vector<std::string>& attributes,
+  el_passo_verify_id(const IdProof& proof,
                      const std::string& associated_data,
                      const std::string& service_name,
                      const G1& authority_pk, const G1& g, const G1& h);
 
   bool
-  el_passo_verify_id_without_id_retrieval(const G1& sig1, const G1& sig2, const G2& k, const G1& phi,
-                                          const Fr& c, const std::vector<Fr>& rs,
-                                          const std::vector<std::string>& attributes,
+  el_passo_verify_id_without_id_retrieval(const IdProof& proof,
                                           const std::string& associated_data, const std::string& service_name);
 
 private:

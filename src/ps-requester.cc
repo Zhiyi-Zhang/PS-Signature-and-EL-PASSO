@@ -137,22 +137,22 @@ PSRequester::randomize_credential(const PSCredential& sig) const
   return newSig;
 }
 
-std::tuple<G1, G1, G2, G1, G1, G1, Fr, std::vector<Fr>, std::vector<std::string>>  // sig1, sig2, k, phi, E1, E2, c, rs, attributes
+IdProof  // sig1, sig2, k, phi, E1, E2, c, rs, attributes
 PSRequester::el_passo_prove_id(const PSCredential& sig,
                                const std::vector<std::tuple<std::string, bool>> attributes,
                                const std::string& associated_data,
                                const std::string& service_name,
                                const G1& authority_pk, const G1& g, const G1& h)
 {
+  IdProof proof;
   // new_sig = sig1^r, sig2 + sig1^t)^r
-  G1 _new_sig1, _new_sig2;
   Fr _t, _r;
   _t.setByCSPRNG();
   _r.setByCSPRNG();
-  G1::mul(_new_sig1, sig.sig1, _r);
-  G1::mul(_new_sig2, sig.sig1, _t);
-  G1::add(_new_sig2, _new_sig2, sig.sig2);
-  G1::mul(_new_sig2, _new_sig2, _r);
+  G1::mul(proof.sig1, sig.sig1, _r);
+  G1::mul(proof.sig2, sig.sig1, _t);
+  G1::add(proof.sig2, proof.sig2, sig.sig2);
+  G1::mul(proof.sig2, proof.sig2, _r);
 
   // El Gamal Cipher E = g^epsilon, y^epsilon * h^gamma
   G1 _E1, _E2, _h_gamma;
@@ -165,15 +165,14 @@ PSRequester::el_passo_prove_id(const PSCredential& sig,
   G1::add(_E2, _E2, _h_gamma);
 
   // phi = hash(service_name)^gamma
-  G1 _phi;
   G1 _service_hash;
   Fr _s;
   hashAndMapToG1(_service_hash, service_name);
   _s.setHashOf(std::get<0>(attributes[0]));
-  G1::mul(_phi, _service_hash, _s);
+  G1::mul(proof.phi, _service_hash, _s);
 
   // k = XX * PI{ YYj^mj } * gg^t
-  G2 _k = m_pk.XX;
+  proof.k = m_pk.XX;
   Fr _attribute_hash;
   G2 _yy_hash;
   std::vector<Fr> _attribute_hashes;
@@ -183,11 +182,11 @@ PSRequester::el_passo_prove_id(const PSCredential& sig,
       _attribute_hash.setHashOf(std::get<0>(attributes[i]));
       _attribute_hashes.push_back(_attribute_hash);
       G2::mul(_yy_hash, m_pk.YYi[i], _attribute_hash);
-      G2::add(_k, _k, _yy_hash);
+      G2::add(proof.k, proof.k, _yy_hash);
     }
   }
   G2::mul(_yy_hash, m_pk.gg, _t);
-  G2::add(_k, _k, _yy_hash);
+  G2::add(proof.k, proof.k, _yy_hash);
 
   /** NIZK Prove:
    * Public Value: will be sent
@@ -247,10 +246,9 @@ PSRequester::el_passo_prove_id(const PSCredential& sig,
   G1::add(_V_E2, _V_E2, _h_random);
 
   // Calculate c = hash(k || phi || E1 || E2 || V_k || V_phi || V_E1 || V_E2 || associated_data )
-  Fr _c;
   cybozu::Sha256 digest_engine;
-  digest_engine.update(_k.serializeToHexStr());
-  digest_engine.update(_phi.serializeToHexStr());
+  digest_engine.update(proof.k.serializeToHexStr());
+  digest_engine.update(proof.phi.serializeToHexStr());
   digest_engine.update(_E1.serializeToHexStr());
   digest_engine.update(_E2.serializeToHexStr());
   digest_engine.update(_V_k.serializeToHexStr());
@@ -258,70 +256,68 @@ PSRequester::el_passo_prove_id(const PSCredential& sig,
   digest_engine.update(_V_E1.serializeToHexStr());
   digest_engine.update(_V_E2.serializeToHexStr());
   auto _c_str = digest_engine.digest(associated_data);
-  _c.setHashOf(_c_str);
+  proof.c.setHashOf(_c_str);
   // std::cout << "parepare: V k: " << _V_k.serializeToHexStr() << std::endl;
   // std::cout << "parepare: V phi: " << _V_phi.serializeToHexStr() << std::endl;
   // std::cout << "parepare: V E1: " << _V_E1.serializeToHexStr() << std::endl;
   // std::cout << "parepare: V E2: " << _V_E2.serializeToHexStr() << std::endl;
 
   // Calculate Rs
-  std::vector<Fr> _rs;
   Fr _temp_r;
   Fr _secret_c;
-  _rs.reserve(attributes.size() + 3);
+  proof.rs.reserve(attributes.size() + 3);
   for (size_t i = 0; i < _attribute_hashes.size(); i++) {
-    Fr::mul(_secret_c, _attribute_hashes[i], _c);
+    Fr::mul(_secret_c, _attribute_hashes[i], proof.c);
     Fr::sub(_temp_r, _randomnesses[i], _secret_c);
-    _rs.push_back(_temp_r);
+    proof.rs.push_back(_temp_r);
   }
-  Fr::mul(_secret_c, _t, _c);
+  Fr::mul(_secret_c, _t, proof.c);
   Fr::sub(_temp_r, _randomnesses[_randomnesses.size() - 2], _secret_c);
-  _rs.push_back(_temp_r);
-  Fr::mul(_secret_c, _epsilon, _c);
+  proof.rs.push_back(_temp_r);
+  Fr::mul(_secret_c, _epsilon, proof.c);
   Fr::sub(_temp_r, _randomnesses[_randomnesses.size() - 1], _secret_c);
-  _rs.push_back(_temp_r);
+  proof.rs.push_back(_temp_r);
 
   // plaintext attributes
-  std::vector<std::string> _plaintext_attributes;
-  _plaintext_attributes.reserve(attributes.size());
+  proof.attributes.reserve(attributes.size());
   for (size_t i = 0; i < attributes.size(); i++) {
     if (std::get<1>(attributes[i])) {
-      _plaintext_attributes.push_back("");
+      proof.attributes.push_back("");
     }
     else {
-      _plaintext_attributes.push_back(std::get<0>(attributes[i]));
+      proof.attributes.push_back(std::get<0>(attributes[i]));
     }
   }
   // sig1, sig2, k, phi, E1, E2, c, rs, attributes
-  return std::make_tuple(_new_sig1, _new_sig2, _k, _phi, _E1, _E2, _c, _rs, _plaintext_attributes);
+  proof.E1 = _E1;
+  proof.E2 = _E2;
+  return proof;
 }
 
-std::tuple<G1, G1, G2, G1, Fr, std::vector<Fr>, std::vector<std::string>>  // sig1, sig2, k, phi, c, rs, attributes
+IdProof  // sig1, sig2, k, phi, c, rs, attributes
 PSRequester::el_passo_prove_id_without_id_retrieval(const PSCredential& sig,
                                                     const std::vector<std::tuple<std::string, bool>> attributes,
                                                     const std::string& associated_data,
                                                     const std::string& service_name)
 {
+  IdProof proof;
   // new_sig = sig1^r, sig2 + sig1^t)^r
-  G1 _new_sig1, _new_sig2;
   Fr _t, _r;
   _t.setByCSPRNG();
   _r.setByCSPRNG();
-  G1::mul(_new_sig1, sig.sig1, _r);
-  G1::mul(_new_sig2, sig.sig1, _t);
-  G1::add(_new_sig2, _new_sig2, sig.sig2);
-  G1::mul(_new_sig2, _new_sig2, _r);
+  G1::mul(proof.sig1, sig.sig1, _r);
+  G1::mul(proof.sig2, sig.sig1, _t);
+  G1::add(proof.sig2, proof.sig2, sig.sig2);
+  G1::mul(proof.sig2, proof.sig2, _r);
 
   // phi = hash(service_name)^s
-  G1 _phi;
   G1 _service_hash;
   Fr _s;
   hashAndMapToG1(_service_hash, service_name);
   _s.setHashOf(std::get<0>(attributes[0]));
-  G1::mul(_phi, _service_hash, _s);
+  G1::mul(proof.phi, _service_hash, _s);
 
   // k = XX * PI{ YYj^mj } * gg^t
-  G2 _k = m_pk.XX;
   Fr _attribute_hash;
   G2 _yy_hash;
   std::vector<Fr> _attribute_hashes;
@@ -331,11 +327,11 @@ PSRequester::el_passo_prove_id_without_id_retrieval(const PSCredential& sig,
       _attribute_hash.setHashOf(std::get<0>(attributes[i]));
       _attribute_hashes.push_back(_attribute_hash);
       G2::mul(_yy_hash, m_pk.YYi[i], _attribute_hash);
-      G2::add(_k, _k, _yy_hash);
+      G2::add(proof.k, proof.k, _yy_hash);
     }
   }
   G2::mul(_yy_hash, m_pk.gg, _t);
-  G2::add(_k, _k, _yy_hash);
+  G2::add(proof.k, proof.k, _yy_hash);
 
   /** NIZK Prove:
    * Public Value: will be sent
@@ -377,42 +373,39 @@ PSRequester::el_passo_prove_id_without_id_retrieval(const PSCredential& sig,
   G1::mul(_V_phi, _service_hash, _randomnesses[0]);  // random1_s
 
   // Calculate c = hash(k || phi || V_k || V_phi || associated_data )
-  Fr _c;
   cybozu::Sha256 digest_engine;
-  digest_engine.update(_k.serializeToHexStr());
-  digest_engine.update(_phi.serializeToHexStr());
+  digest_engine.update(proof.k.serializeToHexStr());
+  digest_engine.update(proof.phi.serializeToHexStr());
   digest_engine.update(_V_k.serializeToHexStr());
   digest_engine.update(_V_phi.serializeToHexStr());
   auto _c_str = digest_engine.digest(associated_data);
-  _c.setHashOf(_c_str);
+  proof.c.setHashOf(_c_str);
   // std::cout << "parepare: V k: " << _V_k.serializeToHexStr() << std::endl;
   // std::cout << "parepare: V phi: " << _V_phi.serializeToHexStr() << std::endl;
 
   // Calculate Rs
-  std::vector<Fr> _rs;
   Fr _temp_r;
   Fr _secret_c;
-  _rs.reserve(attributes.size() + 1);
+  proof.rs.reserve(attributes.size() + 1);
   for (size_t i = 0; i < _attribute_hashes.size(); i++) {
-    Fr::mul(_secret_c, _attribute_hashes[i], _c);
+    Fr::mul(_secret_c, _attribute_hashes[i], proof.c);
     Fr::sub(_temp_r, _randomnesses[i], _secret_c);
-    _rs.push_back(_temp_r);
+    proof.rs.push_back(_temp_r);
   }
-  Fr::mul(_secret_c, _t, _c);
+  Fr::mul(_secret_c, _t, proof.c);
   Fr::sub(_temp_r, _randomnesses[_randomnesses.size() - 1], _secret_c);
-  _rs.push_back(_temp_r);
+  proof.rs.push_back(_temp_r);
 
   // plaintext attributes
-  std::vector<std::string> _plaintext_attributes;
-  _plaintext_attributes.reserve(attributes.size());
+  proof.attributes.reserve(attributes.size());
   for (size_t i = 0; i < attributes.size(); i++) {
     if (std::get<1>(attributes[i])) {
-      _plaintext_attributes.push_back("");
+      proof.attributes.push_back("");
     }
     else {
-      _plaintext_attributes.push_back(std::get<0>(attributes[i]));
+      proof.attributes.push_back(std::get<0>(attributes[i]));
     }
   }
-  // sig1, sig2, k, phi, E1, E2, c, rs, attributes
-  return std::make_tuple(_new_sig1, _new_sig2, _k, _phi, _c, _rs, _plaintext_attributes);
+  // sig1, sig2, k, phi, c, rs, attributes
+  return proof;
 }

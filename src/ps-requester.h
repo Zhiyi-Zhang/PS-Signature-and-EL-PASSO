@@ -108,14 +108,14 @@ public:
    *   - std::vector<std::string>, attributes, attributes that only contain plaintext attributes
    *     and "" for committed attributes. The order of attributes is the same as @p attributes.
    */
-  std::tuple<G1, G1, G2, G1, G1, G1, Fr, std::vector<Fr>, std::vector<std::string>>  // sig1, sig2, k, phi, E1, E2, c, rs, attributes
+  IdProof  // sig1, sig2, k, phi, E1, E2, c, rs, attributes
   el_passo_prove_id(const PSCredential& sig,
                     const std::vector<std::tuple<std::string, bool>> attributes,
                     const std::string& associated_data,
                     const std::string& service_name,
                     const G1& authority_pk, const G1& g, const G1& h);
 
-  std::tuple<G1, G1, G2, G1, Fr, std::vector<Fr>, std::vector<std::string>>  // sig1, sig2, k, phi, c, rs, attributes
+  IdProof  // sig1, sig2, k, phi, c, rs, attributes
   el_passo_prove_id_without_id_retrieval(const PSCredential& sig,
                                          const std::vector<std::tuple<std::string, bool>> attributes,
                                          const std::string& associated_data,
