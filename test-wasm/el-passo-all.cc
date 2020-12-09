@@ -2,6 +2,7 @@
 #include <ps-signer.h>
 #include <ps-requester.h>
 #include <ps-verifier.h>
+#include <ps-encoding.h>
 
 using namespace emscripten;
 
@@ -15,8 +16,7 @@ EMSCRIPTEN_BINDINGS(my_module) {
     .function("sign_hybrid", &PSSigner::sign_hybrid);
 
   class_<PSRequester>("PSRequester")
-    .constructor<>()
-    .function("init_with_pk", &PSRequester::init_with_pk)
+    .constructor<PSPubKey>()
     .function("el_passo_request_id", &PSRequester::el_passo_request_id)
     .function("unblind_credential", &PSRequester::unblind_credential)
     .function("verify", &PSRequester::verify)
@@ -25,8 +25,7 @@ EMSCRIPTEN_BINDINGS(my_module) {
     .function("el_passo_prove_id_without_id_retrieval", &PSRequester::el_passo_prove_id_without_id_retrieval);
 
   class_<PSVerifier>("PSVerifier")
-    .constructor<>()
-    .function("init_with_pk", &PSVerifier::init_with_pk)
+    .constructor<PSPubKey>()
     .function("verify", &PSVerifier::verify)
     .function("el_passo_verify_id", &PSVerifier::el_passo_verify_id)
     .function("el_passo_verify_id_without_id_retrieval", &PSVerifier::el_passo_verify_id_without_id_retrieval);

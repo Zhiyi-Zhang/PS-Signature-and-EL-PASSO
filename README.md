@@ -1,28 +1,39 @@
 # Short Randomizable Signatures (PS Signatures) Implementation in C++
 
-Author: Zhiyi Zhang (zhiyi@cs.ucla.edu)
+**Author: Zhiyi Zhang (zhiyi@cs.ucla.edu)**
 
-This library supports the use of certificates based on PS Signature.
-The certificate is privacy-preserving:
+## Overview of PS Signature and EL PASSO
+
+This library implements (i) PS Signature in C++ and WebAssembly and (ii) EL PASSO protocol.
+
+* PS Signature is a signature scheme that is efficient and randomizable. That is, after generating a PS signature, the signature can be randomized so that it cannot be related to its original presence. This can be widely used for privacy-preserving systems.
+* EL PASSO is a privacy-preserving Single Sign-On (SSO) system. It implements anonymous credentials, enables selective attribute disclosure, and allows users to prove properties about their identity without revealing it in the clear.
+
+A certificate based on PS Signature following EL PASSO protocol is privacy-preserving:
 
 * The signer cannot learn the data being signed. The signer can only verify the correctness of the data through zero-knowledge proofs.
 * Each certificate can be randomized so as to preserve certificate owner's privacy while a randomized certificate is still valid.
 
-For example, Alice wants to get a certificate for attribute `secret1`, `secret2`, and `plaintext1`.
-When applying the certificate from a CA, Alice can hide the value of hidden attributes and prove the ownership of `secret1`, `secret2` to the CA through zero-knowledge proofs.
-After CA issues Alice the certificate.
-Alice can further randomize the certificate.
-When Alice use a randomized certificate to prove her identity, even the CA cannot link this certificate with Alice.
+## An example application scenario
 
-## Quick Compile and Test
+To illustrate the use of our system, let's assume a user Alice is a legit user of Facebook (an Identity Provider or IdP in short) and she wants to login to a website (a Relying Party or RP in short) with her Facebook account.
 
-### Prerequisites
+First, Alice can get a PS Signature certificate for her attributes `secret-key:123`, `name: alice`, `email: alice@example.com`, and `age: 19`.
+When applying the certificate from Facebook, Alice can hide the value of `secret-key:123` and prove the ownership of `secret-key:123` to the Facebook through zero-knowledge proofs.
 
-#### 1. [Google Protocol Buffer](https://developers.google.com/protocol-buffers)
+After Facebook issues Alice the certificate, Alice can further randomize the certificate and use the randomized certificate to prove her identity to the website.
+In addition, Alice can select which attributes to share with the website; for example, Alice can select only to share her name `name: alice` and at the same time, without sharing her age, proves her age is larger than 18.
+The Website, by verifying the certificate with Facebook's public key, can ensure Alice is a legit user of Facebook and see the revealed attributes.
 
-The network part relies on Google's protocol buffer.
-You should install it for C++.
-Check the instructions [here](https://github.com/protocolbuffers/protobuf/tree/master/src#c-installation---unix).
+EL PASSO also provides desired features including:
+
+* Alice cannot register more than one account (sybil attack) on the website with the same certificate.
+* Facebook cannot link the later certificate with Alice.
+* Two factor authentication (2FA).
+* Lost recover when Alice lost her certificate.
+* Optional identity information recovery in case a user misbehaves at RP.
+
+## Compile
 
 ### Download
 
@@ -32,83 +43,71 @@ git clone --recurse-submodules https://github.com/Zhiyi-Zhang/PSSignature.git
 
 ### Compile and Test
 
-First, install the MCL library, which is a submodule of PSSignature.
-`make mcl` should only be called for one time.
+#### 1. Compile and install MCL library
+
+Install the MCL library, which is already a submodule of the repo.
 
 ```bash
 make mcl
 ```
 
-Then compile PSSignature.
+Note that `make mcl` should only be called for one time.
+
+#### 2. Compile PSSignature and EL PASSO
+
+Compile the code and test files with the following command.
 
 ```bash
 make
 ```
 
-If you encountered any issues with Protocol Buffers used in `ps.pb.cc` and `ps.pb.h`.
-You can re-generate them.
-
-```bash
-make protobuf
-```
-
-Otherwise you are all set.
-You can test PSSignature with unit tests.
+You can test PSSignature and EL PASSO with unit tests.
 
 ```bash
 ./build/ps-tests
 ./build/encoding-tests
 ```
 
-## Web Assembly
+## Compile with WebAssembly
 
 Our library supports the use of Web Assembly (WASM) so that web applications can use the PS Signature and EL PASSO system.
 
 To compile the PS signature test file into a HTML and test it with your browser.
 
 ```bash
-make ps-tests.html
+make el-pass-wasm
 ```
 
-After this step, you should have a `ps-tests.js`, `ps-tests.wasm`, and `ps-tests.html` in your directory.
-To check the output in the browser, you can serve the html with python or python3
+Then, you should have `wasm-tests.js`, `wasm-tests.wasm`, and `wasm-tests.html` in a new directory called `wasm-build`.
+To check the output in the browser, you can serve the html with python.
 
 ```bash
-python -m SimpleHTTPServer 8080
-```
-
-or
-
-```bash
+cd wasm-build
 python3 -m http.server 8080
 ```
 
 After that, you can open your browser and visit `http://0.0.0.0:8080/ps-tests.html`.
+To run the test and see output on your browser, click the button `run-tests` to start.
 
-### Compile ps.js
+Note that you can also find each individual module (i.e., IdP, RP, User) in `wasm-build`.
+You can develop your own JS code based on these modules for your own application needs.
 
-To compile the PS code into a piece of JS code:
-
-```bash
-make ps.js
-```
-
-After that, you will get a `ps.js` and a `ps.wasm`. You can develop your own JS code and use `ps.js` for your application.
-
-## Documentation (Doc is out of date for now)
+## Documentation
 
 This library mainly provides following supports.
 
 Importantly, all the functions require the function call `initPairing()` at the very beginning of the program.
 It is recommended to call this function in your main function before calling functions provided by this library.
 
-### 1. PS Signature Support
+A complete documentation can be found in the in-line comments of headers files in `src` directory.
+
+### 1. PS Signature and EL PASSO Support
 
 #### 1.1 Signer: Key Generation
 
 Use PSSigner to generate the public/private key pair over a known number.
 The number indicates how many attributes will be covered by future signatures.
-Therefore, here, the PSSigner should take a maximum value of attribute number.
+Therefore, here, the PSSigner should take a maximum value of attribute number based on the application scenario.
 
 ```C++
 PSSigner signer;
@@ -118,16 +117,15 @@ auto pk = signer.key_gen(3); // key pair for 3 attributes at most
 #### 1.2 Requester: Credential Request Generation
 
 Use PSRequester to generate a signature request over hidden attributes and plaintext attributes.
-**Importantly, `generate_request` will invoke Non-interactive Zero-knowledge Schnorr Prove Protocol to generate proof of ownership of hidden attributes.**
+**Importantly, `el_passo_request_id` will invoke Non-interactive Zero-knowledge Schnorr Prove Protocol to generate proof of ownership of hidden attributes.**
 
 ```C++
 PSRequester user(pk); // pk should be delivered to users through a secure channel, e.g., out-of-band
-std::list<std::string> c_attributes; // attributes to be hidden from the signer
-c_attributes.push_back("secret1");
-c_attributes.push_back("secret2");
-std::list<std::string> attributes; // attributes that can be kept as plaintext
-attributes.push_back("plain1");
-auto request = user.el_passo_request_id(c_attributes, attributes);
+std::vector<std::tuple<std::string, bool>> attributes; // attributes, the bool indicate whether an attribute should be hidden from the IdP
+attributes.push_back(std::make_tuple("secret1", true)); // hidden attribute
+attributes.push_back(std::make_tuple("secret2", true)); // hidden attribute
+attributes.push_back(std::make_tuple("plain1", false)); // plaintext attribute
+auto request = user.el_passo_request_id(attributes, "associated-data"); // a piece of associated data is used with Schnorr Zero Knowledge Proof
 ```
 
 #### 1.3 Signer: Verify Request and Sign the Credential
@@ -136,92 +134,73 @@ Use PSSigner to sign the request.
 **Importantly, `el_passo_provide_id` will invoke Non-interactive Zero-knowledge Schnorr Verification Protocol to verify requester's ownership of hidden attributes.**
 
 ```C++
-auto cred1 = signer.el_passo_provide_id(*request);
+PSCredential cred;
+bool isValid = signer.el_passo_provide_id(request, "associated-data", cred); // the cred will be generated if the request is valid
 ```
 
-#### 1.4 Requester: Unblind, Verify, and Random the Credential
+#### 1.4 Requester: Unblind, Verify, and Randomize the Credential
 
-Use PSRequester to unblind the credential, verify the credential, and further randomized the credential.
+Use PSRequester to unblind the credential, verify the credential, and further randomize the credential.
 
 ```C++
-auto cred2 = user.unblind_credential(*cred1); // unblind signature
+auto ubld_cred = user.unblind_credential(cred); // unblind signature
 std::list<std::string> all_attributes;
 all_attributes.push_back("secret1");
 all_attributes.push_back("secret2");
 all_attributes.push_back("plain1");
-if (!user.verify(*cred2, all_attributes)) { // verify signature
-  std::cout << "Verification Failure" << std::endl;
-  return;
+if (!user.verify(ubld_cred, all_attributes)) { // verify signature
+  // verification of unblinded credential failed
 }
-auto cred3 = user.randomize_credential(*cred2); // randomize signature
-if (!user.verify(*cred3, all_attributes)) { // verify randomized signature
-  std::cout << "verification randomized credential failure" << std::endl;
-  return;
+auto rnd_cred = user.randomize_credential(ubld_cred); // randomize signature
+if (!user.verify(rnd_cred, all_attributes)) { // verify randomized signature
+  // verification of randomized credential failed
 }
 ```
 
 #### 1.5 Requester: Zero-knowledge proof of the Credential
 
-Use PSRequester to zero-knowledge prove the ownership of the credential.
+Use PSRequester to zero-knowledge prove the ownership of the credential to a RP.
 In this process, the owner of the credential can decide which attributes to reveal to the verifier.
-In our current implementation, we require c_attributes + attributes must equal to all attributes and the order matters.
+In addition, when the RP requires identity information recovery in case a user misbehaves, a authorized party's public key can be used to generate a token for identity recovery.
 
 ```C++
-auto [cred3, proof] = user.zk_prove_credentail(*cred2, c_attributes, attributes, "abc");
+G1 authority_pk; // authority's pk should be delivered to users and RPs through a secure channel
+G1 h; // the G1 generator used by the IdP to generate unique id for the user
+G1 g; // a G1 generator used for generating the identity recovery token
+...
+std::vector<std::tuple<std::string, bool>> attributes;
+attributes.push_back(std::make_tuple("secret1", true)); // attribute kept by the user
+attributes.push_back(std::make_tuple("secret1", true)); // attribute kept by the user
+attributes.push_back(std::make_tuple("plain1", false)); // attribute added by the user
+attributes.push_back(std::make_tuple("plain2", false)); // new attribute added by the IdP
+attributes.push_back(std::make_tuple("plain3", false)); // new attribute added by the IdP
+auto proveID = user.el_passo_prove_id(ubld_sig, attributes, "associated-data", "rp1", authority_pk, g, h)
 
-PSRequester user2(pk);
-if (!user2.zk_verify_credential(*cred3, *proof, "abc")) {
-  std::cout << "zk proof failure" << std::endl;
-  return;
+PSVerifier rp(pk); // pk should be delivered to RPs through a secure channel, e.g., out-of-band
+if (!bool result = rp.el_passo_verify_id(proveID, "associated-data", "rp1", authority_pk, g, h);) {
+  // verification of user's request failed
 }
 ```
 
-### 2. Encoding/Decoding of Public Key, Credential Request, and Credential
+### 2. Encoding/Decoding
 
-We use Google Protocol Buffer for encoding and decoding.
+We provide `PSBuffer` for encoding and decoding of all PS data structure (i.e., public key, credential, ID proof, ID request).
 
-Use public key delivery as an example.
-Use `SerializeAsString` to encode:
+* Use `PSDataStructure.toBufferString()` to encode the a PS data structure into a `PSBuffer` (which is a byte vector).
+* Use `PSBuffer.toBase64()` to encode the buffer into a Base 64 string.
+* Use `PSDataStructure::fromBufferString()` to decode a PS data structure from `PSBuffer`.
+* Use `PSBuffer::fromBase64()` to decode `PSBuffer` from a base 64 string.
+
+Using PS public key as an example:
 
 ```C++
 PSSigner signer;
 auto pk = signer.key_gen(3); // key pair for 3 attributes at most
-std::string encoded_pk = pk.SerializeAsString();
+auto pkBuffer = pk.toBufferString(); // can be used in network transmission
+auto base64Str = pkBuffer.toBase64(); // can be used in JSON
 ```
 
-Use `ParseFromString` to decode:
-
 ```C++
-PSPubKey pk;
-std::string encoded_pk;
-// get pk from the network
-if (!pk.ParseFromString(encoded_pk)) {
-  std::cout << "Decoding failure" << std::endl;
-  return;
-}
-PSRequester user(pk);
-```
-
-### 3. Non-interactive Zero-knowledge Schnorr Protocol
-
-This library implements NIZK schnorr protocol as specified in [RFC 8235](https://tools.ietf.org/html/rfc8235).
-
-For example, you want to prove your ownership of a secret.
-
-```C++
-initPairing();
-G1 g; // used as the Group generator
-hashAndMapToG1(g, "abc", 3); // Select a base point as the generator
-Fr secret; // this is your secret
-secret.setByCSPRNG();
-
-G1 A, V;
-Fr r;
-std::string associated_data = "user-id";
-nizk_schnorr_prove(g, secret, associated_data, A, V, r); // initialize A, V, and r
-bool result = nizk_schnorr_verify(g, A, V, r, associated_data); // verify the proof (A, V, r, associated_data)
-if (!result) {
-  std::cout << "NIZK schnorr failure" << std::endl;
-  return;
-}
+auto pkBuffer = PSBuffer::fromBase64(base64Str); // from base 64
+auto pk = PSPubKey::fromBufferString(pkBuffer); // from buffer string
 ```

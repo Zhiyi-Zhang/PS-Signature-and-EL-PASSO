@@ -5,8 +5,7 @@ using namespace emscripten;
 
 EMSCRIPTEN_BINDINGS(my_module) {
   class_<PSRequester>("PSRequester")
-    .constructor<>()
-    .function("init_with_pk", &PSRequester::init_with_pk)
+    .constructor<PSPubKey>()
     .function("el_passo_request_id", &PSRequester::el_passo_request_id)
     .function("unblind_credential", &PSRequester::unblind_credential)
     .function("verify", &PSRequester::verify)
