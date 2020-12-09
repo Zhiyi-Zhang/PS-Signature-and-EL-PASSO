@@ -26,9 +26,6 @@ all: $(PROGRAMS)
 mcl:
 	./install-mcl.sh
 
-protobuf: src/ps.proto
-	protoc --proto_path=src --cpp_out=src src/ps.proto
-
 debug:
 	make "BUILD=debug"
 

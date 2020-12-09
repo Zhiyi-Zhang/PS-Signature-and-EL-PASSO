@@ -20,7 +20,14 @@ enum class PSEncodingType : uint8_t {
 };
 
 class PSBuffer : public std::vector<uint8_t> {
-public:
+public: // used for base64 encoding and decoding
+  static PSBuffer
+  fromBase64(const std::string& base64Str);
+
+  std::string
+  toBase64();
+
+public: // used for TLV encoding and decoding
   void
   appendType(PSEncodingType type);
 
