@@ -69,7 +69,14 @@ test_ps_buffer_encoding()
       return;
     }
   }
-  std::cout << "****test_ps_buffer_encoding without errors****" << std::endl;
+
+  auto base64Str = buffer.toBase64();
+  auto newBuffer = PSBuffer::fromBase64(base64Str);
+  if (buffer != newBuffer) {
+    std::cout << "test_ps_buffer_encoding base 64 encoding/decoding failure" << std::endl;
+      return;
+  }
+  std::cout << "****test_ps_buffer_encoding without errors****\n" << std::endl;
 }
 
 void
@@ -93,7 +100,7 @@ test_pk_with_different_attr_num()
 
   PSSigner idp(3, g, gg);
   PSPubKey pubKey = idp.key_gen();
-  std::cout << "3 total attributes. Public Key Size: " << pubKey.toBufferString().size() << std::endl;
+  std::cout << "3 total attributes. Public Key size: " << pubKey.toBufferString().size() << std::endl;
 
   PSPubKey newKey = PSPubKey::fromBufferString(pubKey.toBufferString());
   if (newKey.g != pubKey.g || newKey.XX != pubKey.XX) {
@@ -103,7 +110,7 @@ test_pk_with_different_attr_num()
 
   PSSigner idp2(20, g, gg);
   pubKey = idp2.key_gen();
-  std::cout << "20 total attributes. Public Key Size: " << pubKey.toBufferString().size() << std::endl;
+  std::cout << "20 total attributes. Public Key size: " << pubKey.toBufferString().size() << std::endl;
   std::cout << "****test_pk_with_different_attr_num ends without errors****\n"
             << std::endl;
 }
@@ -171,7 +178,8 @@ test_el_passo(size_t total_attribute_num)
   std::cout << "IDP-KeyGen over " << total_attribute_num << " attributes: "
             << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
             << "[µs]" << std::endl;
-  std::cout << "Public Key Response Packet Size: " << pk.toBufferString().size() << std::endl;
+  std::cout << "Public Key Response payload size: " << pk.toBufferString().size() << std::endl;
+  std::cout << "Public Key Response base 64 size: " << pk.toBufferString().toBase64().size() << std::endl;
 
   // User-RequestID
   pk = PSPubKey::fromBufferString(pk.toBufferString());
@@ -189,7 +197,8 @@ test_el_passo(size_t total_attribute_num)
   std::cout << "User-RequestID: "
             << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
             << "[µs]" << std::endl;
-  std::cout << "Setup Request Packet Size: " << request.toBufferString().size() << std::endl;
+  std::cout << "Setup Request payload size: " << request.toBufferString().size() << std::endl;
+  std::cout << "Setup Request base 64 size: " << request.toBufferString().toBase64().size() << std::endl;
 
   // IDP-ProvideID
   request = PSCredRequest::fromBufferString(request.toBufferString());
@@ -200,7 +209,8 @@ test_el_passo(size_t total_attribute_num)
   std::cout << "IDP-ProvideID: "
             << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
             << "[µs]" << std::endl;
-  std::cout << "Setup Response Packet Size: " << sig.toBufferString().size() << std::endl;
+  std::cout << "Setup Response payload size: " << sig.toBufferString().size() << std::endl;
+  std::cout << "Setup Response base 64 size: " << sig.toBufferString().toBase64().size() << std::endl;
   if (!sign_result) {
     std::cout << "sign request failure" << std::endl;
     return;
@@ -226,7 +236,8 @@ test_el_passo(size_t total_attribute_num)
   std::cout << "User-ProveID: "
             << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
             << "[µs]" << std::endl;
-  std::cout << "Sign-on Request Packet Size: " << prove.toBufferString().size() << std::endl;
+  std::cout << "Sign-on Request payload size: " << prove.toBufferString().size() << std::endl;
+  std::cout << "Sign-on Request base 64 size: " << prove.toBufferString().toBase64().size() << std::endl;
 
   // RP-VerifyID
   prove = IdProof::fromBufferString(prove.toBufferString());
