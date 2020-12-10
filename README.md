@@ -1,4 +1,4 @@
-# Short Randomizable Signatures (PS Signatures) Implementation in C++
+# Short Randomizable Signatures (PS Signatures) and EL PASSO Implementation in C++ and WebAssembly
 
 **Author: Zhiyi Zhang (zhiyi@cs.ucla.edu)**
 
