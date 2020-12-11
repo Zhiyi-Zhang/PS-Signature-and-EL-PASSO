@@ -3,6 +3,7 @@
 #include <ps-signer.h>
 #include <ps-verifier.h>
 
+#include <chrono>
 #include <iostream>
 
 using namespace mcl::bls12;
@@ -74,9 +75,10 @@ test_ps_buffer_encoding()
   auto newBuffer = PSBuffer::fromBase64(base64Str);
   if (buffer != newBuffer) {
     std::cout << "test_ps_buffer_encoding base 64 encoding/decoding failure" << std::endl;
-      return;
+    return;
   }
-  std::cout << "****test_ps_buffer_encoding without errors****\n" << std::endl;
+  std::cout << "****test_ps_buffer_encoding without errors****\n"
+            << std::endl;
 }
 
 void

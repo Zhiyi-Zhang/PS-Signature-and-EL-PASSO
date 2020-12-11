@@ -2,6 +2,7 @@
 #include <ps-signer.h>
 #include <ps-verifier.h>
 
+#include <chrono>
 #include <iostream>
 
 using namespace mcl::bls12;
