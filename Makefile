@@ -41,6 +41,10 @@ $(BUILD_DIR)/encoding-tests: $(ENCODING_TEST_OBJECTS)
 	mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LIBS)
 
+check: $(BUILD_DIR)/ps-tests $(BUILD_DIR)/encoding-tests
+	./$(BUILD_DIR)/ps-tests
+	./$(BUILD_DIR)/encoding-tests
+
 # **********************************WASM************************************
 
 WASM_BUILD_DIR = wasm-build
