@@ -1,5 +1,5 @@
 CXX = g++
-LIBS = -L./third-parties/mcl/lib -lgmp -lmcl
+LIBS = ./third-parties/mcl/lib/libmcl.a -lgmp
 CXXFLAGS = -std=c++17 -Wall -I./src -I./third-parties/mcl/include -DMCL_DONT_USE_OPENSSL -I/usr/local/include
 
 ifeq ($(BUILD),debug)
@@ -21,7 +21,7 @@ ENCODING_TEST_OBJECTS = $(BUILD_DIR)/encoding-test.o $(OBJECTS)
 
 all: $(PROGRAMS)
 
-.PHONY: unit-tests clean mcl emar_mcl el-passo-wasm
+.PHONY: unit-tests clean mcl el-passo-wasm
 
 mcl:
 	./install-mcl.sh
