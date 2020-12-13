@@ -1,10 +1,8 @@
 name: 'docker build'
 description: 'Docker build and run test'
-inputs:
 outputs:
   test-log:
     description: 'The result of tests'
 runs:
   using: 'docker'
   image: 'Dockerfile'
-  args:
