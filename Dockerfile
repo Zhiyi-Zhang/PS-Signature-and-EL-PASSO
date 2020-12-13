@@ -1,8 +1,11 @@
 # Container image that runs your code
-FROM alpine:3.10
+FROM ubuntu:18.04
 
-RUN apk add git
-RUN apk add build-base
+RUN apt-get update && apt-get install -y \
+  build-essential \
+  git \
+  libgmp-dev \
+  && rm -rf /var/lib/apt/lists/*
 
 COPY entrypoint.sh /entrypoint.sh
 CMD ./entrypoint.sh
