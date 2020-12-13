@@ -8,7 +8,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Docker build action
-        uses: ./docker-build # Uses an action in the root directory
+        uses: ./docker # Uses an action in the root directory
         id: run
       - name: Get the output log
         run: echo "The test log was ${{ steps.run.outputs.test-log }}"
