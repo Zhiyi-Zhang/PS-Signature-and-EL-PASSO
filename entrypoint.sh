@@ -17,6 +17,4 @@ echo "build the codebase"
 make
 
 echo "run test files"
-OUTPUT=$(make check)
-
-echo "::set-output name=test-log::$OUTPUT"
+make check
