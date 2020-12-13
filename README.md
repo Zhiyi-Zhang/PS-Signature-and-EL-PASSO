@@ -2,7 +2,7 @@
 
 ![master-build](https://github.com/Zhiyi-Zhang/PS-Signature-and-EL-PASSO/workflows/master_build/badge.svg)
 
-![docker-build](https://github.com/Zhiyi-Zhang/PS-Signature-and-EL-PASSO/workflows/.github/workflows/docker-build.yml/badge.svg)
+![docker-build](https://github.com/Zhiyi-Zhang/PS-Signature-and-EL-PASSO/workflows/docker_build/badge.svg)
 
 **Author: Zhiyi Zhang (zhiyi@cs.ucla.edu)**
 
