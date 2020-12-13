@@ -1,14 +1,12 @@
 # Short Randomizable Signatures (PS Signatures) and EL PASSO Implementation in C++ and WebAssembly
 
-![master-build](https://github.com/Zhiyi-Zhang/PS-Signature-and-EL-PASSO/workflows/master_build/badge.svg)
+![master-build](https://github.com/Zhiyi-Zhang/PS-Signature-and-EL-PASSO/workflows/master_build/badge.svg) ![docker-build](https://github.com/Zhiyi-Zhang/PS-Signature-and-EL-PASSO/workflows/docker_build/badge.svg)
 
-![docker-build](https://github.com/Zhiyi-Zhang/PS-Signature-and-EL-PASSO/workflows/docker_build/badge.svg)
+**Author**: Zhiyi Zhang (zhiyi@cs.ucla.edu)
 
-**Author: Zhiyi Zhang (zhiyi@cs.ucla.edu)**
+## 1. Overview
 
-## Overview of PS Signature and EL PASSO
-
-This library implements (i) PS Signature in C++ and WebAssembly and (ii) EL PASSO protocol.
+This library implements (i) PS Signature in C++ and WebAssembly and (ii) [EL PASSO](https://arxiv.org/abs/2002.10289).
 
 * PS Signature is a signature scheme that is efficient and randomizable. That is, after generating a PS signature, the signature can be randomized so that it cannot be related to its original presence. This can be widely used for privacy-preserving systems.
 * EL PASSO is a privacy-preserving Single Sign-On (SSO) system. It implements anonymous credentials, enables selective attribute disclosure, and allows users to prove properties about their identity without revealing it in the clear.
@@ -18,7 +16,7 @@ A certificate based on PS Signature following EL PASSO protocol is privacy-prese
 * The signer cannot learn the data being signed. The signer can only verify the correctness of the data through zero-knowledge proofs.
 * Each certificate can be randomized so as to preserve certificate owner's privacy while a randomized certificate is still valid.
 
-## An example application scenario
+## 1.1 An example application scenario
 
 To illustrate the use of our system, let's assume a user Alice is a legit user of Facebook (an Identity Provider or IdP in short) and she wants to login to a website (a Relying Party or RP in short) with her Facebook account.
 
@@ -29,50 +27,57 @@ After Facebook issues Alice the certificate, Alice can further randomize the cer
 In addition, Alice can select which attributes to share with the website; for example, Alice can select only to share her name `name: alice` and at the same time, without sharing her age, proves her age is larger than 18.
 The Website, by verifying the certificate with Facebook's public key, can ensure Alice is a legit user of Facebook and see the revealed attributes.
 
-EL PASSO also provides desired features including:
+At the same time, Alice cannot register more than one account (sybil attack) on the website with the same certificate and Facebook cannot link the later certificate with Alice.
 
-* Alice cannot register more than one account (sybil attack) on the website with the same certificate.
-* Facebook cannot link the later certificate with Alice.
+Based on the application scenario, EL PASSO can also be built to provide followings desired features with simple updates as stated in our [paper](https://arxiv.org/abs/2002.10289):
+
 * Two factor authentication (2FA).
 * Lost recover when Alice lost her certificate.
-* Optional identity information recovery in case a user misbehaves at RP.
+* Identity information recovery with the help of one or a number of authorities in case a user misbehaves at the RP.
 
-## Compile
+## 1.2 To cite our work
 
-### Download
+```ascii
+@article{zhang2020elpasso,
+  title={EL PASSO: Efficient and Lightweight Privacy-preserving Single Sign On},
+  author={Zhang, Zhiyi and Król, Michał and Sonnino, Alberto and Zhang, Lixia and Riviere, Etienne},
+  journal={Proceedings on Privacy Enhancing Technologies},
+  volume={2021},
+  number={2},
+  publisher={Sciendo}
+}
+```
+
+## 2. Quick Start
+
+### 2.1 Download
 
 ```bash
 git clone --recurse-submodules https://github.com/Zhiyi-Zhang/PSSignature.git
 ```
 
-### Compile and Test
+### 2.2 Compile and Test with Make
 
-#### 1. Compile and install MCL library
-
-Install the MCL library, which is already a submodule of the repo.
+The first step is to compile and install MCL library, which is already a submodule of the repo.
 
 ```bash
 make mcl
 ```
 
-Note that `make mcl` should only be called for one time.
+If the submodule cannot be found, you can update the submodule with the following command.
 
-#### 2. Compile PSSignature and EL PASSO
+```bash
+git submodule update --init
+```
 
-Compile the code and test files with the following command.
+Then, you can simply build and test PSSignature and EL PASSO with `make` and `make check`.
 
 ```bash
 make
+make check
 ```
 
-You can test PSSignature and EL PASSO with unit tests.
-
-```bash
-./build/ps-tests
-./build/encoding-tests
-```
-
-## Compile with WebAssembly
+### 2.3 Build with WebAssembly
 
 Our library supports the use of Web Assembly (WASM) so that web applications can use the PS Signature and EL PASSO system.
 
@@ -96,7 +101,23 @@ To run the test and see output on your browser, click the button `run-tests` to 
 Note that you can also find each individual module (i.e., IdP, RP, User) in `wasm-build`.
 You can develop your own JS code based on these modules for your own application needs.
 
-## Documentation
+### 2.4 Build with docker
+
+You can run our codebase in docker as well. This require you must have installed [docker](https://www.docker.com/).
+
+First, create a new image tagged `elpasso` from the `Dockerfile` in the repo directory.
+
+```bash
+docker image build -t elpasso .
+```
+
+Then, run the tests in a docker container.
+
+```bash
+docker run elpasso
+```
+
+## 3. Documentation
 
 This library mainly provides following supports.
 
@@ -105,9 +126,9 @@ It is recommended to call this function in your main function before calling fun
 
 A complete documentation can be found in the in-line comments of headers files in `src` directory.
 
-### 1. PS Signature and EL PASSO Support
+### 3.1. PS Signature and EL PASSO Support
 
-#### 1.1 Signer: Key Generation
+#### 3.1.1 Signer: Key Generation
 
 Use PSSigner to generate the public/private key pair over a known number.
 The number indicates how many attributes will be covered by future signatures.
@@ -118,10 +139,10 @@ PSSigner signer;
 auto pk = signer.key_gen(3); // key pair for 3 attributes at most
 ```
 
-#### 1.2 Requester: Credential Request Generation
+#### 3.1.2 Requester: Credential Request Generation
 
 Use PSRequester to generate a signature request over hidden attributes and plaintext attributes.
-**Importantly, `el_passo_request_id` will invoke Non-interactive Zero-knowledge Schnorr Prove Protocol to generate proof of ownership of hidden attributes.**
+Importantly, `el_passo_request_id` will invoke Non-interactive Zero-knowledge Schnorr Prove Protocol to generate proof of ownership of hidden attributes.
 
 ```C++
 PSRequester user(pk); // pk should be delivered to users through a secure channel, e.g., out-of-band
@@ -132,7 +153,7 @@ attributes.push_back(std::make_tuple("plain1", false)); // plaintext attribute
 auto request = user.el_passo_request_id(attributes, "associated-data"); // a piece of associated data is used with Schnorr Zero Knowledge Proof
 ```
 
-#### 1.3 Signer: Verify Request and Sign the Credential
+#### 3.1.3 Signer: Verify Request and Sign the Credential
 
 Use PSSigner to sign the request.
 **Importantly, `el_passo_provide_id` will invoke Non-interactive Zero-knowledge Schnorr Verification Protocol to verify requester's ownership of hidden attributes.**
@@ -142,7 +163,7 @@ PSCredential cred;
 bool isValid = signer.el_passo_provide_id(request, "associated-data", cred); // the cred will be generated if the request is valid
 ```
 
-#### 1.4 Requester: Unblind, Verify, and Randomize the Credential
+#### 3.1.4 Requester: Unblind, Verify, and Randomize the Credential
 
 Use PSRequester to unblind the credential, verify the credential, and further randomize the credential.
 
@@ -161,7 +182,7 @@ if (!user.verify(rnd_cred, all_attributes)) { // verify randomized signature
 }
 ```
 
-#### 1.5 Requester: Zero-knowledge proof of the Credential
+#### 3.1.5 Requester: Zero-knowledge proof of the Credential
 
 Use PSRequester to zero-knowledge prove the ownership of the credential to a RP.
 In this process, the owner of the credential can decide which attributes to reveal to the verifier.
@@ -186,7 +207,7 @@ if (!bool result = rp.el_passo_verify_id(proveID, "associated-data", "rp1", auth
 }
 ```
 
-### 2. Encoding/Decoding
+### 3.2 Encoding/Decoding
 
 We provide `PSBuffer` for encoding and decoding of all PS data structure (i.e., public key, credential, ID proof, ID request).
 
