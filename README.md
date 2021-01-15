@@ -79,9 +79,11 @@ make check
 
 ### 2.3 Build with WebAssembly
 
-Our library supports the use of Web Assembly (WASM) so that web applications can use the PS Signature and EL PASSO system.
+Our library supports the use of [Web Assembly (WASM)](https://webassembly.org/) so that web applications can use the PS Signature and EL PASSO system.
 
-To compile the PS signature test file into a HTML and test it with your browser.
+To compile with the WASM, you must first follow the instructions from the [WASM's C++ download and install page](https://emscripten.org/docs/getting_started/downloads.html) to get [emsdk](https://emscripten.org/index.html) ready.
+
+After activate the emsdk, to compile the PS signature test file into a HTML and test it with your browser.
 
 ```bash
 make el-pass-wasm
