@@ -16,7 +16,7 @@ test_el_passo(size_t total_attribute_num)
   G2 gg;
   hashAndMapToG1(g, "abc");
   hashAndMapToG2(gg, "edf");
-  PSSigner idp(total_attribute_num, g, gg);
+  PSSigner idp(total_attribute_num);
 
   // IDP-KeyGen
   auto begin = std::chrono::steady_clock::now();

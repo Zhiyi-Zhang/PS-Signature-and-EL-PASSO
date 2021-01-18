@@ -1,0 +1,27 @@
+<html>
+<body>
+
+<h2>IdP Info</h2>
+<input id="idp-addr">
+<button type="button" onclick="requestid()">Click to request credential from the IdP</button>
+
+<h2>RP</h2>
+<input id="rp-addr">
+<button type="button" onclick="signon()">Click to authenticate to the RP</button>
+
+<script>
+function requestid() {
+  var idpAddr;
+  idpAddr = document.getElementById("idp-addr").value;
+  // TODO: call wasm
+}
+
+function signon() {
+  var rpAddr;
+  rpAddr = document.getElementById("rp-addr").value;
+  // TODO: call wasm
+}
+</script>
+
+</body>
+</html>

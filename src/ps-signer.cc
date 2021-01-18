@@ -55,7 +55,7 @@ PSSigner::key_gen()
 }
 
 PSPubKey
-PSSigner::get_pub_key()
+PSSigner::get_pub_key() const
 {
   return m_pk;
 }

@@ -10,6 +10,12 @@ PSRequester::PSRequester(const PSPubKey& pk)
 {
 }
 
+size_t
+PSRequester::maxAllowedAttrNum() const
+{
+  return m_pk.Yi.size();
+}
+
 PSCredRequest
 PSRequester::el_passo_request_id(const std::vector<std::tuple<std::string, bool>> attributes,  // string is the attribute, bool whether to hide
                                  const std::string& associated_data)
@@ -20,7 +26,11 @@ PSRequester::el_passo_request_id(const std::vector<std::tuple<std::string, bool>
    * c = hash( A || V || associated_data);, will be sent
    * r0 = random1 - t*c; r1 = random2_i - attribute_i * c, will be sent
    */
-
+  // calcuate the max number of attributes supported
+  size_t maxAllowedAttrNum = m_pk.Yi.size();
+  if (attributes.size() != maxAllowedAttrNum) {
+    throw std::runtime_error("attribute size does not match");
+  }
   // parameters to send:
   PSCredRequest request;
   request.rs.reserve(attributes.size() + 1);

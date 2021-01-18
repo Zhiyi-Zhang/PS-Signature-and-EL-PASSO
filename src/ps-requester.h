@@ -17,6 +17,9 @@ public:
    */
   PSRequester(const PSPubKey& pk);
 
+  size_t
+  maxAllowedAttrNum() const;
+
   /**
    * @brief Generate a request along with a NIZK proof for the PSSigner to sign over requester's
    *        blinded attributes and plaintext attributes.

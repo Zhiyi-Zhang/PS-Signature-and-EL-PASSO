@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>EL PASSO User Demo</title>
+  </head>
+  <body>
+    <h3>EL PASSO User: For demo purpose only</h3>
+    <p>
+      Note: This demo is only for the purpose of showing how WASM ELPASSO User
+      works.
+      <br />
+      Author: Zhiyi Zhang (zhiyi@cs.ucla.edu)
+    </p>
+
+    <hr />
+
+    <h4>Step 0: User Setup</h4>
+    <p>
+      Please copy paste the IdP's public key here to set up the user.
+    </p>
+    <textarea id="idp-pk" rows="5" cols="50"></textarea>
+    <br />
+    <button type="button" onclick="init()" value="0">Setup User</button>
+    <br />
+    <p id="user-init-result" style="width: 300px; overflow-wrap: break-word"></p>
+
+    <hr />
+
+    <h4>Step 1: Generate Credential Request</h4>
+    <p id="max-num-attr">You can at most set unknown number of attributes</p>
+    <p>The attribute format: a list of "attr_value hide_from_idp?". <br>
+    Sample: secret N plain1 Y plain2 Y </p>
+    <textarea id="attributes" cols="50" value=>secret Y plain1 N plain2 N</textarea>
+    <p>
+      Please click the button to generate the credential request and copy it to IdP's website.
+    </p>
+    <button type="button" onclick="requestid()">Generate credential request</button>
+    <p id="credential-request"></p>
+
+    <script>
+      var Module = {
+        onRuntimeInitialized: function () {
+          Module.initPairing();
+          console.log("init pairing");
+        },
+      };
+      document.getElementById("idp-pk").value = "";
+
+      var user;
+
+      function init() {
+        var keyBase64 = document.getElementById("idp-pk").value;
+        if (keyBase64.length == 0) {
+          alert("Empty IdP's public key is detected.");
+          return;
+        }
+        var pk = Module.PSPubKey.fromBufferString(Module.PSBuffer.fromBase64(keyBase64));
+        user = new Module.PSRequester(pk);
+        console.log("init User");
+        document.getElementById("user-init-result").innerHTML = "Succeed!"
+        document.getElementById("max-num-attr").innerHTML = "You can at most set " + user.maxAllowedAttrNum() + " number of attributes"
+      }
+
+      function requestid() {
+        var attStr = "secret N plain1 Y plain2 Y"
+        var vec = string2AttributeVector()
+        user.el_passo_request_id();
+      }
+    </script>
+    <script async src="el-passo-user.js"></script>
+  </body>
+</html>

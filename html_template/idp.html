@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>EL PASSO Identity Provider Demo</title>
+  </head>
+  <body>
+    <h3>EL PASSO Identity Provider (IdP): For demo purpose only</h3>
+    <p>
+      Note: This demo is only for the purpose of showing how WASM ELPASSO IdP
+      works. For real use, please use the C++ library directly within a web
+      server.
+      <br />
+      Author: Zhiyi Zhang (zhiyi@cs.ucla.edu)
+    </p>
+
+    <hr />
+
+    <h4>Step 0: IdP Setup</h4>
+    <p>
+      Please type in the maximum number of supported attributes (>= 3) and click
+      the button to generate the key pair at IdP.
+    </p>
+    <input id="max-attr" />
+    <br />
+    <button type="button" onclick="init()" value="0">Setup IdP</button>
+    <br />
+    <p id="pk" style="width: 600px; overflow-wrap: break-word"></p>
+
+    <hr />
+
+    <h4>Step 1: Assign Credential to Client</h4>
+    <p>Please copy paste the request from the user here</p>
+    <textarea id="client-request" rows="5" cols="50"></textarea>
+    <br />
+    <button type="button" onclick="init()">Check and issue credential</button>
+    <p id="credential"></p>
+
+    <script>
+      var Module = {
+        onRuntimeInitialized: function () {
+          Module.initPairing();
+          console.log("init pairing");
+        },
+      };
+      document.getElementById("max-attr").value = "";
+
+      var IdP;
+
+      function init() {
+        var maxAttr = parseInt(document.getElementById("max-attr").value);
+        if (isNaN(maxAttr) || maxAttr < 3) {
+          maxAttr = 3;
+        }
+        IdP = new Module.PSSigner(maxAttr);
+        console.log("init IdP");
+        IdP.key_gen();
+        var pk = IdP.get_pub_key();
+        var pkBase64 = pk.toBufferString().toBase64();
+        console.log("pk base64: " + pkBase64);
+        document.getElementById("pk").innerHTML =
+          "Public Key for at most " + maxAttr + " attributes: <br>" + pkBase64;
+      }
+    </script>
+    <script async src="el-passo-idp.js"></script>
+  </body>
+</html>

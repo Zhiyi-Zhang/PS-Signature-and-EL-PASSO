@@ -42,7 +42,7 @@ public:
    * @brief Get the public key.
    */
   PSPubKey
-  get_pub_key();
+  get_pub_key() const;
 
   /**
    * @brief EL PASSO ProvideID.
