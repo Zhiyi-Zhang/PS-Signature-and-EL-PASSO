@@ -33,7 +33,7 @@
     <p>Please copy paste the request from the user here</p>
     <textarea id="client-request" rows="5" cols="50"></textarea>
     <br />
-    <button type="button" onclick="init()">Check and issue credential</button>
+    <button type="button" onclick="issue()">Check and issue credential</button>
     <p id="credential"></p>
 
     <script>
@@ -44,6 +44,7 @@
         },
       };
       document.getElementById("max-attr").value = "";
+      document.getElementById("client-request").value = ""
 
       var IdP;
 
@@ -60,6 +61,14 @@
         console.log("pk base64: " + pkBase64);
         document.getElementById("pk").innerHTML =
           "Public Key for at most " + maxAttr + " attributes: <br>" + pkBase64;
+      }
+
+      function issue() {
+        var requestBase64 = document.getElementById("client-request").value;
+        var assoData = "demo_only";
+        var credentialBase64 = Module.el_passo_prove_id(IdP, requestBase64, assoData);
+        document.getElementById("credential").innerHTML =
+          "Credenail: <br>" + credentialBase64;
       }
     </script>
     <script async src="el-passo-idp.js"></script>

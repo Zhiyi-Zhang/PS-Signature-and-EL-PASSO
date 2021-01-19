@@ -21,7 +21,7 @@ void split(const std::string &s, char delim, Out result) {
 
 // format: att1 Y att2 N att3 Y
 std::vector<std::tuple<std::string, bool>>
-string2AttributeVector(const std::string& vectorStr) {
+string2AttributeVec(const std::string& vectorStr) {
   std::vector<std::string> elems;
   split(vectorStr, ' ', std::back_inserter(elems));
   std::vector<std::tuple<std::string, bool>> result;
@@ -38,9 +38,17 @@ string2AttributeVector(const std::string& vectorStr) {
   return result;
 }
 
+std::string
+el_passo_request_id(PSRequester& requester, const std::string& vectorStr, const std::string& assData)
+{
+  auto vec = string2AttributeVec(vectorStr);
+  auto request = requester.el_passo_request_id(vec, assData);
+  return request.toBufferString().toBase64();
+}
+
 EMSCRIPTEN_BINDINGS(my_module) {
   function("initPairing", &initPS);
-  function("string2AttributeVector", &string2AttributeVector);
+  function("el_passo_request_id", &el_passo_request_id);
 
   class_<PSBuffer>("PSBuffer")
     .class_function("fromBase64", &PSBuffer::fromBase64)

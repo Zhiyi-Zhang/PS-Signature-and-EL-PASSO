@@ -8,45 +8,23 @@ void initPS() {
   initPairing();
 }
 
-// // a wrapper class of PSSigner to use builtin data types
-// class PassoIdP : public PSSigner {
-//   public:
-//   PassoIdP(size_t num);
-
-//   std::string
-//   getPubKey() const;
-
-//   std::string
-//   proveId(const std::string& request, const std::string& assData) const;
-// };
-
-// PassoIdP::PassoIdP(size_t num)
-//   : PSSigner(num)
-// {}
-
-// std::string
-// PassoIdP::getPubKey() const
-// {
-//   auto pk = this->get_pub_key();
-//   return pk.toBufferString().toBase64();
-// }
-
-// std::string
-// PassoIdP::proveId(const std::string& requestStr, const std::string& assData) const
-// {
-//   auto request = PSCredRequest::fromBufferString(PSBuffer::fromBase64(requestStr));
-//   PSCredential credential;
-//   auto success = this->el_passo_provide_id(request, assData, credential);
-//   if (!success) {
-//     return "";
-//   }
-//   else {
-//     return credential.toBufferString().toBase64();
-//   }
-// }
+std::string
+el_passo_prove_id(PSSigner& signer, const std::string& requestStr, const std::string& assoData)
+{
+  auto request = PSCredRequest::fromBufferString(PSBuffer::fromBase64(requestStr));
+  PSCredential credential;
+  auto success = signer.el_passo_provide_id(request, assoData, credential);
+  if (!success) {
+    return "";
+  }
+  else {
+    return credential.toBufferString().toBase64();
+  }
+}
 
 EMSCRIPTEN_BINDINGS(my_module) {
   function("initPairing", &initPS);
+  function("el_passo_prove_id", &el_passo_prove_id);
 
   class_<PSBuffer>("PSBuffer")
     .class_function("fromBase64", &PSBuffer::fromBase64)

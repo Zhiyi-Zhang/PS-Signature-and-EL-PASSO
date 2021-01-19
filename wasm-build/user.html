@@ -23,7 +23,7 @@
     <br />
     <button type="button" onclick="init()" value="0">Setup User</button>
     <br />
-    <p id="user-init-result" style="width: 300px; overflow-wrap: break-word"></p>
+    <p id="user-init-result" style="width: 600px; overflow-wrap: break-word"></p>
 
     <hr />
 
@@ -31,12 +31,12 @@
     <p id="max-num-attr">You can at most set unknown number of attributes</p>
     <p>The attribute format: a list of "attr_value hide_from_idp?". <br>
     Sample: secret N plain1 Y plain2 Y </p>
-    <textarea id="attributes" cols="50" value=>secret Y plain1 N plain2 N</textarea>
+    <textarea id="attributesStr" cols="50" value=>secret Y plain1 N plain2 N</textarea>
     <p>
       Please click the button to generate the credential request and copy it to IdP's website.
     </p>
     <button type="button" onclick="requestid()">Generate credential request</button>
-    <p id="credential-request"></p>
+    <p id="credential-request" style="width: 600px; overflow-wrap: break-word"></p>
 
     <script>
       var Module = {
@@ -58,14 +58,17 @@
         var pk = Module.PSPubKey.fromBufferString(Module.PSBuffer.fromBase64(keyBase64));
         user = new Module.PSRequester(pk);
         console.log("init User");
-        document.getElementById("user-init-result").innerHTML = "Succeed!"
-        document.getElementById("max-num-attr").innerHTML = "You can at most set " + user.maxAllowedAttrNum() + " number of attributes"
+        document.getElementById("user-init-result").innerHTML = "Succeed!";
+        document.getElementById("max-num-attr").innerHTML = "You can at most set " + user.maxAllowedAttrNum() + " number of attributes";
+        document.getElementById("credential-request").value = "";
       }
 
       function requestid() {
-        var attStr = "secret N plain1 Y plain2 Y"
-        var vec = string2AttributeVector()
-        user.el_passo_request_id();
+        var attStr = document.getElementById("attributesStr").value;
+        var assoData = "demo_only";
+        var requestBase64 = Module.el_passo_request_id(user, attStr, assoData);
+        document.getElementById("credential-request").innerHTML =
+          "Credential Request: <br>" + requestBase64;
       }
     </script>
     <script async src="el-passo-user.js"></script>
