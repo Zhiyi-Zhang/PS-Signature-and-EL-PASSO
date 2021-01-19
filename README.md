@@ -56,7 +56,7 @@ Based on the application scenario, EL PASSO can also be built to provide followi
 git clone --recurse-submodules https://github.com/Zhiyi-Zhang/PSSignature.git
 ```
 
-### 2.2 Compile and Test with Make
+### 2.2 Build with Make
 
 The first step is to compile and install MCL library, which is already a submodule of the repo.
 
@@ -98,14 +98,18 @@ By running the make check, several tests will run:
 Our library supports the use of [Web Assembly (WASM)](https://webassembly.org/) so that web applications can use the PS Signature and EL PASSO system.
 
 To compile with the WASM, you must first follow the instructions from the [WASM's C++ download and install page](https://emscripten.org/docs/getting_started/downloads.html) to get [emsdk](https://emscripten.org/index.html) ready.
+If you don't want to install WASM, you can skip 2.3.1 and directly use the existing files in `wasm-build`
 
-After activate the emsdk, to compile the PS signature test file into a HTML and test it with your browser.
+#### 2.3.1 Install WASM depenencies and compile EL PASSO WASMs
+
+After activate the emsdk, you should have the command `em++` available in your path.
+To compile the PS signature test file into a HTML and test it with your browser, use the following command.
 
 ```bash
 make el-pass-wasm
 ```
 
-Then, you should have `wasm-tests.js`, `wasm-tests.wasm`, and `wasm-tests.html` in a new directory called `wasm-build`.
+Then, you should have a number of `js`, `wasm`, and `html` files in a new directory called `wasm-build`.
 To check the output in the browser, you can serve the html with python.
 
 ```bash
@@ -113,12 +117,14 @@ cd wasm-build
 python3 -m http.server 8080
 ```
 
-After that, you can open your browser and visit `http://0.0.0.0:8080/ps-tests.html`.
+#### 2.3.2 Play with EL PASSO WASMs
+
+You can open your browser and visit `http://0.0.0.0:8080/wasm-tests.html`.
 To run the test and see output on your browser, click the button `run-tests` to start.
 The EL PASSO unit tests and encoding/decoding tests will be run.
 
 Note that you can also find each individual module (i.e., IdP, RP, User) in `wasm-build`.
-You can develop your own JS code based on these modules for your own application needs.
+You can play with the individual pages (e.g., `http://0.0.0.0:8080/idp.html`) or develop your own JS code based on these modules for your own application needs.
 
 ### 2.4 Build with docker
 

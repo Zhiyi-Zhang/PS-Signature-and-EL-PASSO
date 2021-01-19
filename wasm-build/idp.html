@@ -44,7 +44,7 @@
         },
       };
       document.getElementById("max-attr").value = "";
-      document.getElementById("client-request").value = ""
+      document.getElementById("client-request").value = "";
 
       var IdP;
 
@@ -66,7 +66,11 @@
       function issue() {
         var requestBase64 = document.getElementById("client-request").value;
         var assoData = "demo_only";
-        var credentialBase64 = Module.el_passo_prove_id(IdP, requestBase64, assoData);
+        var credentialBase64 = Module.el_passo_prove_id(
+          IdP,
+          requestBase64,
+          assoData
+        );
         document.getElementById("credential").innerHTML =
           "Credenail: <br>" + credentialBase64;
       }

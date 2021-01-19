@@ -60,15 +60,12 @@ MCL_C_DEP = $(MCL_DIR)/src/fp.cpp $(MCL_DIR)/include/mcl/impl/bn_c_impl.hpp $(MC
 $(WASM_BUILD_DIR)/wasm-tests.js : test-wasm/wasm-tests.cc $(MCL_DIR)/src/fp.cpp $(SRCS)
 	mkdir -p $(@D)
 	$(EMCC) -o $@ test-wasm/wasm-tests.cc $(MCL_DIR)/src/fp.cpp $(SRCS) $(EMCC_OPT) -DMCL_DONT_USE_XBYAK -DMCL_DONT_USE_OPENSSL -DMCL_USE_VINT -DMCL_SIZEOF_UNIT=8 -DMCL_VINT_64BIT_PORTABLE -DMCL_VINT_FIXED_BUFFER -DMCL_MAX_BIT_SIZE=384
-
-$(WASM_BUILD_DIR)/wasm-tests.html : test-wasm/wasm-tests.cc $(MCL_DIR)/src/fp.cpp $(SRCS)
-	mkdir -p $(@D)
-	$(EMCC) -o $@ test-wasm/wasm-tests.cc $(MCL_DIR)/src/fp.cpp $(SRCS) $(EMCC_OPT) -DMCL_DONT_USE_XBYAK -DMCL_DONT_USE_OPENSSL -DMCL_USE_VINT -DMCL_SIZEOF_UNIT=8 -DMCL_VINT_64BIT_PORTABLE -DMCL_VINT_FIXED_BUFFER -DMCL_MAX_BIT_SIZE=384 --shell-file html_template/shell_minimal.html -s "EXTRA_EXPORTED_RUNTIME_METHODS=['ccall']"
 	cp ./html_template/wasm-tests.html $(@D)
 
 $(WASM_BUILD_DIR)/el-passo-idp.js : test-wasm/el-passo-idp.cc $(MCL_DIR)/src/fp.cpp $(SRCS)
 	mkdir -p $(@D)
 	$(EMCC) -o $@ test-wasm/el-passo-idp.cc src/ps-signer.cc src/ps-encoding.cc $(MCL_DIR)/src/fp.cpp $(EMCC_OPT) -DMCL_DONT_USE_XBYAK -DMCL_DONT_USE_OPENSSL -DMCL_USE_VINT -DMCL_SIZEOF_UNIT=8 -DMCL_VINT_64BIT_PORTABLE -DMCL_VINT_FIXED_BUFFER -DMCL_MAX_BIT_SIZE=384
+	cp ./html_template/idp.html $(@D)
 
 $(WASM_BUILD_DIR)/el-passo-rp.js : test-wasm/el-passo-rp.cc $(MCL_DIR)/src/fp.cpp $(SRCS)
 	mkdir -p $(@D)
@@ -77,12 +74,9 @@ $(WASM_BUILD_DIR)/el-passo-rp.js : test-wasm/el-passo-rp.cc $(MCL_DIR)/src/fp.cp
 $(WASM_BUILD_DIR)/el-passo-user.js : test-wasm/el-passo-user.cc $(MCL_DIR)/src/fp.cpp $(SRCS)
 	mkdir -p $(@D)
 	$(EMCC) -o $@ test-wasm/el-passo-user.cc src/ps-requester.cc src/ps-encoding.cc $(MCL_DIR)/src/fp.cpp $(EMCC_OPT) -DMCL_DONT_USE_XBYAK -DMCL_DONT_USE_OPENSSL -DMCL_USE_VINT -DMCL_SIZEOF_UNIT=8 -DMCL_VINT_64BIT_PORTABLE -DMCL_VINT_FIXED_BUFFER -DMCL_MAX_BIT_SIZE=384
+	cp ./html_template/user.html $(@D)
 
-$(WASM_BUILD_DIR)/el-passo-all.js : test-wasm/el-passo-all.cc $(MCL_DIR)/src/fp.cpp $(SRCS)
-	mkdir -p $(@D)
-	$(EMCC) -o $@ test-wasm/el-passo-all.cc $(SRCS) $(MCL_DIR)/src/fp.cpp $(EMCC_OPT) -DMCL_DONT_USE_XBYAK -DMCL_DONT_USE_OPENSSL -DMCL_USE_VINT -DMCL_SIZEOF_UNIT=8 -DMCL_VINT_64BIT_PORTABLE -DMCL_VINT_FIXED_BUFFER -DMCL_MAX_BIT_SIZE=384
-
-el-passo-wasm : $(WASM_BUILD_DIR)/el-passo-user.js $(WASM_BUILD_DIR)/el-passo-rp.js $(WASM_BUILD_DIR)/el-passo-idp.js $(WASM_BUILD_DIR)/wasm-tests.html
+el-passo-wasm : $(WASM_BUILD_DIR)/el-passo-user.js $(WASM_BUILD_DIR)/el-passo-rp.js $(WASM_BUILD_DIR)/el-passo-idp.js $(WASM_BUILD_DIR)/wasm-tests.js
 
 clean:
 	rm -rf $(BUILD_DIR)
