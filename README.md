@@ -95,10 +95,11 @@ By running the make check, a number of tests will be run:
 
 ### 2.3 Build with WebAssembly
 
-Our library supports the use of [Web Assembly (WASM)](https://webassembly.org/) so that web applications can use the PS Signature and EL PASSO system.
+Our library supports the use of [Web Assembly (WASM)](https://webassembly.org/), which allows our implementation to provide both high efficiency and the ability to be delivered as a web resource
+Therefore, a user do not need to explicitly install EL PASSO software and can directly use EL PASSO with a standard browser.
 
 To compile with the WASM, you must first follow the instructions from the [WASM's C++ download and install page](https://emscripten.org/docs/getting_started/downloads.html) to get [emsdk](https://emscripten.org/index.html) ready.
-If you don't want to install WASM, you can skip 2.3.1 and directly use the existing files in `wasm-build`
+If you don't want to install WASM, you can skip 2.3.1 and directly go to 2.3.2 and 3 because the complied files have been uploaded to `./wasm-build`.
 
 #### 2.3.1 Install WASM depenencies and compile EL PASSO WASMs
 
@@ -109,22 +110,22 @@ To compile the PS signature test file into a HTML and test it with your browser,
 make el-pass-wasm
 ```
 
-Then, you should have a number of `js`, `wasm`, and `html` files in a new directory called `wasm-build`.
-To check the output in the browser, you can serve the html with python.
+Then, it should generate (overwrite) a number of `js`, `wasm`, and `html` files in `./wasm-build`.
+
+#### 2.3.2 Run WASM tests
+
+To test the EL PASSO WASMs with your browser, you should first run a HTTP server.
+An easiest way is to use python's HTTP server.
 
 ```bash
 cd wasm-build
 python3 -m http.server 8080
 ```
 
-#### 2.3.2 Play with EL PASSO WASMs
+You can now open your browser and visit `http://0.0.0.0:8080/wasm-tests.html` and click the button `run-tests` to run the tests.
+The WASM version of the same unit tests as shown in 2.2 will be run.
 
-You can open your browser and visit `http://0.0.0.0:8080/wasm-tests.html`.
-To run the test and see output on your browser, click the button `run-tests` to start.
-The EL PASSO unit tests and encoding/decoding tests will be run.
-
-Note that you can also find each individual module (i.e., IdP, RP, User) in `wasm-build`.
-You can play with the individual pages (e.g., `http://0.0.0.0:8080/idp.html`) or develop your own JS code based on these modules for your own application needs.
+Note that you can also find each individual module (i.e., IdP, RP, User) in `wasm-build` and develop your own JS code based on these modules for your own application needs.
 
 ### 2.4 Build with docker
 
@@ -144,16 +145,41 @@ docker run elpasso
 
 After starting the docker container, you should be able to see the same test results as when you build with make.
 
-## 3. Documentation
+## 3. A Demo of EL PASSO
+
+We provide a demo of the EL PASSO protocol with the IdP, RP, and user.
+This does not require you compile or install anything.
+What you need is only a browser and a version of Python3.
+
+To play with the demo, the first step is to serve the EL PASSO WASM modules with a HTTP server.
+An easiest way is to use Python3's HTTP server.
+
+```bash
+cd wasm-build
+python3 -m http.server 8080
+```
+
+Then, open three new tabs in your browser with `http://0.0.0.0:8080/idp.html`, `http://0.0.0.0:8080/user.html`, and `http://0.0.0.0:8080/rp.html`.
+Then you can follow the steps shown in these webpages to learn how EL PASSO works.
+We also provide a brief description of the steps here:
+
+* On IdP's page, initialize the IdP and copy its public key to both user and RP.
+* On user's page, generate a credential request and copy it to IdP's page.
+* On IdP's page, verify the credential request and issue a credential to the user.
+* On user's page, load the credential issued by the IdP.
+* On user's page, generate a sign on request to a RP.
+* On RP's page, verify the sign on request from the user and finish the authentication of the user.
+
+## 4. Documentation
 
 Importantly, all the functions require the function call `initPairing()` at the very beginning of the program.
 It is recommended to call this function in your main function before calling functions provided by this library.
 
 A complete documentation can be found in the in-line comments of headers files in `src` directory.
 
-### 3.1. PS Signature and EL PASSO Support
+### 4.1. PS Signature and EL PASSO Support
 
-#### 3.1.1 Signer: Key Generation
+#### 4.1.1 Signer: Key Generation
 
 Use PSSigner to generate the public/private key pair over a known number.
 The number indicates how many attributes will be covered by future signatures.
@@ -164,7 +190,7 @@ PSSigner signer;
 auto pk = signer.key_gen(3); // key pair for 3 attributes at most
 ```
 
-#### 3.1.2 Requester: Credential Request Generation
+#### 4.1.2 Requester: Credential Request Generation
 
 Use PSRequester to generate a signature request over hidden attributes and plaintext attributes.
 Importantly, `el_passo_request_id` will invoke Non-interactive Zero-knowledge Schnorr Prove Protocol to generate proof of ownership of hidden attributes.
@@ -178,7 +204,7 @@ attributes.push_back(std::make_tuple("plain1", false)); // plaintext attribute
 auto request = user.el_passo_request_id(attributes, "associated-data"); // a piece of associated data is used with Schnorr Zero Knowledge Proof
 ```
 
-#### 3.1.3 Signer: Verify Request and Sign the Credential
+#### 4.1.3 Signer: Verify Request and Sign the Credential
 
 Use PSSigner to sign the request.
 **Importantly, `el_passo_provide_id` will invoke Non-interactive Zero-knowledge Schnorr Verification Protocol to verify requester's ownership of hidden attributes.**
@@ -188,7 +214,7 @@ PSCredential cred;
 bool isValid = signer.el_passo_provide_id(request, "associated-data", cred); // the cred will be generated if the request is valid
 ```
 
-#### 3.1.4 Requester: Unblind, Verify, and Randomize the Credential
+#### 4.1.4 Requester: Unblind, Verify, and Randomize the Credential
 
 Use PSRequester to unblind the credential, verify the credential, and further randomize the credential.
 
@@ -207,7 +233,7 @@ if (!user.verify(rnd_cred, all_attributes)) { // verify randomized signature
 }
 ```
 
-#### 3.1.5 Requester: Zero-knowledge proof of the Credential
+#### 4.1.5 Requester: Zero-knowledge proof of the Credential
 
 Use PSRequester to zero-knowledge prove the ownership of the credential to a RP.
 In this process, the owner of the credential can decide which attributes to reveal to the verifier.
@@ -232,14 +258,14 @@ if (!bool result = rp.el_passo_verify_id(proveID, "associated-data", "rp1", auth
 }
 ```
 
-### 3.2 Encoding/Decoding
+### 4.2 Encoding/Decoding
 
 We provide `PSBuffer` for encoding and decoding of all PS data structure (i.e., public key, credential, ID proof, ID request).
 
 * Use `PSDataStructure.toBufferString()` to encode the a PS data structure into a `PSBuffer` (which is a byte vector).
-* Use `PSBuffer.toBase64()` to encode the buffer into a Base 64 string.
+* Use `PSBuffer.toBase64()` to encode the buffer into a base64 string.
 * Use `PSDataStructure::fromBufferString()` to decode a PS data structure from `PSBuffer`.
-* Use `PSBuffer::fromBase64()` to decode `PSBuffer` from a base 64 string.
+* Use `PSBuffer::fromBase64()` to decode `PSBuffer` from a base64 string.
 
 Using PS public key as an example:
 
@@ -251,6 +277,6 @@ auto base64Str = pkBuffer.toBase64(); // can be used in JSON
 ```
 
 ```C++
-auto pkBuffer = PSBuffer::fromBase64(base64Str); // from base 64
+auto pkBuffer = PSBuffer::fromBase64(base64Str); // from base64
 auto pk = PSPubKey::fromBufferString(pkBuffer); // from buffer string
 ```
