@@ -108,13 +108,13 @@ public:
                     const std::vector<std::tuple<std::string, bool>> attributes,
                     const std::string& associated_data,
                     const std::string& service_name,
-                    const G1& authority_pk, const G1& g, const G1& h);
+                    const G1& authority_pk, const G1& g, const G1& h) const;
 
   IdProof
   el_passo_prove_id_without_id_retrieval(const PSCredential& sig,
                                          const std::vector<std::tuple<std::string, bool>> attributes,
                                          const std::string& associated_data,
-                                         const std::string& service_name);
+                                         const std::string& service_name) const;
 
 private:
   G2

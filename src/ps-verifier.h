@@ -46,12 +46,12 @@ public:
   el_passo_verify_id(const IdProof& proof,
                      const std::string& associated_data,
                      const std::string& service_name,
-                     const G1& authority_pk, const G1& g, const G1& h);
+                     const G1& authority_pk, const G1& g, const G1& h) const;
 
   bool
   el_passo_verify_id_without_id_retrieval(const IdProof& proof,
                                           const std::string& associated_data,
-                                          const std::string& service_name);
+                                          const std::string& service_name) const;
 
 private:
   G2
@@ -59,9 +59,6 @@ private:
 
 private:
   PSPubKey m_pk;  // public key
-  Fr m_sk_x;      // private key, x
-  G1 m_sk_X;      // private key, X
-  Fr m_t1;        // used for commiting attributes
 };
 
 #endif  // PS_SRC_PS_VERIFIER_H_

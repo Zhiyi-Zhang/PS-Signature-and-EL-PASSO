@@ -152,10 +152,15 @@ PSRequester::el_passo_prove_id(const PSCredential& sig,
                                const std::vector<std::tuple<std::string, bool>> attributes,
                                const std::string& associated_data,
                                const std::string& service_name,
-                               const G1& authority_pk, const G1& g, const G1& h)
+                               const G1& authority_pk, const G1& g, const G1& h) const
 {
+  size_t maxAllowedAttrNum = m_pk.Yi.size();
+  if (attributes.size() != maxAllowedAttrNum) {
+    throw std::runtime_error("attribute size does not match");
+  }
+
   IdProof proof;
-  // new_sig = sig1^r, sig2 + sig1^t)^r
+  // new_sig = sig1^r, (sig2 + sig1^t)^r
   Fr _t, _r;
   _t.setByCSPRNG();
   _r.setByCSPRNG();
@@ -219,7 +224,7 @@ PSRequester::el_passo_prove_id(const PSCredential& sig,
    * * random2 - t * c
    * * random3 - epsilon * c
    */
-  // V_k
+  // V_k = XX * PI{ YYj^random1_j } * gg^random_2
   G2 _V_k = m_pk.XX;
   std::vector<Fr> _randomnesses;
   Fr _temp_randomness;
@@ -275,7 +280,7 @@ PSRequester::el_passo_prove_id(const PSCredential& sig,
   // Calculate Rs
   Fr _temp_r;
   Fr _secret_c;
-  proof.rs.reserve(attributes.size() + 3);
+  proof.rs.reserve(attributes.size() + 2);
   for (size_t i = 0; i < _attribute_hashes.size(); i++) {
     Fr::mul(_secret_c, _attribute_hashes[i], proof.c);
     Fr::sub(_temp_r, _randomnesses[i], _secret_c);
@@ -308,10 +313,15 @@ IdProof  // sig1, sig2, k, phi, c, rs, attributes
 PSRequester::el_passo_prove_id_without_id_retrieval(const PSCredential& sig,
                                                     const std::vector<std::tuple<std::string, bool>> attributes,
                                                     const std::string& associated_data,
-                                                    const std::string& service_name)
+                                                    const std::string& service_name) const
 {
+  size_t maxAllowedAttrNum = m_pk.Yi.size();
+  if (attributes.size() != maxAllowedAttrNum) {
+    throw std::runtime_error("attribute size does not match");
+  }
+
   IdProof proof;
-  // new_sig = sig1^r, sig2 + sig1^t)^r
+  // new_sig = sig1^r, (sig2 + sig1^t)^r
   Fr _t, _r;
   _t.setByCSPRNG();
   _r.setByCSPRNG();
@@ -328,6 +338,7 @@ PSRequester::el_passo_prove_id_without_id_retrieval(const PSCredential& sig,
   G1::mul(proof.phi, _service_hash, _s);
 
   // k = XX * PI{ YYj^mj } * gg^t
+  proof.k = m_pk.XX;
   Fr _attribute_hash;
   G2 _yy_hash;
   std::vector<Fr> _attribute_hashes;
@@ -359,7 +370,7 @@ PSRequester::el_passo_prove_id_without_id_retrieval(const PSCredential& sig,
    * * random1_j - attribute_j * c
    * * random2 - t * c
    */
-  // V_k
+  // V_k = XX * PI{ YYj^random1_j } * gg^random_2
   G2 _V_k = m_pk.XX;
   std::vector<Fr> _randomnesses;
   Fr _temp_randomness;
@@ -378,7 +389,7 @@ PSRequester::el_passo_prove_id_without_id_retrieval(const PSCredential& sig,
   G2::mul(_yy_randomness, m_pk.gg, _temp_randomness);
   G2::add(_V_k, _V_k, _yy_randomness);
 
-  // V_phi
+  // V_phi = hash(domain)^random1_s
   G1 _V_phi;
   G1::mul(_V_phi, _service_hash, _randomnesses[0]);  // random1_s
 

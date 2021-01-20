@@ -38,7 +38,7 @@ bool
 PSVerifier::el_passo_verify_id(const IdProof& proof,
                                const std::string& associated_data,
                                const std::string& service_name,
-                               const G1& authority_pk, const G1& g, const G1& h)
+                               const G1& authority_pk, const G1& g, const G1& h) const
 {
   /** NIZK Verify:
    * Public Value:
@@ -49,7 +49,7 @@ PSVerifier::el_passo_verify_id(const IdProof& proof,
    *
    * Public Random Value:
    * * V_k = XX * PI{ YYj^random1_j } * gg^random_2
-   *       = k^c * XX^(1-c) * PI{ YYj^r1_j } ** gg^r2
+   *       = k^c * XX^(1-c) * PI{ YYj^r1_j } * gg^r2
    * * V_phi = hash(domain)^random1_s
    *         = phi^c * hash(domain)^r1_s
    * * V_E1 = g^random_3
@@ -68,7 +68,7 @@ PSVerifier::el_passo_verify_id(const IdProof& proof,
   if (!proof.E1.has_value() || !proof.E2.has_value()) {
     return false;
   }
-  // V_k = k^c * XX^(1-c) * PI{ YYj^r1_j } ** gg^r2
+  // V_k = k^c * XX^(1-c) * PI{ YYj^r1_j } * gg^r2
   G2 _V_k;
   G2::mul(_V_k, proof.k, proof.c);
   int counter = 0;
@@ -139,7 +139,8 @@ PSVerifier::el_passo_verify_id(const IdProof& proof,
 
 bool
 PSVerifier::el_passo_verify_id_without_id_retrieval(const IdProof& proof,
-                                                    const std::string& associated_data, const std::string& service_name)
+                                                    const std::string& associated_data,
+                                                    const std::string& service_name) const
 {
   /** NIZK Verify:
    * Public Value:
@@ -148,18 +149,18 @@ PSVerifier::el_passo_verify_id_without_id_retrieval(const IdProof& proof,
    *
    * Public Random Value:
    * * V_k = XX * PI{ YYj^random1_j } * gg^random_2
-   *       = k^c * XX^(1-c) * PI{ YYj^r1_j } ** gg^r2
+   *       = k^c * XX^(1-c) * PI{ YYj^r1_j } * gg^r2
    * * V_phi = hash(domain)^random1_s
    *         = phi^c * hash(domain)^r1_s
    *
    * c: to be compared
-   * c = hash(k || phi || E1 || E2 || V_k || V_phi || associated_data )
+   * c = hash(k || phi || V_k || V_phi || associated_data )
    *
    * Rs:
    * * r1_j: random1_j - attribute_j * c
    * * r2: random2 - t * c
    */
-  // V_k = k^c * XX^(1-c) * PI{ YYj^r1_j } ** gg^r2
+  // V_k = k^c * XX^(1-c) * PI{ YYj^r1_j } * gg^r2
   G2 _V_k;
   G2::mul(_V_k, proof.k, proof.c);
   int counter = 0;

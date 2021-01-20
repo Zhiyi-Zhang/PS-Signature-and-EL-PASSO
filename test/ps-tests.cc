@@ -113,6 +113,7 @@ test_el_passo(size_t total_attribute_num)
   std::cout << "User-ProveID: "
             << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
             << "[µs]" << std::endl;
+  auto prove2 = user.el_passo_prove_id_without_id_retrieval(ubld_sig, attributes, "hello", "service");
 
   // RP-VerifyID
   PSVerifier rp(pubKey);
@@ -122,11 +123,15 @@ test_el_passo(size_t total_attribute_num)
   std::cout << "RP-VerifyID: "
             << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
             << "[µs]" << std::endl;
-
+  bool result2 = rp.el_passo_verify_id_without_id_retrieval(prove2, "hello", "service");
   if (!result) {
-    std::cout << "EL PASSO Verify ID failed" << std::endl;
+    std::cout << "EL PASSO Verify ID (with authority) failed" << std::endl;
+    return;
   }
-
+  if (!result2) {
+    std::cout << "EL PASSO Verify ID (no authority) failed" << std::endl;
+    return;
+  }
   std::cout << "****test_el_passo ends without errors****\n"
             << std::endl;
 }
