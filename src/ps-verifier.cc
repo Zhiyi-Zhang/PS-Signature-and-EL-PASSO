@@ -227,3 +227,9 @@ PSVerifier::prepare_hybrid_verification(const G2& k, const std::vector<std::stri
   }
   return _final_k;
 }
+
+std::string
+PSVerifier::get_user_name_from_signon_request(const IdProof& proof)
+{
+  return proof.phi.getStr();
+}

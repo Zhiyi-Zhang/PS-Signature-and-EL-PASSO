@@ -8,7 +8,7 @@
 
 <body>
   <h3>EL PASSO Relying Party (RP): For demo purpose only</h3>
-  <h4>Service Name: rp.com</h4>
+  <h4 id='rp-name-title'>Service Name: </h4>
   <p>
     Note: This demo is only for the purpose of showing how WASM ELPASSO RP
     works.
@@ -52,9 +52,11 @@
 
     var rp;
     var rp_name;
+    var assoData = "demo_only";
 
     function init() {
       rp_name = document.getElementById("rp-name").value;
+      document.getElementById("rp-name-title").innerHTML = "Service Name: " + rp_name;
       var keyBase64 = document.getElementById("idp-pk").value;
       if (keyBase64.length == 0) {
         alert("Empty IdP's public key is detected.");
@@ -67,12 +69,13 @@
     }
 
     function authenticate() {
-      var requestBase64 = document.getElementById("idp-pk").value;
-      var assoData = "demo_only";
+      var requestBase64 = document.getElementById("user-request").value;
       var request = Module.IdProof.fromBufferString(Module.PSBuffer.fromBase64(requestBase64));
       var doesSucceed = rp.el_passo_verify_id_without_id_retrieval(request, assoData, rp_name);
+      var userId = Module.PSVerifier.get_user_name_from_signon_request(request);
+      userId = userId.replaceAll(" ", "");
       if (doesSucceed) {
-        document.getElementById("authenticate-result").innerHTML = "User's sign on request is valid!";
+        document.getElementById("authenticate-result").innerHTML = "User's sign on request is valid! <br />" + "User ID: <br />" + userId;
       }
       else {
         document.getElementById("authenticate-result").innerHTML = "User's sign on request is invalid!";

@@ -241,6 +241,8 @@ test_el_passo(size_t total_attribute_num)
   std::cout << "Sign-on Request payload size: " << prove.toBufferString().size() << std::endl;
   std::cout << "Sign-on Request base 64 size: " << prove.toBufferString().toBase64().size() << std::endl;
 
+  auto prove2 = user.el_passo_prove_id_without_id_retrieval(ubld_sig, attributes, "hello", "service");
+
   // RP-VerifyID
   prove = IdProof::fromBufferString(prove.toBufferString());
   PSVerifier rp(pk);
@@ -251,8 +253,16 @@ test_el_passo(size_t total_attribute_num)
             << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
             << "[µs]" << std::endl;
 
+  prove2 = IdProof::fromBufferString(prove2.toBufferString());
+  bool result2 = rp.el_passo_verify_id_without_id_retrieval(prove2, "hello", "service");
+
   if (!result) {
-    std::cout << "EL PASSO Verify ID failed" << std::endl;
+    std::cout << "EL PASSO Verify ID (with authority) failed" << std::endl;
+    return;
+  }
+  if (!result2) {
+    std::cout << "EL PASSO Verify ID (no authority) failed" << std::endl;
+    return;
   }
 
   std::cout << "****test_el_passo ends without errors****\n"

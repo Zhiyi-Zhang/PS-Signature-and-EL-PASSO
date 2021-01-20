@@ -36,5 +36,6 @@ EMSCRIPTEN_BINDINGS(my_module) {
     .constructor<PSPubKey>()
     .function("verify", &PSVerifier::verify)
     .function("el_passo_verify_id", &PSVerifier::el_passo_verify_id)
-    .function("el_passo_verify_id_without_id_retrieval", &PSVerifier::el_passo_verify_id_without_id_retrieval);
+    .function("el_passo_verify_id_without_id_retrieval", &PSVerifier::el_passo_verify_id_without_id_retrieval)
+    .class_function("get_user_name_from_signon_request", &PSVerifier::get_user_name_from_signon_request);
 }
