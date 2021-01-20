@@ -43,16 +43,29 @@ string2AttributeVec(const std::string& vectorStr) {
 
 // a helper function to simplify the parameter passing from Javascript to C++ in EL PASSO RequestID
 std::string
-el_passo_request_id(PSRequester& requester, const std::string& vectorStr, const std::string& assData)
+el_passo_request_id(PSRequester& requester, const std::string& vectorStr, const std::string& assoData)
 {
   auto vec = string2AttributeVec(vectorStr);
-  auto request = requester.el_passo_request_id(vec, assData);
+  auto request = requester.el_passo_request_id(vec, assoData);
+  return request.toBufferString().toBase64();
+}
+
+// a helper function to simplify the parameter passing from Javascript to C++ in EL PASSO ProveID
+std::string
+el_passo_prove_id(PSRequester& requester, const PSCredential& credential,
+                  const std::string& vectorStr,
+                  const std::string& assoData,
+                  const std::string& serviceName)
+{
+  auto vec = string2AttributeVec(vectorStr);
+  auto request = requester.el_passo_prove_id_without_id_retrieval(credential, vec, assoData, serviceName);
   return request.toBufferString().toBase64();
 }
 
 EMSCRIPTEN_BINDINGS(my_module) {
   function("initPairing", &initPS);
   function("el_passo_request_id", &el_passo_request_id);
+  function("el_passo_prove_id", &el_passo_prove_id);
 
   class_<PSBuffer>("PSBuffer")
     .class_function("fromBase64", &PSBuffer::fromBase64)

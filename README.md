@@ -102,7 +102,7 @@ If you don't want to install WASM, you can skip 2.3.1 and directly use the exist
 
 #### 2.3.1 Install WASM depenencies and compile EL PASSO WASMs
 
-After activate the emsdk, you should have the command `em++` available in your path.
+After activate the emsdk and load the commands into your PATH, you should have the command `em++` available in your path.
 To compile the PS signature test file into a HTML and test it with your browser, use the following command.
 
 ```bash
