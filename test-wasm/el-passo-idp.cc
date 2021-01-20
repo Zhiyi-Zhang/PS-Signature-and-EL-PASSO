@@ -4,10 +4,12 @@
 using namespace emscripten;
 using namespace mcl::bls12;
 
+// a function that should be called before any other exported functions
 void initPS() {
   initPairing();
 }
 
+// a helper function to simplify the parameter passing from Javascript to C++ in EL PASSO ProveID
 std::string
 el_passo_prove_id(PSSigner& signer, const std::string& requestStr, const std::string& assoData)
 {

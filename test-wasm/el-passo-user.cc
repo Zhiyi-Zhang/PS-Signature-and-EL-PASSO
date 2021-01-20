@@ -6,10 +6,12 @@
 using namespace emscripten;
 using namespace mcl::bls12;
 
+// a function that should be called before any other exported functions
 void initPS() {
   initPairing();
 }
 
+// helper function to split string into a vector
 template <typename Out>
 void split(const std::string &s, char delim, Out result) {
     std::istringstream iss(s);
@@ -19,7 +21,8 @@ void split(const std::string &s, char delim, Out result) {
     }
 }
 
-// format: att1 Y att2 N att3 Y
+// helper function to convert a string from Javascript to std::vector<std::tuple<std::string, bool>>
+// string format: att1 Y att2 N att3 Y
 std::vector<std::tuple<std::string, bool>>
 string2AttributeVec(const std::string& vectorStr) {
   std::vector<std::string> elems;
@@ -38,6 +41,7 @@ string2AttributeVec(const std::string& vectorStr) {
   return result;
 }
 
+// a helper function to simplify the parameter passing from Javascript to C++ in EL PASSO RequestID
 std::string
 el_passo_request_id(PSRequester& requester, const std::string& vectorStr, const std::string& assData)
 {

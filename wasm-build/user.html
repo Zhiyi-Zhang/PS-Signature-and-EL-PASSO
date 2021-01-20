@@ -1,76 +1,121 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <title>EL PASSO User Demo</title>
-  </head>
-  <body>
-    <h3>EL PASSO User: For demo purpose only</h3>
-    <p>
-      Note: This demo is only for the purpose of showing how WASM ELPASSO User
-      works.
-      <br />
-      Author: Zhiyi Zhang (zhiyi@cs.ucla.edu)
-    </p>
 
-    <hr />
+<head>
+  <meta charset="utf-8" />
+  <title>EL PASSO User Demo</title>
+</head>
 
-    <h4>Step 0: User Setup</h4>
-    <p>
-      Please copy paste the IdP's public key here to set up the user.
-    </p>
-    <textarea id="idp-pk" rows="5" cols="50"></textarea>
+<body>
+  <h3>EL PASSO User: For demo purpose only</h3>
+  <p>
+    Note: This demo is only for the purpose of showing how WASM ELPASSO User
+    works.
     <br />
-    <button type="button" onclick="init()" value="0">Setup User</button>
-    <br />
-    <p id="user-init-result" style="width: 600px; overflow-wrap: break-word"></p>
+    Author: Zhiyi Zhang (zhiyi@cs.ucla.edu)
+  </p>
 
-    <hr />
+  <hr />
 
-    <h4>Step 1: Generate Credential Request</h4>
-    <p id="max-num-attr">You can at most set unknown number of attributes</p>
-    <p>The attribute format: a list of "attr_value hide_from_idp?". <br>
+  <h4>Step 0: User Setup</h4>
+  <p>
+    Please copy paste the IdP's public key here to set up the user.
+  </p>
+  <textarea id="idp-pk" rows="5" cols="50"></textarea>
+  <br />
+  <button type="button" onclick="init()" value="0">Setup User</button>
+  <br />
+  <p id="user-init-result" style="width: 600px; overflow-wrap: break-word"></p>
+
+  <hr />
+
+  <h4>Step 1: Generate Credential Request</h4>
+  <p>
+    Decide the attributes to be certified by the credential and whether hide them or not.
+    You can at most set unknown number of attributes</p>
+  <p>The attribute format: a list of "attr_value hide_from_idp?". <br>
     Sample: secret N plain1 Y plain2 Y </p>
-    <textarea id="attributesStr" cols="50" value=>secret Y plain1 N plain2 N</textarea>
-    <p>
-      Please click the button to generate the credential request and copy it to IdP's website.
-    </p>
-    <button type="button" onclick="requestid()">Generate credential request</button>
-    <p id="credential-request" style="width: 600px; overflow-wrap: break-word"></p>
+  <textarea id="attributes-str" cols="50" value=>secret Y plain1 N plain2 N</textarea>
+  <p>
+    Click the button to generate the credential request and copy it to IdP's website.
+  </p>
+  <button type="button" onclick="requestid()">Generate credential request</button>
+  <p id="credential-request" style="width: 600px; overflow-wrap: break-word"></p>
 
-    <script>
-      var Module = {
-        onRuntimeInitialized: function () {
-          Module.initPairing();
-          console.log("init pairing");
-        },
-      };
-      document.getElementById("idp-pk").value = "";
+  <hr />
 
-      var user;
+  <h4>Step 2: Unblind and Load Credential Issued by IdP</h4>
+  <p>Please copy paste the IdP's issued credential here to load the credential at user side.</p>
+  <textarea id="issued-credential" rows="5" cols="50"></textarea>
+  <br />
+  <p>
+    Click the button to load and unblind the credential.
+  </p>
+  <button type="button" onclick="loadcredential()">Unblind Credential</button>
+  <p id="unblind-credential" style="width: 600px; overflow-wrap: break-word"></p>
 
-      function init() {
-        var keyBase64 = document.getElementById("idp-pk").value;
-        if (keyBase64.length == 0) {
-          alert("Empty IdP's public key is detected.");
-          return;
-        }
-        var pk = Module.PSPubKey.fromBufferString(Module.PSBuffer.fromBase64(keyBase64));
-        user = new Module.PSRequester(pk);
-        console.log("init User");
-        document.getElementById("user-init-result").innerHTML = "Succeed!";
-        document.getElementById("max-num-attr").innerHTML = "You can at most set " + user.maxAllowedAttrNum() + " number of attributes";
-        document.getElementById("credential-request").value = "";
+  <hr />
+
+  <h4>Step 3: Sign On</h4>
+  <p>Please provide the following information to generate the sign on request to RP.</p>
+  <p>1. Decide the attributes to hide from the RP. <br>
+    The attribute format: a list of "attr_value hide_from_rp?". <br>
+    Sample: secret Y plain1 Y plain2 N
+  </p>
+  <textarea id="attributes-str-RP" cols="50" value=>secret Y plain1 Y plain2 N</textarea>
+  <p>2. RP's service name.</p>
+  <input id="rp-name" />
+  <br />
+  <p>
+    Click the button to generate sign on request.
+  </p>
+  <button type="button" onclick="loadcredential()">Generate Sign on request</button>
+  <p id="signon-request" style="width: 600px; overflow-wrap: break-word"></p>
+
+  <script>
+    var Module = {
+      onRuntimeInitialized: function () {
+        Module.initPairing();
+        console.log("init pairing");
+      },
+    };
+    document.getElementById("idp-pk").value = "";
+
+    var user;
+    var user_credential;
+
+    function init() {
+      var keyBase64 = document.getElementById("idp-pk").value;
+      if (keyBase64.length == 0) {
+        alert("Empty IdP's public key is detected.");
+        return;
       }
+      var pk = Module.PSPubKey.fromBufferString(Module.PSBuffer.fromBase64(keyBase64));
+      user = new Module.PSRequester(pk);
+      console.log("init User");
+      document.getElementById("user-init-result").innerHTML = "Succeed!";
+      document.getElementById("max-num-attr").innerHTML.replace("unknown", user.maxAllowedAttrNum().toString());
+      document.getElementById("credential-request").value = "";
+    }
 
-      function requestid() {
-        var attStr = document.getElementById("attributesStr").value;
-        var assoData = "demo_only";
-        var requestBase64 = Module.el_passo_request_id(user, attStr, assoData);
-        document.getElementById("credential-request").innerHTML =
-          "Credential Request: <br>" + requestBase64;
-      }
-    </script>
-    <script async src="el-passo-user.js"></script>
-  </body>
+    function requestid() {
+      var attStr = document.getElementById("attributes-str").value;
+      var assoData = "demo_only";
+      var requestBase64 = Module.el_passo_request_id(user, attStr, assoData);
+      document.getElementById("credential-request").innerHTML =
+        "Credential Request: <br>" + requestBase64;
+    }
+
+    function loadcredential() {
+      var credentialBase64 = document.getElementById("issued-credential").value;
+      var blind_credential = Module.PSCredential.fromBufferString(Module.PSBuffer.fromBase64(credentialBase64));
+      user_credential = user.unblind_credential(blind_credential);
+      document.getElementById("unblind-credential").innerHTML =
+        "Unblinded Credential: <br>" + user_credential.toBufferString().toBase64();
+
+    }
+  </script>
+  <script async src="el-passo-user.js"></script>
+</body>
+
 </html>
