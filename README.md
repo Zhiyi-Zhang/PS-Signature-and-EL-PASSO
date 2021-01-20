@@ -77,7 +77,7 @@ make
 make check
 ```
 
-By running the make check, several tests will run:
+By running the make check, a number of tests will be run:
 
 * Basic PS signature unit tests
   * PS signature key pair generation
@@ -142,7 +142,7 @@ Then, run the tests in a docker container.
 docker run elpasso
 ```
 
-After starting the docker container, you should be able to see the same results as when you build with make.
+After starting the docker container, you should be able to see the same test results as when you build with make.
 
 ## 3. Documentation
 
