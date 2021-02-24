@@ -19,12 +19,12 @@ OBJECTS = $(BUILD_DIR)/ps-verifier.o $(BUILD_DIR)/ps-signer.o $(BUILD_DIR)/ps-re
 PS_TEST_OBJECTS = $(BUILD_DIR)/ps-tests.o $(OBJECTS)
 ENCODING_TEST_OBJECTS = $(BUILD_DIR)/encoding-test.o $(OBJECTS)
 
-all: $(PROGRAMS)
+all: dependencies $(PROGRAMS)
 
-.PHONY: unit-tests clean mcl el-passo-wasm
+.PHONY: unit-tests clean dependencies el-passo-wasm
 
-mcl:
-	./install-mcl.sh
+dependencies:
+	./build-dependencies.sh
 
 debug:
 	make "BUILD=debug"
@@ -77,7 +77,7 @@ $(WASM_BUILD_DIR)/el-passo-user.js : wasm-src/el-passo-user.cc $(MCL_DIR)/src/fp
 	$(EMCC) -o $@ wasm-src/el-passo-user.cc src/ps-requester.cc src/ps-encoding.cc $(MCL_DIR)/src/fp.cpp $(EMCC_OPT) -DMCL_DONT_USE_XBYAK -DMCL_DONT_USE_OPENSSL -DMCL_USE_VINT -DMCL_SIZEOF_UNIT=8 -DMCL_VINT_64BIT_PORTABLE -DMCL_VINT_FIXED_BUFFER -DMCL_MAX_BIT_SIZE=384
 	cp ./html_template/user.html $(@D)
 
-el-passo-wasm : $(WASM_BUILD_DIR)/el-passo-user.js $(WASM_BUILD_DIR)/el-passo-rp.js $(WASM_BUILD_DIR)/el-passo-idp.js $(WASM_BUILD_DIR)/wasm-tests.js
+el-passo-wasm : dependencies $(WASM_BUILD_DIR)/el-passo-user.js $(WASM_BUILD_DIR)/el-passo-rp.js $(WASM_BUILD_DIR)/el-passo-idp.js $(WASM_BUILD_DIR)/wasm-tests.js
 
 clean:
 	rm -rf $(BUILD_DIR)

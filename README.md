@@ -6,7 +6,7 @@
 
 ## 1. Overview
 
-This library implements (i) PS Signature in C++ and WebAssembly and (ii) [EL PASSO](https://arxiv.org/abs/2002.10289).
+This library implements (i) [PS Signature](https://eprint.iacr.org/2015/525.pdf) in C++ and [WebAssembly](https://webassembly.org/) and (ii) [EL PASSO](https://arxiv.org/abs/2002.10289).
 
 * PS Signature is a signature scheme that is efficient and randomizable. That is, after generating a PS signature, the signature can be randomized so that it cannot be related to its original presence. This can be widely used for privacy-preserving systems.
 * EL PASSO is a privacy-preserving Single Sign-On (SSO) system. It implements anonymous credentials, enables selective attribute disclosure, and allows users to prove properties about their identity without revealing it in the clear.
@@ -58,26 +58,25 @@ git clone --recurse-submodules https://github.com/Zhiyi-Zhang/PSSignature.git
 
 ### 2.2 Build with Make
 
-The first step is to compile and install MCL library, which is already a submodule of the repo.
+Build PSSignature and EL PASSO with the following command.
 
 ```bash
-make mcl
+make all
 ```
 
-If the submodule cannot be found, you can update the submodule with the following command.
+If the submodule MCL cannot be found, you download/update the submodule with the following command.
 
 ```bash
 git submodule update --init
 ```
 
-Then, you can simply build and test PSSignature and EL PASSO with `make` and `make check`.
+Run the tests with the following command.
 
 ```bash
-make
 make check
 ```
 
-By running the make check, a number of tests will be run:
+After that, a number of tests will be executed:
 
 * Basic PS signature unit tests
   * PS signature key pair generation
@@ -98,8 +97,9 @@ By running the make check, a number of tests will be run:
 Our library supports the use of [Web Assembly (WASM)](https://webassembly.org/), which allows our implementation to provide both high efficiency and the ability to be delivered as a web resource
 Therefore, a user do not need to explicitly install EL PASSO software and can directly use EL PASSO with a standard browser.
 
-To compile with the WASM, you must first follow the instructions from the [WASM's C++ download and install page](https://emscripten.org/docs/getting_started/downloads.html) to get [emsdk](https://emscripten.org/index.html) ready.
 If you don't want to install WASM, you can skip 2.3.1 and directly go to 2.3.2 and 3 because the complied files have been uploaded to `./wasm-build`.
+
+To compile with the WASM, you must first follow the instructions from the [WASM's C++ download and install page](https://emscripten.org/docs/getting_started/downloads.html) to get [emsdk](https://emscripten.org/index.html) ready.
 
 #### 2.3.1 Install WASM depenencies and compile EL PASSO WASMs
 
@@ -144,6 +144,28 @@ docker run elpasso
 ```
 
 After starting the docker container, you should be able to see the same test results as when you build with make.
+
+### 2.5 Codebase Structure
+
+```ascii
+./
+|--.github/workflows: used for automated test with GitHub Workflows
+|-- html_template: a list of HTML template used to build EL PASSO htmls for WASM tests and demo
+|-- src: C++ header and source files for PS Signature and EL PASSO
+|-- test: C++ test source files
+|-- third-parties: dependencies, which is MCL library
+|-- wasm-build: Compiled WASM files and HTMLs that can directly be opened without the need to install WASM development tools
+|-- wasm-src: WASM source files for PS Signature and EL PASSO (writen in C++)
+|-- DockerFile: docker container configuration file
+|-- entrypoint.sh: the entrypoint of the docker container
+|-- action.yml: the action performed in the docker container in GitHub Workflows
+|-- Makefile
+|-- build-dependencies.sh: a shell script called by "make mcl" to build dependencies
+|-- LICENSE
+|-- .dockerignore
+|-- .gitignore
+|-- .gitmodules
+```
 
 ## 3. A Demo of EL PASSO
 
