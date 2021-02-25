@@ -196,3 +196,10 @@ We also provide a brief description of the steps here:
 ## 4. Documentation
 
 See [documentation page](documentation.md).
+
+## 5. Issue report and Contribution
+
+If you encounter any issues, please start a new issue [here](https://github.com/Zhiyi-Zhang/PS-Signature-and-EL-PASSO/issues).
+
+If you want to contribute to the codebase, please submit a new pull request [here](https://github.com/Zhiyi-Zhang/PS-Signature-and-EL-PASSO/pulls).
+
