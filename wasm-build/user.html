@@ -84,6 +84,7 @@
 
     var user;
     var user_credential;
+    var assoData = "demo_only";
 
     function init() {
       var keyBase64 = document.getElementById("idp-pk").value;
@@ -101,7 +102,6 @@
 
     function requestid() {
       var attStr = document.getElementById("attributes-str").value;
-      var assoData = "demo_only";
       var requestBase64 = Module.el_passo_request_id(user, attStr, assoData);
       document.getElementById("credential-request").innerHTML =
         "Credential Request: <br>" + requestBase64;
@@ -118,7 +118,6 @@
 
     function signonrequest() {
       var attStrRP = document.getElementById("attributes-str-RP").value;
-      var assoData = "demo_only";
       var rpName = document.getElementById("rp-name").value;
       var requestBase64 = Module.el_passo_prove_id(user, user_credential, attStrRP, assoData, rpName);
       document.getElementById("signon-request").innerHTML =

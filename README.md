@@ -100,10 +100,11 @@ Therefore, a user do not need to explicitly install EL PASSO software and can di
 If you don't want to install WASM, you can skip 2.3.1 and directly go to 2.3.2 and 3 because the complied files have been uploaded to `./wasm-build`.
 
 To compile with the WASM, you must first follow the instructions from the [WASM's C++ download and install page](https://emscripten.org/docs/getting_started/downloads.html) to get [emsdk](https://emscripten.org/index.html) ready.
+You will also need to activate the emsdk and load the commands into your PATH.
+After that, you should have the command `em++` available in your path.
 
 #### 2.3.1 Install WASM depenencies and compile EL PASSO WASMs
 
-After activate the emsdk and load the commands into your PATH, you should have the command `em++` available in your path.
 To compile the PS signature test file into a HTML and test it with your browser, use the following command.
 
 ```bash
