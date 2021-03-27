@@ -195,7 +195,7 @@ We also provide a brief description of the steps here:
 
 ## 4. Documentation
 
-See [documentation page](documentation.md).
+See [documentation page](Documentation.md).
 
 ## 5. Issue report and Contribution
 
