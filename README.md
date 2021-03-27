@@ -108,7 +108,7 @@ After that, you should have the command `em++` available in your path.
 To compile the PS signature test file into a HTML and test it with your browser, use the following command.
 
 ```bash
-make el-pass-wasm
+make wasm
 ```
 
 Then, it should generate (overwrite) a number of `js`, `wasm`, and `html` files in `./wasm-build`.
