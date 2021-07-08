@@ -16,6 +16,10 @@ A certificate based on PS Signature following EL PASSO protocol is privacy-prese
 * The signer cannot learn the data being signed. The signer can only verify the correctness of the data through zero-knowledge proofs.
 * Each certificate can be randomized so as to preserve certificate owner's privacy while a randomized certificate is still valid.
 
+An overview of the difference between the current practice, Open ID Connect (OIDC), and EL PASSO is illustrated in the following figure.
+
+![Comparison between OIDC and EL PASSO](https://github.com/Zhiyi-Zhang/PS-Signature-and-EL-PASSO/blob/master/conclusion.png?raw=true)
+
 ## 1.1 An example application scenario
 
 To illustrate the use of our system, let's assume a user Alice is a legit user of Facebook (an Identity Provider or IdP in short) and she wants to login to a website (a Relying Party or RP in short) with her Facebook account.
