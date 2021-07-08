@@ -32,9 +32,11 @@
   <h4>Step 1: Generate Credential Request</h4>
   <p>Decide the attributes to be certified by the credential and whether hide them or not.</p>
   <p id="max-num-attr">
-    You can at most set unknown number of attributes.
+    According to the provided IdP public key, you are allowed to set at most unknown number of attributes <br>
+    (In this demo, please provide the exact maximum-allowed number of attributes).
   </p>
-  <p>The attribute format: a list of "attr_value hide_from_idp?". <br>
+  <p>
+    The attribute format: a list of "attr_value hide_from_idp?". <br>
     Sample: secret N plain1 Y plain2 Y </p>
   <textarea id="attributes-str" cols="50" value=>secret Y plain1 N plain2 N</textarea>
   <p>
@@ -96,7 +98,8 @@
       user = new Module.PSRequester(pk);
       console.log("init User");
       document.getElementById("user-init-result").innerHTML = "Succeed!";
-      document.getElementById("max-num-attr").innerHTML = "You can at most set " + user.maxAllowedAttrNum() + " number of attributes."
+      document.getElementById("max-num-attr").innerHTML = "According to the provided IdP public key, you are allowed to set at most " 
+      + '<span style="color:red;">' + user.maxAllowedAttrNum() + "</span> attributes <br> (In this demo, please provide the exact maximum-allowed number of attributes)."
       document.getElementById("credential-request").value = "";
     }
 
